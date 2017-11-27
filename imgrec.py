@@ -16,9 +16,9 @@ import subprocess
 from fractions import Fraction
 
 # Define recording function
-def record(duration = 60, resolution = (1000,1000),
+def record(duration = 10, resolution = (1000,1000),
            shutterspeed = 10000, compensation = 0,
-           framerate = Fraction(1, 6), sharpness = 50, iso = 200,
+           framerate = 0.2, sharpness = 50, iso = 200,
            contrast = 20, brightness = 40, saturation = -100,
            quality = 15):
 
@@ -100,7 +100,7 @@ def record(duration = 60, resolution = (1000,1000),
         camera.saturation = saturation
         camera.brightness = brightness
         camera.start_recording(filename, quality = quality)
-        camera.wait_recording(duration)
+        camera.wait_recording(duration-1)
         camera.stop_recording()
 
     print(time.strftime("%H:%M:%S")+" - finished video "+filename)
