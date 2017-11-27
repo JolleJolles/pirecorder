@@ -76,7 +76,7 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
     server = "/home/pi/SERVER/"
     rpi = socket.gethostname()
     foldername = server+rpi
-    if os.path.exists(location):
+    if os.path.exists(foldername):
         os.chdir(foldername)
 
     # Get the current date and time
