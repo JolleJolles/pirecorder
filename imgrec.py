@@ -10,6 +10,7 @@
 # Load modules
 import picamera
 import time
+import socket
 import os
 import subprocess
 from fractions import Fraction
@@ -71,6 +72,8 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
         
     """
 
+    print(time.strftime("%H:%M:%S")+" - recording video "+filename)
+    
     # Set directory to right location
     server = "/home/pi/SERVER/"
     rpi = socket.gethostname()
@@ -98,10 +101,11 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
         camera.contrast = contrast
         camera.saturation = saturation
         camera.brightness = brightness
-        print(time.strftime("%H:%M:%S")+" - Recording video "+filename)
         camera.start_recording(filename, quality = quality)
         camera.wait_recording(duration)
         camera.stop_recording()
+
+    print(time.strftime("%H:%M:%S")+" - finished video "+filename)
 
 # Run recording function
 record()
