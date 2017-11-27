@@ -122,7 +122,7 @@ def record(resolution = (1000, 1000),
     # Start taking images
     bef = dt.now()
     for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
-        if i == 10:
+        if i == 10000:
             break
         delay = wait-(dt.now()-bef).total_seconds()
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
