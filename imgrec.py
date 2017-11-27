@@ -5,7 +5,6 @@
 
 
 #!/usr/bin/python
-
 #######################################
 # Script for automatically recording  #
 # slow framerate videos with the rpi  #
