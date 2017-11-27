@@ -124,13 +124,12 @@ def record(resolution = (1000, 1000),
         if i == 10:
             break
         delay = wait-(dt.now()-bef).total_seconds()
-        print strftime("[%H:%M:%S] [rpi] - captured image ")+img+                       ". Sleeping for "+str(round(delay,2))+"s.."
+        print strftime("[%H:%M:%S][")+rpi+"] - captured ")+img+                       ", sleeping "+str(round(delay,2))+"s.."
         sleep(delay)
         bef = dt.now()
     
     print "=================================================="
     print strftime("ImgRec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
-    print "=================================================="
 
 # Run recording function
 record()
