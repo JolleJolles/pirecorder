@@ -44,7 +44,7 @@ Open a new terminal window and now enter ```ssh pi@RPI_IPADDRESS``` replacing RP
 
 ##### B) Connecting via vnc viewer
 
-Download the free software [here](https://www.realvnc.com/en/connect/download/viewer/)) and install it. Now open a new instance of VNC viewer and type in the ip-address of the respective rpi in the address bar and press Enter. Now similarly as for ssh enter the right username (pi) and password (1gbm0llyp0wer). When succesfull you will now see the linux destkop from that respective rpi. This is particularly helpful to live stream the camera (explained below). 
+Download the free software [here](https://www.realvnc.com/en/connect/download/viewer/) and install it. Now open a new instance of VNC viewer and type in the ip-address of the respective rpi in the address bar and press Enter. Now similarly as for ssh enter the right username (pi) and password (1gbm0llyp0wer). When succesfull you will now see the linux destkop from that respective rpi. This is particularly helpful to live stream the camera (explained below). 
 
 <center><img src="https://github.com/jolleslab/molly/blob/master/images/vncviewer-connected.jpg" width="600px" height="497px"></img></center>
 
