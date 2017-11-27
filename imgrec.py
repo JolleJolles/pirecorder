@@ -21,7 +21,7 @@ from socket import gethostname
 import os
 
 # Define recording function
-def record(resolution = (1000,1000),
+def record(resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
            iso = 200,
