@@ -120,12 +120,11 @@ def record(resolution = (1000, 1000),
     
     # Start taking images
     bef = now()
-    for i, img in enumerate(camera.capture_continuous(filename, 
-                                 format="jpeg", quality=quality):
+    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
         if i == 10:
             break
         delay = wait-(now()-bef).total_seconds()
-        print strftime("[%H:%M:%S] [rpi] - captured image "+img+"; next img in: "+str(round(delay,2))+"sec"
+        print strftime("[%H:%M:%S] [rpi] - captured image ")+img+                       ". Sleeping for "+str(round(delay,2))+"s.."
         sleep(delay)
         bef = now()
     
