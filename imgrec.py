@@ -5,6 +5,7 @@
 
 
 #!/usr/bin/python
+
 #######################################
 # Script for automatically recording  #
 # slow framerate videos with the rpi  #
@@ -124,7 +125,7 @@ def record(resolution = (1000, 1000),
         if i == 10:
             break
         delay = wait-(dt.now()-bef).total_seconds()
-        print strftime("[%H:%M:%S][")+rpi+"] - captured ")+img+                       ", sleeping "+str(round(delay,2))+"s.."
+        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = dt.now()
     
