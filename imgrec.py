@@ -72,8 +72,6 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
         
     """
 
-    print(time.strftime("%H:%M:%S")+" - recording video "+filename)
-    
     # Set directory to right location
     server = "/home/pi/SERVER/"
     rpi = socket.gethostname()
@@ -86,6 +84,8 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
 
     # Create the video filename
     filename = rpi+date+".h264"
+
+    print(time.strftime("%H:%M:%S")+" - recording video "+filename)
 
     # Now record the video
     with picamera.PiCamera() as camera:
