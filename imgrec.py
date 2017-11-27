@@ -105,7 +105,7 @@ def record(resolution = (1000, 1000),
     filename = rpi+daystamp+counter+timestamp+ftype
 
     # Set-up the camera with the right parameters
-    camera = PiCamera() as camera:
+    camera = PiCamera()
     camera.resolution = resolution
     camera.exposure_compensation = compensation
     sleep(0.1)
