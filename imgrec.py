@@ -15,7 +15,7 @@
 # Load modules
 from picamera import PiCamera
 from time import sleep, strftime
-from datetime.datetime import now
+from datetime import now
 from socket import gethostname
 import os
 
