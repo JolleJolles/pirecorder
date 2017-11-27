@@ -16,7 +16,7 @@ import subprocess
 from fractions import Fraction
 
 # Define recording function
-def record(duration = 600, delay = 30, resolution = (1000,1000),
+def record(duration = 60, resolution = (1000,1000),
            shutterspeed = 10000, compensation = 0,
            framerate = Fraction(1, 6), sharpness = 50, iso = 200,
            contrast = 20, brightness = 40, saturation = -100,
@@ -32,8 +32,6 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
             set to the server folder reflecting the rpi name.
         duration : int, default = 60
             Total duration during which images will be recorded
-        delay : int, default = 5
-            Time delay between images
         resolution : tuple, default = (1000,1000)
             The width and height of the images to be recorded.
         framerate : int or fraction, default = Fraction(1,6)
@@ -80,10 +78,10 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
         os.chdir(foldername)
 
     # Get the current date and time
-    date = time.strftime("%m%d%H%M%S")
+    date = time.strftime("%y%m%d_%H%M%S")
 
     # Create the video filename
-    filename = rpi+date+".h264"
+    filename = rpi+"_"+date+".h264"
 
     print(time.strftime("%H:%M:%S")+" - recording video "+filename)
 
@@ -96,7 +94,7 @@ def record(duration = 600, delay = 30, resolution = (1000,1000),
         camera.exposure_mode = 'off'
         camera.awb_mode = 'off'
         camera.sharpness = sharpness
-        camera.shutter_speed = shuterspeed
+        camera.shutter_speed = shutterspeed
         camera.iso = iso
         camera.contrast = contrast
         camera.saturation = saturation
