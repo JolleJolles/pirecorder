@@ -41,20 +41,21 @@ def enablejob():
         job.enable(False)
         print args["name"]+" disabled"
     else:
-            print "Please provide 'True' or 'False' for parameter enable"
+        print "Please provide 'True' or 'False' for parameter enable"
 
 def createjob():
     job = cron.new(command='python /home/pi/AnimRec/imgrec.py >> /home/pi/imglog.txt 2>&1',comment=args["name"])
     job.setall(args["cronline"])
+    enablejob()
     cron.write()
     print "\n"+args["name"]+ " cron job created succesfully"
-    enablejob()
 
 def modifyjob():
     job.setall(args["cronline"])
+    enablejob()
     cron.write()
     print "\n"+args["name"]+" cron job modified successfully"
-    enablejob()
+    
 
 
 # check if already jobs exist; if not create job

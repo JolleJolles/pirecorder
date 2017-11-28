@@ -11816,20 +11816,21 @@ div#notebook {
         <span class="n">job</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
         <span class="k">print</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; disabled&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;Please provide &#39;True&#39; or &#39;False&#39; for parameter enable&quot;</span>
+        <span class="k">print</span> <span class="s2">&quot;Please provide &#39;True&#39; or &#39;False&#39; for parameter enable&quot;</span>
 
 <span class="k">def</span> <span class="nf">createjob</span><span class="p">():</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">cron</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s1">&#39;python /home/pi/AnimRec/imgrec.py &gt;&gt; /home/pi/imglog.txt 2&gt;&amp;1&#39;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
     <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;cronline&quot;</span><span class="p">])</span>
+    <span class="n">enablejob</span><span class="p">()</span>
     <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
     <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
-    <span class="n">enablejob</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
     <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;cronline&quot;</span><span class="p">])</span>
+    <span class="n">enablejob</span><span class="p">()</span>
     <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
     <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; cron job modified successfully&quot;</span>
-    <span class="n">enablejob</span><span class="p">()</span>
+    
 
 
 <span class="c1"># check if already jobs exist; if not create job</span>
