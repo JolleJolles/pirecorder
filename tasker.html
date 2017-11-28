@@ -11808,7 +11808,7 @@ div#notebook {
 <span class="n">cron</span> <span class="o">=</span> <span class="n">CronTab</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
 
 <span class="c1"># create job functions</span>
-<span class="k">def</span> <span class="nf">enablejob</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;enable&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
         <span class="n">job</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
         <span class="k">print</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; enabled&quot;</span>
@@ -11821,7 +11821,7 @@ div#notebook {
 <span class="k">def</span> <span class="nf">createjob</span><span class="p">():</span>
     <span class="n">job</span> <span class="o">=</span> <span class="n">cron</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="s1">&#39;python /home/pi/AnimRec/imgrec.py &gt;&gt; /home/pi/imglog.txt 2&gt;&amp;1&#39;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
     <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;cronline&quot;</span><span class="p">])</span>
-    <span class="n">enablejob</span><span class="p">()</span>
+    <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
     <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
     <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
 

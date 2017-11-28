@@ -33,7 +33,7 @@ args = vars(ap.parse_args())
 cron = CronTab(user='pi')
 
 # create job functions
-def enablejob():
+def enablejob(job):
     if args["enable"] == "True":
         job.enable()
         print args["name"]+" enabled"
@@ -46,7 +46,7 @@ def enablejob():
 def createjob():
     job = cron.new(command='python /home/pi/AnimRec/imgrec.py >> /home/pi/imglog.txt 2>&1',comment=args["name"])
     job.setall(args["cronline"])
-    enablejob()
+    enablejob(job)
     cron.write()
     print "\n"+args["name"]+ " cron job created succesfully"
 
