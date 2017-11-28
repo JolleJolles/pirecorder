@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 #!/usr/bin/python
 
 #######################################
@@ -13,14 +12,14 @@
 # Last updated: 27 Nov 2017           #
 #######################################
 
-# Load modules
+# import packages
 from picamera import PiCamera
 from time import sleep, strftime
 from datetime import datetime as dt
 from socket import gethostname
 import os
 
-# Define recording function
+# define recording function
 def record(resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -86,26 +85,26 @@ def record(resolution = (1000, 1000),
         """
     
     print "=================================================="
-    print strftime("ImgRec started: Date: %y/%m/%d; Time: %H:%M:%S")
+    print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
-    # Acquire rpi name
+    # acquire rpi name
     rpi = gethostname()
     
-    # Set the directory
+    # set the directory
     server = "/home/pi/SERVER/"
     location = server + rpi
     if os.path.exists(location):
         os.chdir(location)
     
-    # Set-up automatic filenaming
+    # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
     counter = "_im{counter:05d}"
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
     filename = rpi+daystamp+counter+timestamp+ftype
 
-    # Set-up the camera with the right parameters
+    # set-up the camera with the right parameters
     camera = PiCamera()
     camera.resolution = resolution
     camera.exposure_compensation = compensation
@@ -119,7 +118,7 @@ def record(resolution = (1000, 1000),
     camera.saturation = saturation
     camera.brightness = brightness
     
-    # Start taking images
+    # start taking images
     bef = dt.now()
     for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
         if i == 10000:
@@ -130,8 +129,8 @@ def record(resolution = (1000, 1000),
         bef = dt.now()
     
     print "=================================================="
-    print strftime("ImgRec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
-# Run recording function
+# run recording function
 record()
 
