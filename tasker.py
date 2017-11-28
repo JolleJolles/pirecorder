@@ -12,19 +12,19 @@
 #######################################
 
 # import packages
-from argparse import ArgumentParser as ap
 from crontab import CronTab
 from datetime import datetime as dt
 
 # construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
 ap.add_argument("-l", "--cronline", type=str, default="0 7 * * *",
         help="crontab code for executing the code. Default\
               executes job every day at 07:00")
-ap.add_argument("-n", "--name", type=str, default="molly",
-        help="name of the crontab")
-ap.add_argument("-e", "--enable", default="True",
-        help="if a job should be enabled or not")
-ap.add_argument("-s", "--show", default="False",
+ap.add_argument("-n", "--name", type=str, default="molly", 
+                help="name of the crontab")
+ap.add_argument("-e", "--enable", default="True", 
+                help="if a job should be enabled or not")
+ap.add_argument("-s", "--show", default="False", 
                 help="if the crontab schedule should be shown")
 args = vars(ap.parse_args())
 
