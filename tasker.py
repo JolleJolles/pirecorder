@@ -52,7 +52,7 @@ def createjob():
 
 def modifyjob():
     job.setall(args["cronline"])
-    enablejob()
+    enablejob(job)
     cron.write()
     print "\n"+args["name"]+" cron job modified successfully"
     

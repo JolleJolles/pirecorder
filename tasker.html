@@ -11827,7 +11827,7 @@ div#notebook {
 
 <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
     <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;cronline&quot;</span><span class="p">])</span>
-    <span class="n">enablejob</span><span class="p">()</span>
+    <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
     <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
     <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; cron job modified successfully&quot;</span>
     
