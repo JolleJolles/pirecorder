@@ -21,7 +21,7 @@ import os
 
 # define recording function
 def record(imgwait = 5.0,
-           imgnr = 100
+           imgnr = 100,
            imgtime = 600,
            resolution = (1000, 1000),
            compensation = 0,
