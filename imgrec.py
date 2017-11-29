@@ -22,7 +22,7 @@ import os
 # define recording function
 def record(imgwait = 5.0,
            imgnr = 100
-           imgtime = 480,
+           imgtime = 600,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -99,6 +99,11 @@ def record(imgwait = 5.0,
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
+    # Change type for use with runp
+    imgwait = int(imgwait)
+    imgnr = float(imgnr)
+    imgtime = int(imgtime)
+            
     # get number of images to record
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)

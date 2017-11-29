@@ -18,7 +18,7 @@ from datetime import datetime as dt
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-l", "--cronline", type=str, default="0 7 * * *",
+ap.add_argument("-t", "--timecode", type=str, default="0 7 * * *",
         help="crontab code for executing the code. Default\
               executes job every day at 07:00")
 ap.add_argument("-n", "--name", type=str, default="molly", 
@@ -28,6 +28,9 @@ ap.add_argument("-e", "--enable", default="True",
 ap.add_argument("-s", "--show", default="False", 
                 help="if the crontab schedule should be shown")
 args = vars(ap.parse_args())
+timecode = args["timecode"]
+
+def tasker(imgwait=5.0,imgnr=100,imgtime=480,timecode="0 7 * * *"):
 
 # create access to the system crontab of pi
 cron = CronTab(user='pi')
@@ -44,8 +47,8 @@ def enablejob(job):
         print "Please provide 'True' or 'False' for parameter enable"
 
 def createjob():
-    job = cron.new(command='python /home/pi/AnimRec/imgrec.py >> /home/pi/imglog.txt 2>&1',comment=args["name"])
-    job.setall(args["cronline"])
+    job = cron.new(command='runp /home/pi/AnimRec/imgrec.py record:imgwait=5.0,imgnr=100,imgtime=480 >> /home/pi/imglog.txt 2>&1',comment=args["name"])
+    job.setall(timecode)
     enablejob(job)
     cron.write()
     print "\n"+args["name"]+ " cron job created succesfully"
