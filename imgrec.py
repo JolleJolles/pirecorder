@@ -100,8 +100,8 @@ def record(imgwait = 5.0,
     print "=================================================="
     
     # Change type for use with runp
-    imgwait = int(imgwait)
-    imgnr = float(imgnr)
+    imgwait = float(imgwait)
+    imgnr = int(imgnr)
     imgtime = int(imgtime)
             
     # get number of images to record
