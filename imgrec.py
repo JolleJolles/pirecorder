@@ -152,6 +152,3 @@ def record(imgwait = 5.0,
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
-# run recording function
-record()
-
