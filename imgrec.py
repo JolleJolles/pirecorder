@@ -9,7 +9,7 @@
 # Script for automatically recording  #
 # slow framerate videos with the rpi  #
 # Author: J. Jolles                   #
-# Last updated: 27 Nov 2017           #
+# Last updated: 28 Nov 2017           #
 #######################################
 
 # import packages
@@ -20,7 +20,10 @@ from socket import gethostname
 import os
 
 # define recording function
-def record(resolution = (1000, 1000),
+def record(imgwait = 5.0,
+           imgnr = 100
+           imgtime = 480,
+           resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
            iso = 200,
@@ -28,11 +31,10 @@ def record(resolution = (1000, 1000),
            sharpness = 50,
            contrast = 20,
            saturation = -100,
-           quality = 20,
-           wait = 5.0):
+           quality = 20):
     
     """
-        Run automated video recording with the rpi camera
+        Run automated image recording with the rpi camera
         
         Storage location
         ----------
@@ -42,6 +44,20 @@ def record(resolution = (1000, 1000),
         
         Parameters
         ----------
+        imgwait : float, default = 5.0
+            The delay between subsequent images in seconds. When a 
+            delay is provided that is less than shutterspeed + 
+            processingtime "delay" will be automatically set at 0 
+            and images thus taken one after the other.
+        imgnr : integer, default = 100
+            The number of images that should be taken. When this 
+            number is reached the script will automatically terminate.
+            The minimum of imgnr and nr of images based on imgwait and
+            imgtime will be selected.
+        imgtime : integer, default = 10
+            The time in minutes during which images should be taken.
+            The minimum of imgnr and nr of images based on imgwait and
+            imgtime will be selected.
         resolution : tuple, default = (1000, 1000)
             The width and height of the images that will be recorded.
         compensation : int, default = 0
@@ -70,11 +86,6 @@ def record(resolution = (1000, 1000),
         quality : int, default = 20
             Defines the quality of the JPEG encoder as an integer
             ranging from 1 to 100. Defaults to 20.
-        wait : float, default = 5.0
-            The delay between subsequent images in seconds. When a 
-            delay is provided that is less than (shutterspeed + 
-            processing time) delay will be automatically set at 0 
-            and images thus taken continuously.
         
         Output
         -------
@@ -87,6 +98,10 @@ def record(resolution = (1000, 1000),
     print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
+    
+    # get number of images to record
+    totimg = int(imgtime * (60 / imgwait))
+    imgnr = min(imgnr, totimg)
     
     # acquire rpi name
     rpi = gethostname()
@@ -121,9 +136,10 @@ def record(resolution = (1000, 1000),
     # start taking images
     bef = dt.now()
     for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
-        if i == 100:
+        if i == imgnr:
             break
-        delay = wait-(dt.now()-bef).total_seconds()
+        delay = imgwait-(dt.now()-bef).total_seconds()
+        delay = 0 if delay < 0 else delay
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = dt.now()
