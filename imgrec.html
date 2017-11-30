@@ -11891,11 +11891,11 @@ div#notebook {
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
     
     <span class="c1"># set-up automatic filenaming</span>
-<span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
-<span class="n">counter</span> <span class="o">=</span> <span class="s2">&quot;_im{counter:05d}&quot;</span>
-<span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
-<span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span><span class="o">+</span><span class="n">daystamp</span><span class="o">+</span><span class="n">counter</span><span class="o">+</span><span class="n">timestamp</span><span class="o">+</span><span class="n">ftype</span>
+    <span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="s2">&quot;_im{counter:05d}&quot;</span>
+    <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
+    <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span><span class="o">+</span><span class="n">daystamp</span><span class="o">+</span><span class="n">counter</span><span class="o">+</span><span class="n">timestamp</span><span class="o">+</span><span class="n">ftype</span>
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
