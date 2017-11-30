@@ -16,6 +16,14 @@ from ast import literal_eval
 
 # define recording function
 def record(imgwait = 5.0):
+    
+    # set-up automatic filenaming
+    daystamp = "_{timestamp:%Y%m%d}"
+    counter = "_im{counter:05d}"
+    timestamp = "_{timestamp:%H%M%S}"
+    ftype = ".jpg"
+    filename = rpi+daystamp+counter+timestamp+ftype
+
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
     time.sleep(0.1)
