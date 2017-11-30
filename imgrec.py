@@ -22,7 +22,7 @@ import os
 
 # define recording function
 def record(imgwait = 5.0,
-           imgnr = 10,
+           imgnr = 3,
            imgtime = 1,
            resolution = (1000, 1000),
            compensation = 0,
@@ -102,6 +102,7 @@ def record(imgwait = 5.0,
     
     # get number of images to record
     print type(imgtime), type(imgwait)
+    print imgtime, imgwait
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
     
@@ -148,6 +149,4 @@ def record(imgwait = 5.0,
     
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
-
-record()
 
