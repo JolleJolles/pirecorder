@@ -122,7 +122,6 @@ def record(imgwait = 5.0,
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
     filename = rpi+daystamp+counter+timestamp+ftype
-    print "done2"
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
@@ -137,7 +136,6 @@ def record(imgwait = 5.0,
     camera.contrast = contrast
     camera.saturation = saturation
     camera.brightness = brightness
-    print "done3"
     
     # start taking images
     #bef = dt.now()

@@ -6,7 +6,7 @@
 #!/usr/bin/python
 
 import picamera
-import time
+from time import sleep, strftime
 import os
 import socket
 import cPickle
@@ -31,7 +31,7 @@ def record(imgwait = 5.0):
     camera = picamera.PiCamera()
     camera.resolution = (100,100)
     camera.exposure_compensation = 5
-    time.sleep(0.1)
+    sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = 10000
@@ -45,5 +45,8 @@ def record(imgwait = 5.0):
         if i == 4:
             break
         print i
-        time.sleep(imgwait)
+        sleep(imgwait)
+        
+    print "=================================================="
+    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
