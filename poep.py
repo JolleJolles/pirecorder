@@ -17,7 +17,21 @@ from ast import literal_eval
 # define recording function
 def record(imgwait = 5.0):
     
+    print "=================================================="
+    print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
+    print "=================================================="
+    
     imgwait = float(imgwait)
+    imgtime = int(imgtime)
+    imgwait = int(imgwait)
+    
+    # get number of images to record
+    print type(imgtime), type(imgwait)
+    print imgtime, imgwait
+    totimg = int(imgtime * (60 / imgwait))
+    imgnr = min(imgnr, totimg)
+    
+    
     
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"

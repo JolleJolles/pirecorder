@@ -114,7 +114,6 @@ def record(imgwait = 5.0,
     location = server + rpi
     if os.path.exists(location):
         os.chdir(location)
-    print "done1"
     
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
