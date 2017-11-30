@@ -14,35 +14,7 @@
 # import packages
 import argparse
 from crontab import CronTab
-from datetime import datetime as dt
-
-# construct the argument parse and parse the arguments
-# (for using the script from commandline without runp)
-ap = argparse.ArgumentParser()
-ap.add_argument("-w", "--imgwait", type=float, default=5.0,
-        help="The delay between subsequent images in seconds")
-ap.add_argument("-i", "--imgnr", type=int, default=10,
-        help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=int, default=1,
-        help="The duration in minutes during which images\
-              should be taken.")
-ap.add_argument("-c", "--code", type=str, default="0 7 * * *",
-        help="crontab code for executing the code. Default\
-              executes job every day at 07:00")
-ap.add_argument("-n", "--name", type=str, default="molly", 
-        help="name of the crontab")
-ap.add_argument("-e", "--set", default="True", 
-        help="if a job should be enabled or not")
-ap.add_argument("-s", "--show", default="False", 
-        help="if the crontab schedule should be shown")
-args = vars(ap.parse_args())
-imgwait = args["imgwait"]
-imgnr = args["imgnr"]
-imgtime = args["imgtime"]
-taskcode = str(args["code"])
-taskname = str(args["name"])
-taskset = str(args["set"])
-taskshow = str(args["show"])
+import datetime
 
 # define plan function
 def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
@@ -107,7 +79,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
     # define crontab job command
     exe = "python"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
-    fcode = " -w "+str(imgwait)+" -n"+str(imgnr)+" -t "+str(imgtime)
+    fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
     write = " >> /home/pi/imglog.txt 2>&1"
     task = exe+scriptloc+fcode+write
     
@@ -163,13 +135,12 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
 
         # now show last and next job
         for job in cron:
-            sch = job.schedule(date_from=dt.now())
+            sch = job.schedule(date_from=datetime.datetime.now())
             previous = sch.get_prev()
             next = sch.get_next()
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
             print jobname+" - last job: "+str(previous)+"; next job: "+str(next)
     
-
 plan()
 
