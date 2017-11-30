@@ -20,10 +20,24 @@ from socket import gethostname
 import argparse
 import os
 
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-w", "--imgwait", type=float, default=5.0,
+        help="The delay between subsequent images in seconds")
+ap.add_argument("-i", "--imgnr", type=int, default=10,
+        help="The number of images that should be taken. ")
+ap.add_argument("-t", "--imgtime", type=int, default=1,
+        help="The duration in minutes during which images\
+              should be taken.")
+args = vars(ap.parse_args())
+imgwait = args["imgwait"]
+imgnr = args["imgnr"]
+imgtime = args["imgtime"]
+
 # define recording function
-def record(imgwait = 5.0,
-           imgnr = 10,
-           imgtime = 1,
+def record(imgwait = imgwait,
+           imgnr = imgnr,
+           imgtime = imgtime,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -122,32 +136,32 @@ def record(imgwait = 5.0,
     filename = rpi+daystamp+counter+timestamp+ftype
 
     # set-up the camera with the right parameters
-    with PiCamera() as camera:
-        camera.resolution = resolution
-        camera.exposure_compensation = compensation
-        sleep(0.1)
-        camera.exposure_mode = 'off'
-        camera.awb_mode = 'off'
-        camera.shutter_speed = shutterspeed
-        camera.sharpness = sharpness
-        camera.iso = iso
-        camera.contrast = contrast
-        camera.saturation = saturation
-        camera.brightness = brightness
-
-        # start taking images
+    camera = PiCamera()
+    camera.resolution = resolution
+    camera.exposure_compensation = compensation
+    sleep(0.1)
+    camera.exposure_mode = 'off'
+    camera.awb_mode = 'off'
+    camera.shutter_speed = shutterspeed
+    camera.sharpness = sharpness
+    camera.iso = iso
+    camera.contrast = contrast
+    camera.saturation = saturation
+    camera.brightness = brightness
+    
+    # start taking images
+    bef = dt.now()
+    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
+        if i == imgnr:
+            break
+        delay = imgwait-(dt.now()-bef).total_seconds()
+        delay = 0 if delay < 0 else delay
+        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
+        sleep(delay)
         bef = dt.now()
-        for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
-            if i == imgnr:
-                break
-            delay = imgwait-(dt.now()-bef).total_seconds()
-            delay = 0 if delay < 0 else delay
-            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +                   ", sleeping " + str(round(delay,2)) + "s.."
-            sleep(delay)
-            bef = dt.now()
+    
+    print "=================================================="
+    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
-        print "=================================================="
-        print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
-
-#record()
+record()
 
