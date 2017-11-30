@@ -20,24 +20,10 @@ from socket import gethostname
 import argparse
 import os
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-w", "--imgwait", type=float, default=5.0,
-        help="The delay between subsequent images in seconds")
-ap.add_argument("-i", "--imgnr", type=int, default=10,
-        help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=int, default=1,
-        help="The duration in minutes during which images\
-              should be taken.")
-args = vars(ap.parse_args())
-imgwait = args["imgwait"]
-imgnr = args["imgnr"]
-imgtime = args["imgtime"]
-
 # define recording function
-def record(imgwait = imgwait,
-           imgnr = imgnr,
-           imgtime = imgtime,
+def record(imgwait = 5.0,
+           imgnr = 10,
+           imgtime = 1,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -163,5 +149,5 @@ def record(imgwait = imgwait,
         print "=================================================="
         print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
-record()
+#record()
 
