@@ -17,6 +17,8 @@ from ast import literal_eval
 # define recording function
 def record(imgwait = 5.0):
     
+    imgwait = float(imgwait)
+    
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
     counter = "_im{counter:05d}"
