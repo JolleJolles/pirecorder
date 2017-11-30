@@ -19,14 +19,14 @@ from datetime import datetime as dt
 # construct the argument parse and parse the arguments
 # (for using the script from commandline without runp)
 ap = argparse.ArgumentParser()
-ap.add_argument("-t", "--imgwait", type=str, default="0 7 * * *",
+ap.add_argument("-w", "--imgwait", type=str, default=5.0,
         help="The delay between subsequent images in seconds")
-ap.add_argument("-t", "--imgnr", type=str, default="0 7 * * *",
+ap.add_argument("-n", "--imgnr", type=str, default=10,
         help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=str, default="0 7 * * *",
+ap.add_argument("-t", "--imgtime", type=str, default=1,
         help="The duration in minutes during which images\
               should be taken.")
-ap.add_argument("-t", "--taskcode", type=str, default="0 7 * * *",
+ap.add_argument("-c", "--taskcode", type=str, default="0 7 * * *",
         help="crontab code for executing the code. Default\
               executes job every day at 07:00")
 ap.add_argument("-n", "--name", type=str, default="molly", 
@@ -105,9 +105,9 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
     cron = CronTab(user='pi')
 
     # define crontab job command
-    exe = "runp"
+    exe = "python"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
-    fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
+    fcode = " -w "+str(imgwait)+" -n"+str(imgnr)+" -t "+str(imgtime)
     write = " >> /home/pi/imglog.txt 2>&1"
     task = exe+scriptloc+fcode+write
     

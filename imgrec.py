@@ -17,12 +17,28 @@ from picamera import PiCamera
 from time import sleep, strftime
 from datetime import datetime as dt
 from socket import gethostname
+import argparse
 import os
 
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-w", "--imgwait", type=str, default=5.0,
+        help="The delay between subsequent images in seconds")
+ap.add_argument("-n", "--imgnr", type=str, default=10,
+        help="The number of images that should be taken. ")
+ap.add_argument("-t", "--imgtime", type=str, default=1,
+        help="The duration in minutes during which images\
+              should be taken.")
+args = vars(ap.parse_args())
+imgwait = str(args["imgwait"])
+imgnr = str(args["imgnr"])
+imgtime = str(args["imgtime"])
+
+
 # define recording function
-def record(imgwait = 5.0,
-           imgnr = 100,
-           imgtime = 600,
+def record(imgwait = imgwait,
+           imgnr = imgnr,
+           imgtime = imgtime,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -151,31 +167,4 @@ def record(imgwait = 5.0,
     
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
-    
-    
-# define recording function
-def test(imgwait = 5.0):
-
-    camera = PiCamera()
-    sleep(0.1)
-    camera.exposure_mode = 'off'
-    camera.awb_mode = 'off'
-    camera.shutter_speed = 10000
-
-    bef = dt.now()
-    i = 0
-    for img in camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10):
-        i += 1
-        if i == 5:
-            break
-        #delay = imgwait-(dt.now()-bef).total_seconds()
-        #delay = 0 if delay < 0 else delay
-        print img
-
-test()
-
-
-# In[ ]:
-
-
 
