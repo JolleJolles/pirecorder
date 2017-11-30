@@ -30,12 +30,9 @@ ap.add_argument("-t", "--imgtime", type=int, default=1,
         help="The duration in minutes during which images\
               should be taken.")
 args = vars(ap.parse_args())
-imgwait = str(args["imgwait"])
-imgnr = str(args["imgnr"])
-imgtime = str(args["imgtime"])
-
-print imgwait
-
+imgwait = args["imgwait"]
+imgnr = args["imgnr"]
+imgtime = args["imgtime"]
 
 # define recording function
 def record(imgwait = imgwait,
@@ -113,13 +110,12 @@ def record(imgwait = imgwait,
         
         """
     
-    print imgwait
-    
     print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
     # get number of images to record
+    print type(imgtime), type(imgwait)
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
     
