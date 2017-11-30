@@ -119,11 +119,6 @@ def record(imgwait = imgwait,
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
-    # Change type for use with runp
-    imgwait = float(imgwait)
-    #imgnr = int(imgnr)
-    #imgtime = int(imgtime)
-            
     # get number of images to record
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
