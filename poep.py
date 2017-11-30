@@ -22,7 +22,7 @@ def record(imgwait = 5.0):
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     for i, img in enumerate(camera.capture_continuous("{timestamp:%Y%m%d}", format="jpeg")):
-        if i == imgnr:
+        if i == 4:
             break
         print i
         sleep(2)
