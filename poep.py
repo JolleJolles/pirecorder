@@ -15,7 +15,18 @@ import subprocess
 from ast import literal_eval
 
 # define recording function
-def record(imgwait = 5.0, imgtime = 10, imgnr=3):
+def record(imgwait = 5.0,
+           imgnr = 3,
+           imgtime = 1,
+           resolution = (1000, 1000),
+           compensation = 0,
+           shutterspeed = 10000,
+           iso = 200,
+           brightness = 40,
+           sharpness = 50,
+           contrast = 20,
+           saturation = -100,
+           quality = 20):
     
     print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
@@ -43,17 +54,17 @@ def record(imgwait = 5.0, imgtime = 10, imgnr=3):
 
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
-    camera.resolution = (100,100)
-    camera.exposure_compensation = 5
+    camera.resolution = resolution
+    camera.exposure_compensation = compensation
     sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
-    camera.shutter_speed = 10000
-    camera.sharpness = 20
-    camera.iso = 400
-    camera.contrast = 50
-    camera.saturation = -100
-    camera.brightness = 50
+    camera.shutter_speed = shutterspeed
+    camera.sharpness = sharpness
+    camera.iso = iso
+    camera.contrast = contrast
+    camera.saturation = saturation
+    camera.brightness = brightness
 
     for i, img in enumerate(camera.capture_continuous("{timestamp:%Y%m%d}", format="jpeg")):
         if i == imgnr:
