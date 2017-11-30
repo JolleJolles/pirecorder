@@ -154,9 +154,7 @@ def record(imgwait = 5.0,
     
     
 # define recording function
-def test(imgwait = 5.0,
-           imgnr = 100,
-           imgtime = 600):
+def test(imgwait = 5.0):
 
     camera = PiCamera()
     sleep(0.1)
@@ -165,8 +163,8 @@ def test(imgwait = 5.0,
     camera.shutter_speed = 10000
 
     bef = dt.now()
-    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
-        if i == imgnr:
+    for i, img in enumerate(camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10)):
+        if i == 5:
             break
         delay = imgwait-(dt.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
