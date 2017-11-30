@@ -19,11 +19,11 @@ from datetime import datetime as dt
 # construct the argument parse and parse the arguments
 # (for using the script from commandline without runp)
 ap = argparse.ArgumentParser()
-ap.add_argument("-w", "--imgwait", type=str, default=5.0,
+ap.add_argument("-w", "--imgwait", type=float, default=5.0,
         help="The delay between subsequent images in seconds")
-ap.add_argument("-n", "--imgnr", type=str, default=10,
+ap.add_argument("-n", "--imgnr", type=int, default=10,
         help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=str, default=1,
+ap.add_argument("-t", "--imgtime", type=int, default=1,
         help="The duration in minutes during which images\
               should be taken.")
 ap.add_argument("-c", "--taskcode", type=str, default="0 7 * * *",
