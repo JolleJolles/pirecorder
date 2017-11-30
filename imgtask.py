@@ -133,7 +133,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
         job.setall(timecode)
         enablejob(job)
         cron.write()
-        print "\n"+timename+" cron job modified successfully"
+        print "\n"+taskname+" cron job modified successfully"
 
     # check if already jobs exist; if not create job
     if len(cron) == 0:
@@ -144,7 +144,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
         for i, job in enumerate(cron):
 
             # a job with specific name exists, so modify
-            if job.comment == timename:
+            if job.comment == taskname:
                 modifyjob()
                 break
 
