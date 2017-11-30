@@ -13,31 +13,17 @@
 #######################################
 
 # import packages
-from picamera import PiCamera
+import picamera
 from time import sleep, strftime
 from datetime import datetime as dt
 from socket import gethostname
 import argparse
 import os
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-w", "--imgwait", type=float, default=5.0,
-        help="The delay between subsequent images in seconds")
-ap.add_argument("-i", "--imgnr", type=int, default=10,
-        help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=int, default=1,
-        help="The duration in minutes during which images\
-              should be taken.")
-args = vars(ap.parse_args())
-imgwait = args["imgwait"]
-imgnr = args["imgnr"]
-imgtime = args["imgtime"]
-
 # define recording function
-def record(imgwait = imgwait,
-           imgnr = imgnr,
-           imgtime = imgtime,
+def record(imgwait = 5.0,
+           imgnr = 10,
+           imgtime = 1,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 10000,
@@ -136,7 +122,7 @@ def record(imgwait = imgwait,
     filename = rpi+daystamp+counter+timestamp+ftype
 
     # set-up the camera with the right parameters
-    camera = PiCamera()
+    camera = picamera.PiCamera()
     camera.resolution = resolution
     camera.exposure_compensation = compensation
     sleep(0.1)
