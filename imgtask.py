@@ -26,7 +26,7 @@ ap.add_argument("-i", "--imgnr", type=int, default=10,
 ap.add_argument("-t", "--imgtime", type=int, default=1,
         help="The duration in minutes during which images\
               should be taken.")
-ap.add_argument("-c", "--taskcode", type=str, default="0 7 * * *",
+ap.add_argument("-c", "--code", type=str, default="0 7 * * *",
         help="crontab code for executing the code. Default\
               executes job every day at 07:00")
 ap.add_argument("-n", "--name", type=str, default="molly", 
