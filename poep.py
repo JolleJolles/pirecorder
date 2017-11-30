@@ -67,8 +67,8 @@ def record(imgwait = 5.0,
     camera.brightness = brightness
 
     # start taking images
-    #bef = dt.now()
-    #print bef
+    bef = dt.now()
+    print bef
     for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
         if i == imgnr:
             break
@@ -76,8 +76,8 @@ def record(imgwait = 5.0,
         #delay = 0 if delay < 0 else delay
         #print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
         #      ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(3)
-        #bef = dt.now()
+        sleep(imgwait)
+        bef = dt.now() 
         
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
