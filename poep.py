@@ -22,7 +22,7 @@ def run(single = "no"):
     time.sleep(1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
-    print(time.strftime("%H:%M:%S")+" - Recording video "+filename)
+    print(time.strftime("%H:%M:%S")+" - Recording video")
     camera.start_recording("sint.h264", quality = 10)
     camera.wait_recording(5)
     camera.stop_recording()
