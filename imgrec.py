@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 #!/usr/bin/python
 
@@ -22,17 +22,19 @@ import os
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-w", "--imgwait", type=str, default=5.0,
+ap.add_argument("-w", "--imgwait", type=float, default=5.0,
         help="The delay between subsequent images in seconds")
-ap.add_argument("-n", "--imgnr", type=str, default=10,
+ap.add_argument("-n", "--imgnr", type=int, default=10,
         help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=str, default=1,
+ap.add_argument("-t", "--imgtime", type=int, default=1,
         help="The duration in minutes during which images\
               should be taken.")
 args = vars(ap.parse_args())
 imgwait = str(args["imgwait"])
 imgnr = str(args["imgnr"])
 imgtime = str(args["imgtime"])
+
+print imgwait
 
 
 # define recording function
@@ -111,6 +113,8 @@ def record(imgwait = imgwait,
         
         """
     
+    print imgwait
+    
     print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
@@ -167,4 +171,6 @@ def record(imgwait = imgwait,
     
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+
+record()
 

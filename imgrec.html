@@ -11775,7 +11775,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="ch">#!/usr/bin/python</span>
@@ -11797,17 +11797,19 @@ div#notebook {
 
 <span class="c1"># construct the argument parse and parse the arguments</span>
 <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
-<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgwait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgwait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The delay between subsequent images in seconds&quot;</span><span class="p">)</span>
-<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgnr&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgnr&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The number of images that should be taken. &quot;</span><span class="p">)</span>
-<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgtime&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgtime&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The duration in minutes during which images</span><span class="se">\</span>
 <span class="s2">              should be taken.&quot;</span><span class="p">)</span>
 <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
 <span class="n">imgwait</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgwait&quot;</span><span class="p">])</span>
 <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgnr&quot;</span><span class="p">])</span>
 <span class="n">imgtime</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgtime&quot;</span><span class="p">])</span>
+
+<span class="k">print</span> <span class="n">imgwait</span>
 
 
 <span class="c1"># define recording function</span>
@@ -11886,6 +11888,8 @@ div#notebook {
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
     
+    <span class="k">print</span> <span class="n">imgwait</span>
+    
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec started: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
@@ -11943,34 +11947,11 @@ div#notebook {
     
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec stopped: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>
+
+<span class="n">record</span><span class="p">()</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt"></div>
-
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">ImportError</span>                               Traceback (most recent call last)
-<span class="ansi-green-fg">&lt;ipython-input-1-c8170bb81f04&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-intense-fg ansi-bold">      9</span> 
-<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-red-fg"># import packages</span>
-<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> picamera <span class="ansi-green-fg">import</span> PiCamera
-<span class="ansi-green-intense-fg ansi-bold">     12</span> <span class="ansi-green-fg">from</span> time <span class="ansi-green-fg">import</span> sleep<span class="ansi-blue-fg">,</span> strftime
-<span class="ansi-green-intense-fg ansi-bold">     13</span> <span class="ansi-green-fg">from</span> datetime <span class="ansi-green-fg">import</span> datetime <span class="ansi-green-fg">as</span> dt
-
-<span class="ansi-red-fg">ImportError</span>: No module named picamera</pre>
-</div>
-</div>
-
 </div>
 </div>
 
