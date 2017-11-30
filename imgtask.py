@@ -16,6 +16,34 @@ import argparse
 from crontab import CronTab
 from datetime import datetime as dt
 
+# construct the argument parse and parse the arguments
+# (for using the script from commandline without runp)
+ap = argparse.ArgumentParser()
+ap.add_argument("-w", "--imgwait", type=float, default=5.0,
+        help="The delay between subsequent images in seconds")
+ap.add_argument("-i", "--imgnr", type=int, default=10,
+        help="The number of images that should be taken. ")
+ap.add_argument("-t", "--imgtime", type=int, default=1,
+        help="The duration in minutes during which images\
+              should be taken.")
+ap.add_argument("-c", "--taskcode", type=str, default="0 7 * * *",
+        help="crontab code for executing the code. Default\
+              executes job every day at 07:00")
+ap.add_argument("-n", "--name", type=str, default="molly", 
+        help="name of the crontab")
+ap.add_argument("-e", "--set", default="True", 
+        help="if a job should be enabled or not")
+ap.add_argument("-s", "--show", default="False", 
+        help="if the crontab schedule should be shown")
+args = vars(ap.parse_args())
+imgwait = args["imgwait"]
+imgnr = args["imgnr"]
+imgtime = args["imgtime"]
+taskcode = str(args["code"])
+taskname = str(args["name"])
+taskset = str(args["set"])
+taskshow = str(args["show"])
+
 # define plan function
 def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
          taskcode="0 7 * * *",taskset="True",taskshow="False"):
