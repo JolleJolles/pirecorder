@@ -11865,7 +11865,7 @@ div#notebook {
 <span class="sd">    taskset : str, default = &quot;True&quot;</span>
 <span class="sd">        If the timing task should be enabled (&quot;True&quot;) or disabled</span>
 <span class="sd">        (&quot;False&quot;)</span>
-<span class="sd">    timeshow : str, default = &quot;False&quot;</span>
+<span class="sd">    taskshow : str, default = &quot;False&quot;</span>
 <span class="sd">        If the different timed tasks should be shown (&quot;True&quot;) or</span>
 <span class="sd">        not (&quot;False&quot;)</span>
 <span class="sd">    </span>
@@ -11888,10 +11888,10 @@ div#notebook {
     
     <span class="c1"># create job functions</span>
     <span class="k">def</span> <span class="nf">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">timeenable</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">taskset</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
             <span class="n">job</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
             <span class="k">print</span> <span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; enabled&quot;</span>
-        <span class="k">elif</span> <span class="n">timeenable</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">taskset</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
             <span class="n">job</span><span class="o">.</span><span class="n">enable</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
             <span class="k">print</span> <span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; disabled&quot;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -11905,7 +11905,7 @@ div#notebook {
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
 
     <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
-        <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">timecode</span><span class="p">)</span>
+        <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
         <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
         <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; cron job modified successfully&quot;</span>
@@ -11928,7 +11928,7 @@ div#notebook {
                 <span class="n">createjob</span><span class="p">()</span>
 
     <span class="c1"># print crontab schedule</span>
-    <span class="k">if</span> <span class="n">timeshow</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">taskshow</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Current task schedule:&quot;</span>
 
         <span class="c1"># get length of maximum crontab name</span>

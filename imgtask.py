@@ -90,7 +90,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
     taskset : str, default = "True"
         If the timing task should be enabled ("True") or disabled
         ("False")
-    timeshow : str, default = "False"
+    taskshow : str, default = "False"
         If the different timed tasks should be shown ("True") or
         not ("False")
     
@@ -113,10 +113,10 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
     
     # create job functions
     def enablejob(job):
-        if timeenable == "True":
+        if taskset == "True":
             job.enable()
             print taskname+" enabled"
-        elif timeenable == "False":
+        elif taskset == "False":
             job.enable(False)
             print taskname+" disabled"
         else:
@@ -130,7 +130,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
         print "\n"+taskname+ " cron job created succesfully"
 
     def modifyjob():
-        job.setall(timecode)
+        job.setall(taskcode)
         enablejob(job)
         cron.write()
         print "\n"+taskname+" cron job modified successfully"
@@ -153,7 +153,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
                 createjob()
 
     # print crontab schedule
-    if timeshow == "True":
+    if taskshow == "True":
         print "\nCurrent task schedule:"
 
         # get length of maximum crontab name
