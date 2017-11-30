@@ -22,6 +22,7 @@ def record(imgwait = 5.0):
     counter = "_im{counter:05d}"
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
+    rpi = "jolpi10"
     filename = rpi+daystamp+counter+timestamp+ftype
 
     # set-up the camera with the right parameters
