@@ -136,32 +136,32 @@ def record(imgwait = imgwait,
     filename = rpi+daystamp+counter+timestamp+ftype
 
     # set-up the camera with the right parameters
-    camera = PiCamera()
-    camera.resolution = resolution
-    camera.exposure_compensation = compensation
-    sleep(0.1)
-    camera.exposure_mode = 'off'
-    camera.awb_mode = 'off'
-    camera.shutter_speed = shutterspeed
-    camera.sharpness = sharpness
-    camera.iso = iso
-    camera.contrast = contrast
-    camera.saturation = saturation
-    camera.brightness = brightness
-    
-    # start taking images
-    bef = dt.now()
-    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
-        if i == imgnr:
-            break
-        delay = imgwait-(dt.now()-bef).total_seconds()
-        delay = 0 if delay < 0 else delay
-        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(delay)
+    with PiCamera() as camera:
+        camera.resolution = resolution
+        camera.exposure_compensation = compensation
+        sleep(0.1)
+        camera.exposure_mode = 'off'
+        camera.awb_mode = 'off'
+        camera.shutter_speed = shutterspeed
+        camera.sharpness = sharpness
+        camera.iso = iso
+        camera.contrast = contrast
+        camera.saturation = saturation
+        camera.brightness = brightness
+
+        # start taking images
         bef = dt.now()
-    
-    print "=================================================="
-    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+        for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
+            if i == imgnr:
+                break
+            delay = imgwait-(dt.now()-bef).total_seconds()
+            delay = 0 if delay < 0 else delay
+            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +                   ", sleeping " + str(round(delay,2)) + "s.."
+            sleep(delay)
+            bef = dt.now()
+
+        print "=================================================="
+        print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
 record()
 
