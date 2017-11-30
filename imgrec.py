@@ -14,7 +14,7 @@
 
 # import packages
 import picamera
-from time import sleep, strftime
+import time
 from datetime import datetime as dt
 from socket import gethostname
 import argparse
@@ -97,7 +97,7 @@ def record(imgwait = 5.0,
         """
     
     print "=================================================="
-    print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
+    print time.strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
     # get number of images to record
@@ -126,7 +126,7 @@ def record(imgwait = 5.0,
     camera = picamera.PiCamera()
     camera.resolution = resolution
     camera.exposure_compensation = compensation
-    sleep(0.1)
+    time.sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = shutterspeed
@@ -144,11 +144,11 @@ def record(imgwait = 5.0,
             break
         #delay = imgwait-(dt.now()-bef).total_seconds()
         #delay = 0 if delay < 0 else delay
-        #print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
+        #print time.strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
         #      ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(3)
+        time.sleep(3)
         #bef = dt.now()
     
     print "=================================================="
-    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+    print time.strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
