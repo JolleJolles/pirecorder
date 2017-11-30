@@ -15,7 +15,7 @@ import subprocess
 from ast import literal_eval
 
 # define recording function
-def record(imgwait = 5.0):
+def record(imgwait = 5.0, imgtime = 10, imgnr=3):
     
     print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
@@ -23,7 +23,7 @@ def record(imgwait = 5.0):
     
     imgwait = float(imgwait)
     imgtime = int(imgtime)
-    imgwait = int(imgwait)
+    imgnr = int(imgnr)
     
     # get number of images to record
     print type(imgtime), type(imgwait)
@@ -56,7 +56,7 @@ def record(imgwait = 5.0):
     camera.brightness = 50
 
     for i, img in enumerate(camera.capture_continuous("{timestamp:%Y%m%d}", format="jpeg")):
-        if i == 4:
+        if i == imgnr:
             break
         print i
         sleep(imgwait)
