@@ -27,12 +27,21 @@ def record(imgwait = 5.0):
 
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
-    time.sleep(0.1)
+    camera.resolution = (100,100)
+    camera.exposure_compensation = 5
+    sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
+    camera.shutter_speed = 10000
+    camera.sharpness = 20
+    camera.iso = 400
+    camera.contrast = 50
+    camera.saturation = -100
+    camera.brightness = 50
+
     for i, img in enumerate(camera.capture_continuous("{timestamp:%Y%m%d}", format="jpeg")):
         if i == 4:
             break
         print i
-        time.sleep(2)
+        time.sleep(imgwait)
 
