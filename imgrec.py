@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 #!/usr/bin/python
 
@@ -171,4 +171,11 @@ def test(imgwait = 5.0):
         #delay = imgwait-(dt.now()-bef).total_seconds()
         #delay = 0 if delay < 0 else delay
         print img
+
+test()
+
+
+# In[ ]:
+
+
 

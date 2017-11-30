@@ -11775,7 +11775,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="ch">#!/usr/bin/python</span>
@@ -11939,13 +11939,54 @@ div#notebook {
     <span class="n">camera</span><span class="o">.</span><span class="n">shutter_speed</span> <span class="o">=</span> <span class="mi">10000</span>
 
     <span class="n">bef</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="s2">&quot;img{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="s2">&quot;img{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
             <span class="k">break</span>
         <span class="c1">#delay = imgwait-(dt.now()-bef).total_seconds()</span>
         <span class="c1">#delay = 0 if delay &lt; 0 else delay</span>
         <span class="k">print</span> <span class="n">img</span>
+
+<span class="n">test</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt"></div>
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">ImportError</span>                               Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-1-c8170bb81f04&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span> 
+<span class="ansi-green-intense-fg ansi-bold">     10</span> <span class="ansi-red-fg"># import packages</span>
+<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> picamera <span class="ansi-green-fg">import</span> PiCamera
+<span class="ansi-green-intense-fg ansi-bold">     12</span> <span class="ansi-green-fg">from</span> time <span class="ansi-green-fg">import</span> sleep<span class="ansi-blue-fg">,</span> strftime
+<span class="ansi-green-intense-fg ansi-bold">     13</span> <span class="ansi-green-fg">from</span> datetime <span class="ansi-green-fg">import</span> datetime <span class="ansi-green-fg">as</span> dt
+
+<span class="ansi-red-fg">ImportError</span>: No module named picamera</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
 </pre></div>
 
 </div>
