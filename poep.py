@@ -5,7 +5,7 @@
 
 #!/usr/bin/python
 
-import picamera
+from picamera import PiCamera
 import time
 import os
 import socket
