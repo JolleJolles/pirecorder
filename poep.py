@@ -18,7 +18,7 @@ from ast import literal_eval
 def record(imgwait = 5.0):
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
-    sleep(0.1)
+    time.sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     for i, img in enumerate(camera.capture_continuous("{timestamp:%Y%m%d}", format="jpeg")):
