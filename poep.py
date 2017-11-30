@@ -5,7 +5,7 @@
 
 #!/usr/bin/python
 
-from picamera import PiCamera
+import picamera
 import time
 import os
 import socket
@@ -17,7 +17,7 @@ from ast import literal_eval
 # define recording function
 def record(imgwait = 5.0):
     # set-up the camera with the right parameters
-    camera = PiCamera()
+    camera = picamera.PiCamera()
     sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
