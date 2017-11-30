@@ -163,7 +163,8 @@ def test(imgwait = 5.0):
     camera.shutter_speed = 10000
 
     bef = dt.now()
-    i = 0for img in camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10):
+    i = 0
+    for img in camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10):
         i += 1
         if i == 5:
             break
