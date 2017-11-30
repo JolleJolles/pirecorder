@@ -29,7 +29,7 @@ def record(imgwait = 5.0):
     camera = picamera.PiCamera()
     camera.resolution = (100,100)
     camera.exposure_compensation = 5
-    sleep(0.1)
+    time.sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = 10000
