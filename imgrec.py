@@ -14,7 +14,7 @@
 
 # import packages
 import picamera
-import time
+from time import sleep, strftime
 from datetime import datetime as dt
 from socket import gethostname
 import argparse
@@ -97,7 +97,7 @@ def record(imgwait = 5.0,
         """
     
     print "=================================================="
-    print time.strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
+    print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
     # get number of images to record
@@ -114,6 +114,7 @@ def record(imgwait = 5.0,
     location = server + rpi
     if os.path.exists(location):
         os.chdir(location)
+    print "done1"
     
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
@@ -121,12 +122,13 @@ def record(imgwait = 5.0,
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
     filename = rpi+daystamp+counter+timestamp+ftype
-
+    print "done2"
+    
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
     camera.resolution = resolution
     camera.exposure_compensation = compensation
-    time.sleep(0.1)
+    sleep(0.1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = shutterspeed
@@ -135,6 +137,7 @@ def record(imgwait = 5.0,
     camera.contrast = contrast
     camera.saturation = saturation
     camera.brightness = brightness
+    print "done3"
     
     # start taking images
     #bef = dt.now()
@@ -144,11 +147,11 @@ def record(imgwait = 5.0,
             break
         #delay = imgwait-(dt.now()-bef).total_seconds()
         #delay = 0 if delay < 0 else delay
-        #print time.strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
+        #print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
         #      ", sleeping " + str(round(delay,2)) + "s.."
-        time.sleep(3)
+        sleep(3)
         #bef = dt.now()
     
     print "=================================================="
-    print time.strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
 
