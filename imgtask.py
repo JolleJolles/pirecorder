@@ -3,7 +3,7 @@
 
 # In[ ]:
 
-#!/usr/bin/python
+# !/usr/bin/python
 
 #######################################
 # Script for planning recording task  #
@@ -169,4 +169,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
             print jobname+" - last job: "+str(previous)+"; next job: "+str(next)
+    
+
+plan()
 
