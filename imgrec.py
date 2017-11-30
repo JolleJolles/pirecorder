@@ -168,7 +168,7 @@ def test(imgwait = 5.0):
             break
         delay = imgwait-(dt.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
-        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
+        print strftime("[%H:%M:%S][") + img + ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = dt.now()
 
