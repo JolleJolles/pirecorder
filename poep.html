@@ -11788,7 +11788,7 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="c1"># define recording function</span>
 <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
@@ -11843,7 +11843,7 @@ div#notebook {
     <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span>
 
     <span class="c1"># start taking images</span>
-    <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     <span class="k">print</span> <span class="n">bef</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">imgnr</span><span class="p">:</span>
@@ -11853,7 +11853,7 @@ div#notebook {
         <span class="c1">#print strftime(&quot;[%H:%M:%S][&quot;) + rpi + &quot;] - captured &quot; + img + \</span>
         <span class="c1">#      &quot;, sleeping &quot; + str(round(delay,2)) + &quot;s..&quot;</span>
         <span class="n">sleep</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span>
-        <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> 
+        <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> 
         
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec stopped: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>

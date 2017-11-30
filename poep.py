@@ -13,7 +13,7 @@ import cPickle
 from decimal import Decimal
 import subprocess
 from ast import literal_eval
-from datetime import datetime
+import datetime
 
 # define recording function
 def record(imgwait = 5.0,
@@ -68,7 +68,7 @@ def record(imgwait = 5.0,
     camera.brightness = brightness
 
     # start taking images
-    bef = datetime.now()
+    bef = datetime.datetime.now()
     print bef
     for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
         if i == imgnr:
@@ -78,7 +78,7 @@ def record(imgwait = 5.0,
         #print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + \
         #      ", sleeping " + str(round(delay,2)) + "s.."
         sleep(imgwait)
-        bef = datetime.now() 
+        bef = datetime.datetime.now() 
         
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
