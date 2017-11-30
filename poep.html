@@ -11790,7 +11790,18 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 
 <span class="c1"># define recording function</span>
-<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">imgnr</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
+           <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+           <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+           <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+           <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+           <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+           <span class="n">brightness</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
+           <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+           <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
     
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec started: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>
@@ -11818,17 +11829,17 @@ div#notebook {
 
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">exposure_compensation</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">exposure_compensation</span> <span class="o">=</span> <span class="n">compensation</span>
     <span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">exposure_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">awb_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">shutter_speed</span> <span class="o">=</span> <span class="mi">10000</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">sharpness</span> <span class="o">=</span> <span class="mi">20</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">iso</span> <span class="o">=</span> <span class="mi">400</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">contrast</span> <span class="o">=</span> <span class="mi">50</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">shutter_speed</span> <span class="o">=</span> <span class="n">shutterspeed</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">sharpness</span> <span class="o">=</span> <span class="n">sharpness</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">iso</span> <span class="o">=</span> <span class="n">iso</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">contrast</span> <span class="o">=</span> <span class="n">contrast</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">saturation</span> <span class="o">=</span> <span class="n">saturation</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="s2">&quot;{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">imgnr</span><span class="p">:</span>
