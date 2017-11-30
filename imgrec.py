@@ -147,7 +147,7 @@ def record(imgwait = 5.0,
         delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(3)
+        sleep(delay)
         bef = datetime.datetime.now()
     
     print "=================================================="
