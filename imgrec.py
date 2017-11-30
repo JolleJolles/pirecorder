@@ -151,4 +151,26 @@ def record(imgwait = 5.0,
     
     print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+    
+    
+# define recording function
+def test(imgwait = 5.0,
+           imgnr = 100,
+           imgtime = 600):
+
+    camera = PiCamera()
+    sleep(0.1)
+    camera.exposure_mode = 'off'
+    camera.awb_mode = 'off'
+    camera.shutter_speed = 10000
+
+    bef = dt.now()
+    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
+        if i == imgnr:
+            break
+        delay = imgwait-(dt.now()-bef).total_seconds()
+        delay = 0 if delay < 0 else delay
+        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
+        sleep(delay)
+        bef = dt.now()
 
