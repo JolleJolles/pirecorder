@@ -13,6 +13,7 @@ import cPickle
 from decimal import Decimal
 import subprocess
 from ast import literal_eval
+from datetime import datetime as dt
 
 # define recording function
 def record(imgwait = 5.0,
