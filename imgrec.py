@@ -105,6 +105,10 @@ def record(imgwait = 5.0,
     imgnr = int(imgnr)
     imgtime = int(imgtime)
     
+    # when imgwait is close to zero, change to mininum
+    # value that roughly equals time to take image
+    imgwait = 0.3 if imgwait < 0.3 else imgwait
+
     # get number of images to record
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)

@@ -11880,6 +11880,10 @@ div#notebook {
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span>
     <span class="n">imgtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
     
+    <span class="c1"># when imgwait is close to zero, change to mininum</span>
+    <span class="c1"># value that roughly equals time to take image</span>
+    <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="k">if</span> <span class="n">imgwait</span> <span class="o">&lt;</span> <span class="mf">0.3</span> <span class="k">else</span> <span class="n">imgwait</span>
+
     <span class="c1"># get number of images to record</span>
     <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">))</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
