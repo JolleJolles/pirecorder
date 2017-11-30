@@ -25,5 +25,5 @@ def record(imgwait = 5.0):
         if i == 4:
             break
         print i
-        sleep(2)
+        time.sleep(2)
 
