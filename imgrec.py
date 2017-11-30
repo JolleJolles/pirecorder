@@ -163,12 +163,11 @@ def test(imgwait = 5.0):
     camera.shutter_speed = 10000
 
     bef = dt.now()
-    for i, img in enumerate(camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10)):
+    i = 0for img in camera.capture_continuous("img{timestamp:%Y%m%d}", format="jpeg", quality=10):
+        i += 1
         if i == 5:
             break
-        delay = imgwait-(dt.now()-bef).total_seconds()
-        delay = 0 if delay < 0 else delay
-        print strftime("[%H:%M:%S][") + img + ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(delay)
-        bef = dt.now()
+        #delay = imgwait-(dt.now()-bef).total_seconds()
+        #delay = 0 if delay < 0 else delay
+        print img
 
