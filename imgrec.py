@@ -24,7 +24,7 @@ import os
 ap = argparse.ArgumentParser()
 ap.add_argument("-w", "--imgwait", type=float, default=5.0,
         help="The delay between subsequent images in seconds")
-ap.add_argument("-n", "--imgnr", type=int, default=10,
+ap.add_argument("-i", "--imgnr", type=int, default=10,
         help="The number of images that should be taken. ")
 ap.add_argument("-t", "--imgtime", type=int, default=1,
         help="The duration in minutes during which images\
