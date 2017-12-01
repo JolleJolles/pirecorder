@@ -17,7 +17,7 @@ from crontab import CronTab
 import datetime
 
 # define plan function
-def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
+def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
          taskcode="0 7 * * *",taskset="True",taskshow="False"):
 
     """
@@ -81,7 +81,8 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
     scriptloc = " /home/pi/AnimRec/imgrec.py"
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
     write = " >> /home/pi/imglog.txt 2>&1"
-    task = exe+scriptloc+fcode+write
+    taskcommand = exe+scriptloc+fcode+write
+    print taskcommand
     
     # create job functions
     def enablejob(job):
@@ -95,7 +96,7 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
             print "Please provide 'True' or 'False' for parameter enable"
 
     def createjob():
-        job = cron.new(command=task,comment=taskname)
+        job = cron.new(command=taskcommand,comment=taskname)
         job.setall(taskcode)
         enablejob(job)
         cron.write()
@@ -141,6 +142,4 @@ def plan(imgwait=5.0,imgnr=100,imgtime=480,taskname="molly",
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
             print jobname+" - last job: "+str(previous)+"; next job: "+str(next)
-    
-plan()
 
