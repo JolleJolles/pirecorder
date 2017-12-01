@@ -96,7 +96,6 @@ def record(imgwait = 5.0,
         
         """
     
-    print "=================================================="
     print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
     
@@ -121,7 +120,6 @@ def record(imgwait = 5.0,
     location = server + rpi
     if os.path.exists(location):
         os.chdir(location)
-    print os.getcwd()
     
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
@@ -155,8 +153,8 @@ def record(imgwait = 5.0,
         sleep(delay)
         bef = datetime.datetime.now()
     
-    print "=================================================="
     print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
+    print "=================================================="
 
 record()
 

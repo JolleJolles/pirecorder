@@ -11871,7 +11871,6 @@ div#notebook {
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
     
-    <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec started: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>
     <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     
@@ -11896,7 +11895,6 @@ div#notebook {
     <span class="n">location</span> <span class="o">=</span> <span class="n">server</span> <span class="o">+</span> <span class="n">rpi</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
     
     <span class="c1"># set-up automatic filenaming</span>
     <span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
@@ -11931,8 +11929,8 @@ div#notebook {
         <span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
         <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
     
-    <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;imgrec stopped: Date: %y/%m/</span><span class="si">%d</span><span class="s2">; Time: %H:%M:%S&quot;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
 
 <span class="n">record</span><span class="p">()</span>
 </pre></div>
