@@ -168,7 +168,6 @@ def record(imgwait = imgwait,
         sleep(delay)
         bef = datetime.datetime.now()
     
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped"
     print "==================================================\n"
 
 record()
