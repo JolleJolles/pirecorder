@@ -60,5 +60,16 @@ Download the free VNC viewer software [here](https://www.realvnc.com/en/connect/
 To see the rpi camera stream you will need to connect with VNC viewer. Then open a terminal window on the desktop and type in ```raspistill -t 0 -k -p 100,100,600,600``` and press enter. You will now see what the rpi camera seems live, which is helpful for aligning the camera and tank for example. To exit press ```ctrl+c```.
 
 #### Set-up image recording
+Setting-up image recording is pretty straightforward. Make sure you are connected to the rpi, either via SSH or VNC viewer, and have a terminal window. Then to set the recording script type in ```runp /AnimRec/imgtask.py plan```. Without entering anything else it will use the standard settings. To see what these are and what parameters can be set type in ```runp AnimRec/imgtask.py -d plan```. This will show an overview of the different parameters (imgwait, imgnr, imgtime etc), what default value they have, and a brief explanation.
 
+So when you run the imgtask script without entering else it will schedule image recording to start at 7AM every day until forever (under the schedule name *molly*) where a total of 100 images are taken with 5 seconds delay between them. Both imagetime and imgnr can be provided. The script will select the minimum of those based on the imgdelay. Now to set custom parameters, simply add these after a colon after the main command, making sure to have no spaces between subsequent parameters. 
+
+An example. Let's say you want to take images with 17.5s delay for a total of 6 hours. This means imgwait=17.5 and imgtime=6*60. As the script automatically takes the minimum of imgtime and imgnr, also the latter needs to be set to some high value. You want to use the standard schedule and show the task. The code you will need to enter in terminal will therefore be:
+``` runp AnimRec/imgtask.py plan:imgwait=17.5,imgnr=999999,imgtime=360,taskshow=True```
+
+The taskcode command is to set the specific schedule of the recording script. This is based on CRON scheduling. It is a nice and simple way to provide any possible schedule, although a bit more difficult to use when wanting very specific schedules. [This](http://www.nncron.ru/help/EN/working/cron-format.htm) is a great place to learn more about this format. To see if your taskcode does what you want you can try it out on [this website](http://cron.schlitt.info).
+
+A scheduling example. Say you additionally want to change the schedule to start the recording script at 22:00 on every day of the week only and continuously throughout the year. The first character in the taskcode is minutes, so that should be `0`. The second character is hour so that should be `22`. The third character is day of the month so that should be `*`. The fourth is month so that should also be `*`. The fifth is day of the week so that should be `1-5`. So the code you will have to add to the command above is: ```,"0 22 * * 1-5```.
+
+A log of all recording is stored in the home folder on each rpi in the file *imglog.txt* with details of the exact time and name of each image.
 
