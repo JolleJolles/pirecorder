@@ -82,7 +82,6 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
     write = " >> /home/pi/imglog.txt 2>&1"
     taskcommand = exe+scriptloc+fcode+write
-    print taskcommand
     
     # create job functions
     def enablejob(job):
@@ -103,6 +102,8 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
         print "\n"+taskname+ " cron job created succesfully"
 
     def modifyjob():
+        if job.command != taskcommand:
+            job.command = taskcommand
         job.setall(taskcode)
         enablejob(job)
         cron.write()

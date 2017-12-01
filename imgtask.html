@@ -11857,7 +11857,6 @@ div#notebook {
     <span class="n">fcode</span> <span class="o">=</span> <span class="s2">&quot; record:imgwait=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgnr=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgtime=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
     <span class="n">write</span> <span class="o">=</span> <span class="s2">&quot; &gt;&gt; /home/pi/imglog.txt 2&gt;&amp;1&quot;</span>
     <span class="n">taskcommand</span> <span class="o">=</span> <span class="n">exe</span><span class="o">+</span><span class="n">scriptloc</span><span class="o">+</span><span class="n">fcode</span><span class="o">+</span><span class="n">write</span>
-    <span class="k">print</span> <span class="n">taskcommand</span>
     
     <span class="c1"># create job functions</span>
     <span class="k">def</span> <span class="nf">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">):</span>
@@ -11878,6 +11877,8 @@ div#notebook {
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
 
     <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">!=</span> <span class="n">taskcommand</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">taskcommand</span>
         <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
         <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
         <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
