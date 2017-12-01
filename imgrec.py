@@ -115,7 +115,7 @@ def record(imgwait = imgwait,
     rpi = gethostname()
     
     print "=================================================="
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started:                     Date: %y/%m/%d; Time: %H:%M:%S"
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")           
     
     # convert to right type
     imgwait = float(imgwait)
@@ -170,7 +170,7 @@ def record(imgwait = imgwait,
         sleep(delay)
         bef = datetime.datetime.now()
     
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped:           Date: %y/%m/%d, Time: %H:%M:%S"
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped"
     print "==================================================\n"
 
 record()
