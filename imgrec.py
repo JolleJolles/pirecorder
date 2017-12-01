@@ -96,8 +96,8 @@ def record(imgwait = 5.0,
         
         """
     
-    print strftime("imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     print "=================================================="
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
     
     # convert to right type
     imgwait = float(imgwait)
@@ -111,6 +111,7 @@ def record(imgwait = 5.0,
     # get number of images to record
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
+    print imgnr
     
     # acquire rpi name
     rpi = gethostname()
@@ -153,8 +154,8 @@ def record(imgwait = 5.0,
         sleep(delay)
         bef = datetime.datetime.now()
     
-    print strftime("imgrec stopped: Date: %y/%m/%d; Time: %H:%M:%S")
-    print "=================================================="
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped: Date: %y/%m/%d, Time: %H:%M:%S")
+    print "==================================================\n"
 
 record()
 
