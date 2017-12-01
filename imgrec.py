@@ -114,7 +114,6 @@ def record(imgwait = imgwait,
     # acquire rpi name
     rpi = gethostname()
     
-    print "=================================================="
     print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")           
     
     # convert to right type
@@ -129,7 +128,6 @@ def record(imgwait = imgwait,
     # get number of images to record
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
-    print imgnr
     
     # set the directory
     server = "/home/pi/SERVER/"

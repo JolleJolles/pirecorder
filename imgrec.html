@@ -11889,7 +11889,6 @@ div#notebook {
     <span class="c1"># acquire rpi name</span>
     <span class="n">rpi</span> <span class="o">=</span> <span class="n">gethostname</span><span class="p">()</span>
     
-    <span class="k">print</span> <span class="s2">&quot;==================================================&quot;</span>
     <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - imgrec started. The date is &quot;</span><span class="o">+</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>           
     
     <span class="c1"># convert to right type</span>
@@ -11904,7 +11903,6 @@ div#notebook {
     <span class="c1"># get number of images to record</span>
     <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">))</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">imgnr</span>
     
     <span class="c1"># set the directory</span>
     <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/SERVER/&quot;</span>
