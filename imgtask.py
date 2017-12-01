@@ -88,10 +88,8 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
     def enablejob(job):
         if taskset == "True":
             job.enable()
-            print taskname+" enabled"
         elif taskset == "False":
             job.enable(False)
-            print taskname+" disabled"
         else:
             print "Please provide 'True' or 'False' for parameter enable"
 

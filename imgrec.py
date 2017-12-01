@@ -111,6 +111,9 @@ def record(imgwait = imgwait,
         
         """
     
+    # acquire rpi name
+    rpi = gethostname()
+    
     print "=================================================="
     print strftime("[%H:%M:%S][") + rpi + "] - imgrec started:                     Date: %y/%m/%d; Time: %H:%M:%S"
     
@@ -127,9 +130,6 @@ def record(imgwait = imgwait,
     totimg = int(imgtime * (60 / imgwait))
     imgnr = min(imgnr, totimg)
     print imgnr
-    
-    # acquire rpi name
-    rpi = gethostname()
     
     # set the directory
     server = "/home/pi/SERVER/"
