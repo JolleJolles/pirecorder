@@ -97,7 +97,7 @@ def record(imgwait = 5.0,
         """
     
     print "=================================================="
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started: Date: %y/%m/%d; Time: %H:%M:%S")
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started:                     Date: %y/%m/%d; Time: %H:%M:%S"
     
     # convert to right type
     imgwait = float(imgwait)
@@ -145,16 +145,17 @@ def record(imgwait = 5.0,
     
     # start taking images
     bef = datetime.datetime.now()
-    for i, img in enumerate(camera.capture_continuous(filename, format="jpeg", quality=quality)):
+    for i, img in enumerate(camera.capture_continuous(filename, 
+                            format="jpeg", quality=quality)):
         if i == imgnr:
             break
         delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
-        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +               ", sleeping " + str(round(delay,2)) + "s.."
+        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +              ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = datetime.datetime.now()
     
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped: Date: %y/%m/%d, Time: %H:%M:%S")
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec stopped:           Date: %y/%m/%d, Time: %H:%M:%S")
     print "==================================================\n"
 
 record()
