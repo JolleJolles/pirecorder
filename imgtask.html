@@ -11913,11 +11913,10 @@ div#notebook {
         <span class="c1"># now show last and next job</span>
         <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">cron</span><span class="p">:</span>
             <span class="n">sch</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">date_from</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
-            <span class="n">previous</span> <span class="o">=</span> <span class="n">sch</span><span class="o">.</span><span class="n">get_prev</span><span class="p">()</span>
             <span class="nb">next</span> <span class="o">=</span> <span class="n">sch</span><span class="o">.</span><span class="n">get_next</span><span class="p">()</span>
             <span class="n">jobname</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">comment</span>
             <span class="n">jobname</span> <span class="o">=</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="o">*</span><span class="p">(</span><span class="n">maxlen</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">jobname</span><span class="p">))</span>
-            <span class="k">print</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; - last job: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">previous</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; next job: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+            <span class="k">print</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; next job: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
 </pre></div>
 
 </div>

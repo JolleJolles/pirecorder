@@ -138,9 +138,8 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
         # now show last and next job
         for job in cron:
             sch = job.schedule(date_from=datetime.datetime.now())
-            previous = sch.get_prev()
             next = sch.get_next()
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
-            print jobname+" - last job: "+str(previous)+"; next job: "+str(next)
+            print jobname+" next job: "+str(next)
 
