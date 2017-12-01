@@ -77,9 +77,10 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
     cron = CronTab(user='pi')
 
     # define crontab job command
-    exe = "runp"
+    exe = "python"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
-    fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
+    #fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
+    fcode = " -w "+str(imgwait)+" -i "+str(imgnr)+" -t "+str(imgtime)
     write = " >> /home/pi/imglog.txt 2>&1"
     taskcommand = exe+scriptloc+fcode+write
     

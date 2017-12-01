@@ -11795,10 +11795,25 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="c1"># construct the argument parse and parse the arguments</span>
+<span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgwait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The delay between subsequent images in seconds&quot;</span><span class="p">)</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgnr&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The number of images that should be taken. &quot;</span><span class="p">)</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgtime&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The duration in minutes during which images</span><span class="se">\</span>
+<span class="s2">              should be taken.&quot;</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+<span class="n">imgwait</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgwait&quot;</span><span class="p">]</span>
+<span class="n">imgnr</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgnr&quot;</span><span class="p">]</span>
+<span class="n">imgtime</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgtime&quot;</span><span class="p">]</span>
+
+
 <span class="c1"># define recording function</span>
-<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
-           <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-           <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">imgwait</span> <span class="o">=</span> <span class="n">imgwait</span><span class="p">,</span>
+           <span class="n">imgnr</span> <span class="o">=</span> <span class="n">imgnr</span><span class="p">,</span>
+           <span class="n">imgtime</span> <span class="o">=</span> <span class="n">imgtime</span><span class="p">,</span>
            <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
