@@ -142,5 +142,8 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
             next = sch.get_next()
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
-            print jobname+" next job: "+str(next)
+            if job.is_enabled():
+                print jobname+" next job: "+str(next)
+            else:
+                print jobname+" disabled"
 

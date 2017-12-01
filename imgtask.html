@@ -11917,7 +11917,10 @@ div#notebook {
             <span class="nb">next</span> <span class="o">=</span> <span class="n">sch</span><span class="o">.</span><span class="n">get_next</span><span class="p">()</span>
             <span class="n">jobname</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">comment</span>
             <span class="n">jobname</span> <span class="o">=</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; &quot;</span><span class="o">*</span><span class="p">(</span><span class="n">maxlen</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">jobname</span><span class="p">))</span>
-            <span class="k">print</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; next job: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">is_enabled</span><span class="p">():</span>
+                <span class="k">print</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; next job: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">print</span> <span class="n">jobname</span><span class="o">+</span><span class="s2">&quot; disabled&quot;</span>
 </pre></div>
 
 </div>
