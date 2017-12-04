@@ -20,7 +20,7 @@ import datetime
 # define plan function
 def plan(imgwait=5.0,
          imgnr=100,
-         imgtime=10,
+         imgtime=600,
          taskname="molly",
          taskcode="0 7 * * *",
          taskset="True",
@@ -47,8 +47,8 @@ def plan(imgwait=5.0,
         number is reached the script will automatically terminate.
         The minimum of imgnr and nr of images based on imgwait and
         imgtime will be selected.
-    imgtime : integer, default = 10
-        The time in minutes during which images should be taken.
+    imgtime : integer, default = 600
+        The time in seconds during which images should be taken.
         The minimum of imgnr and nr of images based on imgwait and
         imgtime will be selected.
     taskname : str, default = "molly"

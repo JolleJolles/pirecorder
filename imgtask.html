@@ -11792,7 +11792,7 @@ div#notebook {
 <span class="c1"># define plan function</span>
 <span class="k">def</span> <span class="nf">plan</span><span class="p">(</span><span class="n">imgwait</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
          <span class="n">imgnr</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-         <span class="n">imgtime</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+         <span class="n">imgtime</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
          <span class="n">taskname</span><span class="o">=</span><span class="s2">&quot;molly&quot;</span><span class="p">,</span>
          <span class="n">taskcode</span><span class="o">=</span><span class="s2">&quot;0 7 * * *&quot;</span><span class="p">,</span>
          <span class="n">taskset</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
@@ -11819,8 +11819,8 @@ div#notebook {
 <span class="sd">        number is reached the script will automatically terminate.</span>
 <span class="sd">        The minimum of imgnr and nr of images based on imgwait and</span>
 <span class="sd">        imgtime will be selected.</span>
-<span class="sd">    imgtime : integer, default = 10</span>
-<span class="sd">        The time in minutes during which images should be taken.</span>
+<span class="sd">    imgtime : integer, default = 600</span>
+<span class="sd">        The time in seconds during which images should be taken.</span>
 <span class="sd">        The minimum of imgnr and nr of images based on imgwait and</span>
 <span class="sd">        imgtime will be selected.</span>
 <span class="sd">    taskname : str, default = &quot;molly&quot;</span>

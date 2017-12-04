@@ -28,9 +28,9 @@ from fractions import Fraction
 ap = argparse.ArgumentParser()
 ap.add_argument("-w", "--imgwait", type=float, default=5.0,
         help="The delay between subsequent images in seconds")
-ap.add_argument("-i", "--imgnr", type=int, default=10,
+ap.add_argument("-i", "--imgnr", type=int, default=100,
         help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=int, default=1,
+ap.add_argument("-t", "--imgtime", type=int, default=600,
         help="The duration in minutes during which images\
               should be taken.")
 args = vars(ap.parse_args())
@@ -48,7 +48,7 @@ def record(location = "pi",
            compensation = 0,
            shutterspeed = 8000,
            iso = 200,
-           brightness = 40,
+           brightness = 30,
            sharpness = 0,
            contrast = 10,
            saturation = -100,
