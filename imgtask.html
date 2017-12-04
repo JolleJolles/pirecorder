@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11782,8 +11780,8 @@ div#notebook {
 
 <span class="c1">#######################################</span>
 <span class="c1"># Script for planning recording task  #</span>
-<span class="c1"># Author: J. Jolles                   #</span>
-<span class="c1"># Last updated: 28 Nov 2017           #</span>
+<span class="c1"># Author: J. W. Jolles                #</span>
+<span class="c1"># Last updated: 4 Dec 2017            #</span>
 <span class="c1">#######################################</span>
 
 <span class="c1"># import packages</span>
@@ -11792,11 +11790,22 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">datetime</span>
 
 <span class="c1"># define plan function</span>
-<span class="k">def</span> <span class="nf">plan</span><span class="p">(</span><span class="n">imgwait</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span><span class="n">imgnr</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="n">imgtime</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">taskname</span><span class="o">=</span><span class="s2">&quot;molly&quot;</span><span class="p">,</span>
-         <span class="n">taskcode</span><span class="o">=</span><span class="s2">&quot;0 7 * * *&quot;</span><span class="p">,</span><span class="n">taskset</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span><span class="n">taskshow</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">plan</span><span class="p">(</span><span class="n">imgwait</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+         <span class="n">imgnr</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+         <span class="n">imgtime</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+         <span class="n">taskname</span><span class="o">=</span><span class="s2">&quot;molly&quot;</span><span class="p">,</span>
+         <span class="n">taskcode</span><span class="o">=</span><span class="s2">&quot;0 7 * * *&quot;</span><span class="p">,</span>
+         <span class="n">taskset</span><span class="o">=</span><span class="s2">&quot;True&quot;</span><span class="p">,</span>
+         <span class="n">taskshow</span><span class="o">=</span><span class="s2">&quot;False&quot;</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run automated image recording with the rpi camera</span>
+
+<span class="sd">    Storage location</span>
+<span class="sd">    ----------</span>
+<span class="sd">    The folder where the images will be stored is automatically</span>
+<span class="sd">    set to the folder on the server that reflects the rpi name,</span>
+<span class="sd">    for example /home/pi/SERVER/pi41.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -11840,11 +11849,14 @@ div#notebook {
 <span class="sd">    taskshow : str, default = &quot;False&quot;</span>
 <span class="sd">        If the different timed tasks should be shown (&quot;True&quot;) or</span>
 <span class="sd">        not (&quot;False&quot;)</span>
-<span class="sd">    </span>
+<span class="sd">        </span>
 <span class="sd">    Output</span>
 <span class="sd">    -------</span>
-<span class="sd">    A scheduled task to record images for a certain duration of time or</span>
-<span class="sd">    number according to a specific schedule</span>
+<span class="sd">    A scheduled task to run automated SESSIONS during which a</span>
+<span class="sd">    series of controlled JPEG images are recorded for a certain</span>
+<span class="sd">    duration and delay. Images are automatically named based on </span>
+<span class="sd">    the rpi number, date, and time, following a standard naming </span>
+<span class="sd">    convention, e.g. pi11_172511_im00010_153012.jpg</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
         

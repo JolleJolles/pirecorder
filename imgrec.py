@@ -3,13 +3,14 @@
 
 # In[ ]:
 
+
 #!/usr/bin/python
 
 #######################################
 # Script for automatically recording  #
 # slow framerate videos with the rpi  #
-# Author: J. Jolles                   #
-# Last updated: 28 Nov 2017           #
+# Author: J. W. Jolles                #
+# Last updated: 4 Dec 2017            #
 #######################################
 
 # import packages
@@ -19,6 +20,8 @@ import datetime
 from socket import gethostname
 import argparse
 import os
+import csv
+from ast import literal_eval
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -47,7 +50,8 @@ def record(imgwait = imgwait,
            sharpness = 50,
            contrast = 20,
            saturation = -100,
-           quality = 20):
+           quality = 20,
+           roifile = "/home/pi/imgroi.txt"):
     
     """
         Run automated image recording with the rpi camera
@@ -102,6 +106,12 @@ def record(imgwait = imgwait,
         quality : int, default = 20
             Defines the quality of the JPEG encoder as an integer
             ranging from 1 to 100. Defaults to 20.
+        roifile : str, default = /home/pi/roifile.txt
+            The filename for the txt file that contains the roi
+            that should be used to crop the image. In that file
+            the roi should be provided as (x, y, w, h) tuple of 
+            floating point values ranging from 0.0 to 1.0, 
+            The default value is (0.0, 0.0, 1.0, 1.0).
         
         Output
         -------
@@ -141,6 +151,11 @@ def record(imgwait = imgwait,
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
     filename = rpi+daystamp+counter+timestamp+ftype
+    
+    # set the roi
+    reader = csv.reader(open(roifile, "r"))
+    zoom = next(reader)[0]
+    zoom = literal_eval(crop)        
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()

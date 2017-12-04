@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11783,8 +11781,8 @@ div#notebook {
 <span class="c1">#######################################</span>
 <span class="c1"># Script for automatically recording  #</span>
 <span class="c1"># slow framerate videos with the rpi  #</span>
-<span class="c1"># Author: J. Jolles                   #</span>
-<span class="c1"># Last updated: 28 Nov 2017           #</span>
+<span class="c1"># Author: J. W. Jolles                #</span>
+<span class="c1"># Last updated: 4 Dec 2017            #</span>
 <span class="c1">#######################################</span>
 
 <span class="c1"># import packages</span>
@@ -11794,6 +11792,8 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="n">gethostname</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 
 <span class="c1"># construct the argument parse and parse the arguments</span>
 <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
@@ -11822,7 +11822,8 @@ div#notebook {
            <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
            <span class="n">contrast</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
            <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">20</span><span class="p">):</span>
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+           <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/imgroi.txt&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run automated image recording with the rpi camera</span>
@@ -11877,6 +11878,12 @@ div#notebook {
 <span class="sd">        quality : int, default = 20</span>
 <span class="sd">            Defines the quality of the JPEG encoder as an integer</span>
 <span class="sd">            ranging from 1 to 100. Defaults to 20.</span>
+<span class="sd">        roifile : str, default = /home/pi/roifile.txt</span>
+<span class="sd">            The filename for the txt file that contains the roi</span>
+<span class="sd">            that should be used to crop the image. In that file</span>
+<span class="sd">            the roi should be provided as (x, y, w, h) tuple of </span>
+<span class="sd">            floating point values ranging from 0.0 to 1.0, </span>
+<span class="sd">            The default value is (0.0, 0.0, 1.0, 1.0).</span>
 <span class="sd">        </span>
 <span class="sd">        Output</span>
 <span class="sd">        -------</span>
@@ -11916,6 +11923,11 @@ div#notebook {
     <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
     <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
     <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span><span class="o">+</span><span class="n">daystamp</span><span class="o">+</span><span class="n">counter</span><span class="o">+</span><span class="n">timestamp</span><span class="o">+</span><span class="n">ftype</span>
+    
+    <span class="c1"># set the roi</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>        
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>

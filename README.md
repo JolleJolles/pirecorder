@@ -60,12 +60,27 @@ Download the free VNC viewer software [here](https://www.realvnc.com/en/connect/
 To see the rpi camera stream you will need to connect with VNC viewer. Then open a terminal window on the desktop and type in ```raspistill -t 0 -k -p 100,100,600,600``` and press enter. You will now see what the rpi camera seems live, which is helpful for aligning the camera and tank for example. To exit press ```ctrl+c```.
 
 #### Set-up image recording
-Setting-up image recording is pretty straightforward. Make sure you are connected to the rpi, either via SSH or VNC viewer, and have a terminal window. Then to set the recording script type in ```runp /AnimRec/imgtask.py plan```. Without entering anything else it will use the standard settings. To see what these are and what parameters can be set type in ```runp AnimRec/imgtask.py -d plan```. This will show an overview of the different parameters (imgwait, imgnr, imgtime etc), what default value they have, and a brief explanation.
+For setting-up image recording make first of all sure that you are connected to the rpi(s), either via SSH or VNC viewer, with a terminal window open.
 
-So when you run the imgtask script without entering else it will schedule image recording to start at 7AM every day until forever (under the schedule name *molly*) where a total of 100 images are taken with 5 seconds delay between them. Both imagetime and imgnr can be provided. The script will select the minimum of those based on the imgdelay. Now to set custom parameters, simply add these after a colon after the main command, making sure to have no spaces between subsequent parameters. 
+##### A) Image settings
+To run one session of image recording type in ```img record```. It is important to make sure that the image record parameters are appropriate for the experiment to be done and storage space available. This is done by Jolle. 
 
-An example. Let's say you want to take images with 17.5s delay for a total of 6 hours. This means imgwait=17.5 and imgtime=6*60. As the script automatically takes the minimum of imgtime and imgnr, also the latter needs to be set to some high value. You want to use the standard schedule and show the task. The code you will need to enter in terminal will therefore be:
-``` runp AnimRec/imgtask.py plan:imgwait=17.5,imgnr=999999,imgtime=360,taskshow=True```
+To see what can be changed (currently 13), type in ```img -d record```. To change the settings of the recording script with new parameters, simply add these after a colon after the main command, making sure to have no spaces between subsequent parameters. For example, to set the image saturation to -50 the final code would be ```img record:saturation=-50```. To get the right parameters make sure to also set imgnr to some low value. Now check the recorded image and change the values accordingly until you are happy with the result. These sessions can now be used in this way for single sessions, but to use the image parameters in the recording schedule this needs to be set by Jolle (or modified manually in the file AnimRec/imgrec.py).
+
+In each rpi home folder there is a file called ```roifile.txt```. This file is used for the automated image recording script to get the right roi to crop the image output before storing. This file can be edited directly. Setting the roi is important as it it will enable us to store much smaller images by focusing only on that section of the image that we are interested in. This is done by Jolle. 
+
+When you are happy with the image properties, these should ideally not be touched again and as the scheduling script also enables setting the img nr, delay and time it is not needed anymore to run the ```img record``` command directly.
+
+##### B) Scheduling image recording tasks
+
+The scheduling of image recordings consists of two components: 1) how many images should be taking and at what delay for each recording SESSION, and 2) when exactly recording sessions should be run and until when that should continue. Both of these should be set using the scheduling script by typing in ```schedule plan```.
+
+When running the schedule command and nothing else is added it will plan an automatic schedule of image recording using the standard settings. To see what these standard settings are and what parameters can be set manually, type in ```schedule -d plan```. This will provide an overview of the different parameters, with their default values and a brief explanation.
+
+So (based on the defaults) when you run the imgtask script without entering anything else it will schedule image recording to start at 7AM every day forever (under the schedule name *molly*) where a total of 100 images are taken with 5 seconds delay between them. Both imgtime and imgnr can be provided. The script will select the minimum of those based on the imgdelay. 
+
+To set custom parameters, simply add these after a colon after the main command, making sure to have no spaces between subsequent parameters. An example. Let's say you want to take images with 17.5s delay between them for a total of 6 hours per session. This means imgwait=17.5 and imgtime=6*60. As the script automatically takes the minimum of imgtime and imgnr, also the latter needs to be set to some high value. You want to use the standard schedule and show the task. The code you will need to enter in terminal will therefore be:
+```schedule plan:imgwait=17.5,imgnr=999999,imgtime=360,taskshow=True```
 
 The taskcode command is to set the specific schedule of the recording script. This is based on CRON scheduling. It is a nice and simple way to provide any possible schedule, although a bit more difficult to use when wanting very specific schedules. [This](http://www.nncron.ru/help/EN/working/cron-format.htm) is a great place to learn more about this format. To see if your taskcode does what you want you can try it out on [this website](http://cron.schlitt.info).
 

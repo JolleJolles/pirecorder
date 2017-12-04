@@ -3,12 +3,13 @@
 
 # In[ ]:
 
+
 # !/usr/bin/python
 
 #######################################
 # Script for planning recording task  #
-# Author: J. Jolles                   #
-# Last updated: 28 Nov 2017           #
+# Author: J. W. Jolles                #
+# Last updated: 4 Dec 2017            #
 #######################################
 
 # import packages
@@ -17,11 +18,22 @@ from crontab import CronTab
 import datetime
 
 # define plan function
-def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
-         taskcode="0 7 * * *",taskset="True",taskshow="False"):
+def plan(imgwait=5.0,
+         imgnr=100,
+         imgtime=10,
+         taskname="molly",
+         taskcode="0 7 * * *",
+         taskset="True",
+         taskshow="False"):
 
     """
     Run automated image recording with the rpi camera
+
+    Storage location
+    ----------
+    The folder where the images will be stored is automatically
+    set to the folder on the server that reflects the rpi name,
+    for example /home/pi/SERVER/pi41.
 
     Parameters
     ----------
@@ -65,11 +77,14 @@ def plan(imgwait=5.0,imgnr=100,imgtime=10,taskname="molly",
     taskshow : str, default = "False"
         If the different timed tasks should be shown ("True") or
         not ("False")
-    
+        
     Output
     -------
-    A scheduled task to record images for a certain duration of time or
-    number according to a specific schedule
+    A scheduled task to run automated SESSIONS during which a
+    series of controlled JPEG images are recorded for a certain
+    duration and delay. Images are automatically named based on 
+    the rpi number, date, and time, following a standard naming 
+    convention, e.g. pi11_172511_im00010_153012.jpg
 
     """
         
