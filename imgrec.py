@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 #!/usr/bin/python
 
 #######################################
@@ -24,31 +23,11 @@ import csv
 from ast import literal_eval
 from fractions import Fraction
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-l", "--location", type=str, default="pi",
-        help="The location where the images should be stored,\
-        if not the default ('pi'), a folder will be created \
-        in home")
-ap.add_argument("-w", "--imgwait", type=float, default=5.0,
-        help="The delay between subsequent images in seconds")
-ap.add_argument("-i", "--imgnr", type=int, default=100,
-        help="The number of images that should be taken. ")
-ap.add_argument("-t", "--imgtime", type=int, default=600,
-        help="The duration in minutes during which images\
-              should be taken.")
-args = vars(ap.parse_args())
-location = args["location"]
-imgwait = args["imgwait"]
-imgnr = args["imgnr"]
-imgtime = args["imgtime"]
-
-
 # define recording function
-def record(location = location,
-           imgwait = imgwait,
-           imgnr = imgnr,
-           imgtime = imgtime,
+def record(location = "pi",
+           imgwait = 5.0,
+           imgnr = 100,
+           imgtime = 600,
            resolution = (1000, 1000),
            compensation = 0,
            shutterspeed = 8000,
