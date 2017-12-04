@@ -11964,7 +11964,9 @@ div#notebook {
     
     <span class="k">print</span> <span class="s2">&quot;==================================================</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-<span class="n">record</span><span class="p">()</span>
+<span class="c1"># Only execute when you run the file, not when importing</span>
+<span class="n">when</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">record</span><span class="p">()</span>
 </pre></div>
 
 </div>

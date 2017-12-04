@@ -191,5 +191,7 @@ def record(location = "pi",
     
     print "==================================================\n"
 
-record()
+# Only execute when you run the file, not when importing
+when if __name__ == '__main__':
+    record()
 
