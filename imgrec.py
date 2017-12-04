@@ -194,7 +194,7 @@ def record(location = "pi",
     
     print "==================================================\n"
     
-    # Release camera
+    # Finally release camera
     camera.close()
 
 # Only execute when you run the file, not when importing
