@@ -155,7 +155,7 @@ def record(imgwait = imgwait,
     # set the roi
     reader = csv.reader(open(roifile, "r"))
     zoom = next(reader)[0]
-    zoom = literal_eval(crop)        
+    zoom = literal_eval(zoom)        
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()

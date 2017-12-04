@@ -11927,7 +11927,7 @@ div#notebook {
     <span class="c1"># set the roi</span>
     <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
     <span class="n">zoom</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">crop</span><span class="p">)</span>        
+    <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>        
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
