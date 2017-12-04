@@ -146,8 +146,9 @@ def record(location = "pi",
     if location == "pi":
         server = "/home/pi/SERVER/"
         location = server + rpi
-    if os.path.exists(location):
-        os.chdir(location)
+    if not os.path.exists(location):
+        os.makedirs(location)
+    os.chdir(location)
     
     # set-up automatic filenaming
     daystamp = "_{timestamp:%Y%m%d}"
