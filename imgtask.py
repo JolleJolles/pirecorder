@@ -32,7 +32,8 @@ def plan(imgwait=5.0,
     ----------
     The folder where the images will be stored is automatically
     set to the folder on the server that reflects the rpi name,
-    for example /home/pi/SERVER/pi41.
+    and within that a folder of the date, for example
+    /home/pi/SERVER/pi41/171204.
 
     Parameters
     ----------
