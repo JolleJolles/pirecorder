@@ -11866,11 +11866,9 @@ div#notebook {
     <span class="n">cron</span> <span class="o">=</span> <span class="n">CronTab</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
 
     <span class="c1"># define crontab job command</span>
-    <span class="n">exe</span> <span class="o">=</span> <span class="s2">&quot;runp&quot;</span>
-    <span class="c1">#exe = &quot;python&quot;</span>
+    <span class="n">exe</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/bin/runp&quot;</span>
     <span class="n">scriptloc</span> <span class="o">=</span> <span class="s2">&quot; /home/pi/AnimRec/imgrec.py&quot;</span>
     <span class="n">fcode</span> <span class="o">=</span> <span class="s2">&quot; record:imgwait=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgnr=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgtime=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
-    <span class="c1">#fcode = &quot; -w &quot;+str(imgwait)+&quot; -i &quot;+str(imgnr)+&quot; -t &quot;+str(imgtime)</span>
     <span class="n">write</span> <span class="o">=</span> <span class="s2">&quot; &gt;&gt; /home/pi/imglog.txt 2&gt;&amp;1&quot;</span>
     <span class="n">taskcommand</span> <span class="o">=</span> <span class="n">exe</span><span class="o">+</span><span class="n">scriptloc</span><span class="o">+</span><span class="n">fcode</span><span class="o">+</span><span class="n">write</span>
     
