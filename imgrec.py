@@ -51,7 +51,8 @@ def record(location = "pi",
             that reflects the rpi name, for example 
             /home/pi/SERVER/pi41. If different, a folder with 
             corresponding location name will be created in the home 
-            directory.
+            directory. Images are stored in separate automatically 
+            create folders each day.
         imgwait : float, default = 5.0
             The delay between subsequent images in seconds. When a 
             delay is provided that is less than shutterspeed + 
@@ -127,10 +128,12 @@ def record(location = "pi",
     totimg = int(imgtime / imgwait)
     imgnr = min(imgnr, totimg)
     
-    # set the directory
+    # set the main directory 
     if location == "pi":
         server = "/home/pi/SERVER/"
         location = server + rpi
+        # add date folder
+        location = location + strftime("/%y%m%d")
     else:
         location = "/home/pi/"+location
     if not os.path.exists(location):
@@ -170,20 +173,19 @@ def record(location = "pi",
     for i, img in enumerate(camera.capture_continuous(filename, 
                             format="jpeg", quality=quality)):
         if i == (imgnr-1):
-            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img
+            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + "\n"
             break
         delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +              ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = datetime.datetime.now()
-    
-    print "==================================================\n"
+
     
     # Finally release camera
     camera.close()
 
-# Only execute when you run the file, not when importing
+# only execute when you run the file, not when importing
 if __name__ == '__main__':
     record()
 

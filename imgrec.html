@@ -11826,7 +11826,8 @@ div#notebook {
 <span class="sd">            that reflects the rpi name, for example </span>
 <span class="sd">            /home/pi/SERVER/pi41. If different, a folder with </span>
 <span class="sd">            corresponding location name will be created in the home </span>
-<span class="sd">            directory.</span>
+<span class="sd">            directory. Images are stored in separate automatically </span>
+<span class="sd">            create folders each day.</span>
 <span class="sd">        imgwait : float, default = 5.0</span>
 <span class="sd">            The delay between subsequent images in seconds. When a </span>
 <span class="sd">            delay is provided that is less than shutterspeed + </span>
@@ -11902,10 +11903,12 @@ div#notebook {
     <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">)</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
     
-    <span class="c1"># set the directory</span>
+    <span class="c1"># set the main directory </span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pi&quot;</span><span class="p">:</span>
         <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/SERVER/&quot;</span>
         <span class="n">location</span> <span class="o">=</span> <span class="n">server</span> <span class="o">+</span> <span class="n">rpi</span>
+        <span class="c1"># add date folder</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">location</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;/%y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/&quot;</span><span class="o">+</span><span class="n">location</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
@@ -11945,7 +11948,7 @@ div#notebook {
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
                             <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)):</span>
         <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">imgnr</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - captured &quot;</span> <span class="o">+</span> <span class="n">img</span>
+            <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - captured &quot;</span> <span class="o">+</span> <span class="n">img</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="k">break</span>
         <span class="n">delay</span> <span class="o">=</span> <span class="n">imgwait</span><span class="o">-</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">-</span><span class="n">bef</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
         <span class="n">delay</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">delay</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">delay</span>
@@ -11953,13 +11956,12 @@ div#notebook {
               <span class="s2">&quot;, sleeping &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;s..&quot;</span>
         <span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
         <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    
-    <span class="k">print</span> <span class="s2">&quot;==================================================</span><span class="se">\n</span><span class="s2">&quot;</span>
+
     
     <span class="c1"># Finally release camera</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="c1"># Only execute when you run the file, not when importing</span>
+<span class="c1"># only execute when you run the file, not when importing</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">record</span><span class="p">()</span>
 </pre></div>
