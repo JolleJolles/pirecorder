@@ -91,7 +91,7 @@ def plan(imgwait=5.0,
     cron = CronTab(user='pi')
 
     # define crontab job command
-    exr = "runp"
+    exe = "runp"
     #exe = "python"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
