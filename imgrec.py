@@ -146,6 +146,8 @@ def record(location = "pi",
     if location == "pi":
         server = "/home/pi/SERVER/"
         location = server + rpi
+    else:
+        location = "/home/pi/"+location
     if not os.path.exists(location):
         os.makedirs(location)
     os.chdir(location)
@@ -191,6 +193,9 @@ def record(location = "pi",
         bef = datetime.datetime.now()
     
     print "==================================================\n"
+    
+    # Release camera
+    camera.close()
 
 # Only execute when you run the file, not when importing
 if __name__ == '__main__':
