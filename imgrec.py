@@ -51,7 +51,7 @@ def record(imgwait = imgwait,
            contrast = 20,
            saturation = -100,
            quality = 20,
-           roifile = "/home/pi/imgroi.txt"):
+           roifile = "/home/pi/roifile.txt"):
     
     """
         Run automated image recording with the rpi camera
