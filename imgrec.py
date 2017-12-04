@@ -22,6 +22,7 @@ import argparse
 import os
 import csv
 from ast import literal_eval
+from fractions import Fraction
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
