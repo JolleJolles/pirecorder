@@ -39,7 +39,8 @@ imgtime = args["imgtime"]
 
 
 # define recording function
-def record(imgwait = imgwait,
+def record(location = "pi",
+           imgwait = imgwait,
            imgnr = imgnr,
            imgtime = imgtime,
            resolution = (1000, 1000),
@@ -47,23 +48,25 @@ def record(imgwait = imgwait,
            shutterspeed = 10000,
            iso = 200,
            brightness = 40,
-           sharpness = 50,
+           sharpness = 0,
            contrast = 20,
            saturation = -100,
-           quality = 20,
+           quality = 15,
            roifile = "/home/pi/roifile.txt"):
     
     """
         Run automated image recording with the rpi camera
-        
-        Storage location
-        ----------
-        The folder where the images will be stored is automatically
-        set to the folder on the server that reflects the rpi name,
-        for example /home/pi/SERVER/pi41.
-        
+                
         Parameters
         ----------
+        location : str, default = pi
+            The location where the images should be stored. By default
+            (when location is "pi") the folder where the images are 
+            stored is automatically set to the folder on the server 
+            that reflects the rpi name, for example 
+            /home/pi/SERVER/pi41. If different, a folder with 
+            corresponding location name will be created in the home 
+            directory.
         imgwait : float, default = 5.0
             The delay between subsequent images in seconds. When a 
             delay is provided that is less than shutterspeed + 
@@ -140,8 +143,9 @@ def record(imgwait = imgwait,
     imgnr = min(imgnr, totimg)
     
     # set the directory
-    server = "/home/pi/SERVER/"
-    location = server + rpi
+    if location == "pi":
+        server = "/home/pi/SERVER/"
+        location = server + rpi
     if os.path.exists(location):
         os.chdir(location)
     
