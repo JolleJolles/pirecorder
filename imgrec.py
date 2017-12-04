@@ -10,7 +10,10 @@
 # slow framerate videos with the rpi  #
 # Author: J. W. Jolles                #
 # Last updated: 4 Dec 2017            #
+# Version: 1.0.0                      #
 #######################################
+
+#1.0.0: imgrec final and published
 
 # import packages
 import picamera
@@ -40,35 +43,35 @@ def record(location = "pi",
            roifile = "/home/pi/roifile.txt"):
     
     """
-        Run automated image recording with the rpi camera
+        A fully automated image recording script for the rpi
                 
         Parameters
         ----------
-        location : str, default = pi
-            The location where the images should be stored. By default
-            (when location is "pi") the folder where the images are 
-            stored is automatically set to the folder on the server 
-            that reflects the rpi name, for example 
-            /home/pi/SERVER/pi41. If different, a folder with 
-            corresponding location name will be created in the home 
-            directory. Images are stored in separate automatically 
-            create folders each day.
+        location : str, default = "pi"
+            The location where the images are stored. By default, 
+            when location is "pi", this is automatically set to 
+            the folder on the server corresponding to the rpi name, 
+            for example /home/pi/SERVER/pi41. If different, a folder 
+            with name corresponding to location will be created
+            inside the home directory. Images are stored in separate 
+            automatically created folders each day.
         imgwait : float, default = 5.0
             The delay between subsequent images in seconds. When a 
             delay is provided that is less than shutterspeed + 
-            processingtime "delay" will be automatically set at 0 
-            and images thus taken one after the other.
-        imgnr : integer, default = 100
+            processingtime, it will be automatically set to 0 
+            and images thus taken immideately one after the other.
+        imgnr : int, default = 100
             The number of images that should be taken. When this 
-            number is reached the script will automatically terminate.
-            The minimum of imgnr and nr of images based on imgwait and
-            imgtime will be selected.
+            number is reached, the script will automatically terminate.
+            The minimum of a) imgnr and b) nr of images based on 
+            imgwait and imgtime will be selected.
         imgtime : integer, default = 600
             The time in seconds during which images should be taken.
-            The minimum of imgnr and nr of images based on imgwait and
-            imgtime will be selected.
+            The minimum of a) imgnr and b) nr of images based on 
+            imgwait and imgtime will be selected.
         resolution : tuple, default = (1000, 1000)
-            The width and height of the images that will be recorded.
+            The width and height of the to-be recorded images in 
+            pixels.
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.
             Compensation artificially adds extra light to the image.
@@ -76,62 +79,65 @@ def record(location = "pi",
             Shutter speed of the camera in microseconds, i.e. the
             default of 10000 is equivalent to 1/100th of a second. A
             longer shutterspeed will result in a brighter image but
-            more likely motion blur.
+            more motion blur.
         iso : int, default = 200
-            The camera iso value. Higher values are more light
-            sensitive but have higher gain. Valid values are
-            between 200 and 1600.
+            The camera ISO value, an integer value in sequence 
+            [200,400,800,1600]. Higher values are more light
+            sensitive but have higher gain.
         brightness : int, default = 55
-            The brightness level of the camera. Valid values are
+            The brightness level of the camera, an integer value 
             between 0 and 100.
         sharpness : int, default = 50
-            The sharpness of the image, an integer value between -100
-            and 100.
+            The sharpness of the camera, an integer value between 
+            -100 and 100.
         contrast : int, default = 20
             The image contrast, an integer value between 0 and 100.
         saturation : int, default -100
             The color saturation level of the image, an integer
             value between -100 and 100.
         quality : int, default = 20
-            Defines the quality of the JPEG encoder as an integer
+            The quality of the JPEG encoder, as an integer
             ranging from 1 to 100. Defaults to 20.
         roifile : str, default = /home/pi/roifile.txt
-            The filename for the txt file that contains the roi
-            that should be used to crop the image. In that file
-            the roi should be provided as (x, y, w, h) tuple of 
-            floating point values ranging from 0.0 to 1.0, 
-            The default value is (0.0, 0.0, 1.0, 1.0).
+            The filename for the txt file that contains the region 
+            of interest. This should be provided on one line as 
+            (x, y, w, h) with parentheses, i.e. a tuple of floating 
+            point values ranging from 0.0 to 1.0. The default value 
+            is (0.0, 0.0, 1.0, 1.0).
         
         Output
         -------
         A series of JPEG images, automatically named based on 
-        the rpi number, date, and time, following a standard 
-        naming convention, e.g. pi11_172511_im00010_153012.jpg
+        the rpi number, date, and time, following the standard 
+        naming convention: piXX_YYMMDD_im%04d_HHMMSS.jpg
         
         """
     
     # acquire rpi name
     rpi = gethostname()
     
+    # print starting statement
     print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")           
     
-    # convert to right type
+    # convert input to right type (for using runp)
     imgwait = float(imgwait)
     imgnr = int(imgnr)
     imgtime = int(imgtime)
     
     # when imgwait is close to zero, change to mininum
     # value that roughly equals time to take image
-    imgwait = 0.3 if imgwait < 0.3 else imgwait
+    mintime = 0.45
+    imgwait = mintime if imgwait < mintime else imgwait
 
     # get number of images to record
     totimg = int(imgtime / imgwait)
     imgnr = min(imgnr, totimg)
     
-    # set the main directory 
+    # set the directory 
     if location == "pi":
         server = "/home/pi/SERVER/"
         location = server + rpi
+        
         # add date folder
         location = location + strftime("/%y%m%d")
     else:
@@ -145,7 +151,7 @@ def record(location = "pi",
     counter = "_im{counter:05d}"
     timestamp = "_{timestamp:%H%M%S}"
     ftype = ".jpg"
-    filename = rpi+daystamp+counter+timestamp+ftype
+    filename = rpi + daystamp + counter + timestamp + ftype
     
     # set the roi
     reader = csv.reader(open(roifile, "r"))
@@ -172,20 +178,23 @@ def record(location = "pi",
     bef = datetime.datetime.now()
     for i, img in enumerate(camera.capture_continuous(filename, 
                             format="jpeg", quality=quality)):
+        
+        # stop when image number is reached
         if i == (imgnr-1):
             print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + "\n"
             break
+        
+        # calculate delay and wait before taking next image
         delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +              ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = datetime.datetime.now()
 
-    
-    # Finally release camera
+    # release camera when finished
     camera.close()
 
-# only execute when you run the file, not when importing
+# only execute record function when file is run
 if __name__ == '__main__':
     record()
 
