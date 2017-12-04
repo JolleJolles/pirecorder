@@ -26,6 +26,10 @@ from fractions import Fraction
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
+ap.add_argument("-l", "--location", type=str, default="pi",
+        help="The location where the images should be stored,\
+        if not the default ('pi'), a folder will be created \
+        in home")
 ap.add_argument("-w", "--imgwait", type=float, default=5.0,
         help="The delay between subsequent images in seconds")
 ap.add_argument("-i", "--imgnr", type=int, default=100,
@@ -34,13 +38,14 @@ ap.add_argument("-t", "--imgtime", type=int, default=600,
         help="The duration in minutes during which images\
               should be taken.")
 args = vars(ap.parse_args())
+location = args["location"]
 imgwait = args["imgwait"]
 imgnr = args["imgnr"]
 imgtime = args["imgtime"]
 
 
 # define recording function
-def record(location = "pi",
+def record(location = location,
            imgwait = imgwait,
            imgnr = imgnr,
            imgtime = imgtime,

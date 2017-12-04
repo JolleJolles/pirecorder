@@ -11798,6 +11798,10 @@ div#notebook {
 
 <span class="c1"># construct the argument parse and parse the arguments</span>
 <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;--location&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The location where the images should be stored,</span><span class="se">\</span>
+<span class="s2">        if not the default (&#39;pi&#39;), a folder will be created </span><span class="se">\</span>
+<span class="s2">        in home&quot;</span><span class="p">)</span>
 <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-w&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgwait&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The delay between subsequent images in seconds&quot;</span><span class="p">)</span>
 <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--imgnr&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
@@ -11806,13 +11810,14 @@ div#notebook {
         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The duration in minutes during which images</span><span class="se">\</span>
 <span class="s2">              should be taken.&quot;</span><span class="p">)</span>
 <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+<span class="n">location</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
 <span class="n">imgwait</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgwait&quot;</span><span class="p">]</span>
 <span class="n">imgnr</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgnr&quot;</span><span class="p">]</span>
 <span class="n">imgtime</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imgtime&quot;</span><span class="p">]</span>
 
 
 <span class="c1"># define recording function</span>
-<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;pi&quot;</span><span class="p">,</span>
+<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="p">,</span>
            <span class="n">imgwait</span> <span class="o">=</span> <span class="n">imgwait</span><span class="p">,</span>
            <span class="n">imgnr</span> <span class="o">=</span> <span class="n">imgnr</span><span class="p">,</span>
            <span class="n">imgtime</span> <span class="o">=</span> <span class="n">imgtime</span><span class="p">,</span>

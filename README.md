@@ -67,6 +67,8 @@ To run one session of image recording type in ```img record```. It is important 
 
 To see what can be changed (currently 13), type in ```img -d record```. To change the settings of the recording script with new parameters, simply add these after a colon after the main command, making sure to have no spaces between subsequent parameters. For example, to set the image saturation to -50 the final code would be ```img record:saturation=-50```. To get the right parameters make sure to also set imgnr to some low value. Now check the recorded image and change the values accordingly until you are happy with the result. These sessions can now be used in this way for single sessions, but to use the image parameters in the recording schedule this needs to be set by Jolle (or modified manually in the file AnimRec/imgrec.py).
 
+#### CHANGE TO WORK WITH --LOCATion etc
+
 In each rpi home folder there is a file called ```roifile.txt```. This file is used for the automated image recording script to get the right roi to crop the image output before storing. This file can be edited directly. Setting the roi is important as it it will enable us to store much smaller images by focusing only on that section of the image that we are interested in. This is done by Jolle. 
 
 When you are happy with the image properties, these should ideally not be touched again and as the scheduling script also enables setting the img nr, delay and time it is not needed anymore to run the ```img record``` command directly.

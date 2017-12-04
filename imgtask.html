@@ -11830,10 +11830,10 @@ div#notebook {
 <span class="sd">        The taskcode representing the schedule for the image script</span>
 <span class="sd">        to be executed, based on CRON scheduling. The parts it</span>
 <span class="sd">        should contain are as follows:</span>
-<span class="sd">        * * * * * *</span>
-<span class="sd">        - - - - - -</span>
-<span class="sd">        | | | | | |</span>
-<span class="sd">        | | | | | + year [optional]</span>
+<span class="sd">        * * * * *</span>
+<span class="sd">        - - - - -</span>
+<span class="sd">        | | | | |</span>
+<span class="sd">        | | | | |</span>
 <span class="sd">        | | | | +----- day of week (0 - 7) (Sunday=0 or 7)</span>
 <span class="sd">        | | | +---------- month (1 - 12)</span>
 <span class="sd">        | | +--------------- day of month (1 - 31)</span>
@@ -11888,9 +11888,10 @@ div#notebook {
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
 
     <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">!=</span> <span class="n">taskcommand</span><span class="p">:</span>
-            <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">taskcommand</span>
-        <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">taskset</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">!=</span> <span class="n">taskcommand</span><span class="p">:</span>
+                <span class="n">job</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">taskcommand</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
         <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
         <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
         <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; cron job modified successfully&quot;</span>
