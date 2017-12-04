@@ -160,8 +160,9 @@ def record(imgwait = imgwait,
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
     camera.resolution = resolution
+    camera.zoom = zoom
     camera.exposure_compensation = compensation
-    sleep(0.1)
+    sleep(1)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = shutterspeed
@@ -175,7 +176,8 @@ def record(imgwait = imgwait,
     bef = datetime.datetime.now()
     for i, img in enumerate(camera.capture_continuous(filename, 
                             format="jpeg", quality=quality)):
-        if i == imgnr:
+        if i == (imgnr-1):
+            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img
             break
         delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
         delay = 0 if delay < 0 else delay
