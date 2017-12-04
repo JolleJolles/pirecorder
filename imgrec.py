@@ -170,7 +170,7 @@ def record(location = "pi",
     camera.zoom = zoom
     camera.exposure_compensation = compensation
     sleep(1)
-    camera.exposure_mode = 'backlit'
+    #camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
     camera.shutter_speed = shutterspeed
     camera.sharpness = sharpness
