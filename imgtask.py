@@ -12,9 +12,10 @@
 #######################################
 
 # import packages
+from time import strftime
 import crontab
 import datetime
-from time import strftime
+import os
 
 # define plan function
 def plan(imgwait=5.0,
