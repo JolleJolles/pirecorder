@@ -62,7 +62,6 @@ def plan(imgwait=5.0,
         * * * * *
         - - - - -
         | | | | |
-        | | | | |
         | | | | +----- day of week (0 - 7) (Sunday=0 or 7)
         | | | +---------- month (1 - 12)
         | | +--------------- day of month (1 - 31)
@@ -101,7 +100,7 @@ def plan(imgwait=5.0,
     exe = "/usr/local/bin/runp"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
-    write = " >> /home/pi/imglog/"+strftime("%y%m%d")+".log 2>&1"
+    write = " >> /home/pi/imglog/`date +\%y\%m\%d`.log 2>&1"
     taskcommand = exe+scriptloc+fcode+write
     
     # create job functions
