@@ -46,13 +46,13 @@ def record(location = "pi",
            imgtime = imgtime,
            resolution = (1000, 1000),
            compensation = 0,
-           shutterspeed = 10000,
+           shutterspeed = 8000,
            iso = 200,
            brightness = 40,
            sharpness = 0,
-           contrast = 20,
+           contrast = 10,
            saturation = -100,
-           quality = 15,
+           quality = 17,
            roifile = "/home/pi/roifile.txt"):
     
     """
@@ -78,8 +78,8 @@ def record(location = "pi",
             number is reached the script will automatically terminate.
             The minimum of imgnr and nr of images based on imgwait and
             imgtime will be selected.
-        imgtime : integer, default = 10
-            The time in minutes during which images should be taken.
+        imgtime : integer, default = 600
+            The time in seconds during which images should be taken.
             The minimum of imgnr and nr of images based on imgwait and
             imgtime will be selected.
         resolution : tuple, default = (1000, 1000)
@@ -140,7 +140,7 @@ def record(location = "pi",
     imgwait = 0.3 if imgwait < 0.3 else imgwait
 
     # get number of images to record
-    totimg = int(imgtime * (60 / imgwait))
+    totimg = int(imgtime / imgwait)
     imgnr = min(imgnr, totimg)
     
     # set the directory

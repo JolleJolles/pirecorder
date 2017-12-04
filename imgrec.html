@@ -11818,13 +11818,13 @@ div#notebook {
            <span class="n">imgtime</span> <span class="o">=</span> <span class="n">imgtime</span><span class="p">,</span>
            <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
            <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
            <span class="n">brightness</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
            <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
            <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
            <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/roifile.txt&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
@@ -11850,8 +11850,8 @@ div#notebook {
 <span class="sd">            number is reached the script will automatically terminate.</span>
 <span class="sd">            The minimum of imgnr and nr of images based on imgwait and</span>
 <span class="sd">            imgtime will be selected.</span>
-<span class="sd">        imgtime : integer, default = 10</span>
-<span class="sd">            The time in minutes during which images should be taken.</span>
+<span class="sd">        imgtime : integer, default = 600</span>
+<span class="sd">            The time in seconds during which images should be taken.</span>
 <span class="sd">            The minimum of imgnr and nr of images based on imgwait and</span>
 <span class="sd">            imgtime will be selected.</span>
 <span class="sd">        resolution : tuple, default = (1000, 1000)</span>
@@ -11912,7 +11912,7 @@ div#notebook {
     <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="k">if</span> <span class="n">imgwait</span> <span class="o">&lt;</span> <span class="mf">0.3</span> <span class="k">else</span> <span class="n">imgwait</span>
 
     <span class="c1"># get number of images to record</span>
-    <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">*</span> <span class="p">(</span><span class="mi">60</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">))</span>
+    <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">)</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
     
     <span class="c1"># set the directory</span>
