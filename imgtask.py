@@ -12,9 +12,9 @@
 #######################################
 
 # import packages
-import argparse
-from crontab import CronTab
+import crontab
 import datetime
+from time import strftime
 
 # define plan function
 def plan(imgwait=5.0,
@@ -89,13 +89,18 @@ def plan(imgwait=5.0,
     """
         
     # create access to the system crontab of pi
-    cron = CronTab(user='pi')
+    cron = crontab.CronTab(user='pi')
+    
+    # set-up storing of logfiles
+    logfolder = "/home/pi/imglog/"
+    if not os.path.exists(logfolder):
+        os.makedirs(logfolder)
 
     # define crontab job command
     exe = "/usr/local/bin/runp"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
-    write = " >> /home/pi/imglog.txt 2>&1"
+    write = " >> /home/pi/imglog/"+strftime("%y%m%d")+".log 2>&1"
     taskcommand = exe+scriptloc+fcode+write
     
     # create job functions
