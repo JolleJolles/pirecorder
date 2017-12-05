@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+
 # !/usr/bin/python
 
 #######################################
@@ -41,20 +42,21 @@ def plan(imgwait=5.0,
     imgwait : float, default = 5.0
         The delay between subsequent images in seconds. When a 
         delay is provided that is less than shutterspeed + 
-        processingtime "delay" will be automatically set at 0 
+        processingtime, "delay" will be automatically set to 0 
         and images thus taken one after the other.
     imgnr : integer, default = 100
-        The number of images that should be taken. When this 
-        number is reached the script will automatically terminate.
-        The minimum of imgnr and nr of images based on imgwait and
+        The number of images that will be taken. When this number 
+        is reached, the script will automatically terminate. The 
+        minimum of imgnr and nr of images based on imgwait and
         imgtime will be selected.
     imgtime : integer, default = 600
         The time in seconds during which images should be taken.
-        The minimum of imgnr and nr of images based on imgwait and
-        imgtime will be selected.
+        The minimum of imgnr and nr of images based on imgwait 
+        and imgtime will be selected.
     taskname : str, default = "molly"
-        The name for the timing task. Really only needed to set 
-        when wanting to run multiple different tasks.
+        The name for the timing task. This parameter only really
+        needs to be set when wanting to run multiple different 
+        tasks.
     taskcode : string, default = "0 7 * * *"
         The taskcode representing the schedule for the image script
         to be executed, based on CRON scheduling. The parts it
@@ -92,7 +94,7 @@ def plan(imgwait=5.0,
     cron = crontab.CronTab(user='pi')
     
     # set-up storing of logfiles
-    logfolder = "/home/pi/imglog/"
+    logfolder = "/home/pi/SERVER/imglogs/"
     if not os.path.exists(logfolder):
         os.makedirs(logfolder)
 
@@ -100,7 +102,7 @@ def plan(imgwait=5.0,
     exe = "/usr/local/bin/runp"
     scriptloc = " /home/pi/AnimRec/imgrec.py"
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
-    write = " >> /home/pi/imglog/`date +\%y\%m\%d`.log 2>&1"
+    write = " >> /home/pi/SERVER/imglogs/`date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
     taskcommand = exe+scriptloc+fcode+write
     
     # create job functions
@@ -117,7 +119,7 @@ def plan(imgwait=5.0,
         job.setall(taskcode)
         enablejob(job)
         cron.write()
-        print "\n"+taskname+ " cron job created succesfully"
+        print "\n"+taskname+ " recording job created succesfully"
 
     def modifyjob():
         if taskset == "True":
@@ -126,7 +128,7 @@ def plan(imgwait=5.0,
             job.setall(taskcode)
         enablejob(job)
         cron.write()
-        print "\n"+taskname+" cron job modified successfully"
+        print "\n"+taskname+" recording job modified successfully"
 
     # check if already jobs exist; if not create job
     if len(cron) == 0:

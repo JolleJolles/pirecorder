@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11816,20 +11814,21 @@ div#notebook {
 <span class="sd">    imgwait : float, default = 5.0</span>
 <span class="sd">        The delay between subsequent images in seconds. When a </span>
 <span class="sd">        delay is provided that is less than shutterspeed + </span>
-<span class="sd">        processingtime &quot;delay&quot; will be automatically set at 0 </span>
+<span class="sd">        processingtime, &quot;delay&quot; will be automatically set to 0 </span>
 <span class="sd">        and images thus taken one after the other.</span>
 <span class="sd">    imgnr : integer, default = 100</span>
-<span class="sd">        The number of images that should be taken. When this </span>
-<span class="sd">        number is reached the script will automatically terminate.</span>
-<span class="sd">        The minimum of imgnr and nr of images based on imgwait and</span>
+<span class="sd">        The number of images that will be taken. When this number </span>
+<span class="sd">        is reached, the script will automatically terminate. The </span>
+<span class="sd">        minimum of imgnr and nr of images based on imgwait and</span>
 <span class="sd">        imgtime will be selected.</span>
 <span class="sd">    imgtime : integer, default = 600</span>
 <span class="sd">        The time in seconds during which images should be taken.</span>
-<span class="sd">        The minimum of imgnr and nr of images based on imgwait and</span>
-<span class="sd">        imgtime will be selected.</span>
+<span class="sd">        The minimum of imgnr and nr of images based on imgwait </span>
+<span class="sd">        and imgtime will be selected.</span>
 <span class="sd">    taskname : str, default = &quot;molly&quot;</span>
-<span class="sd">        The name for the timing task. Really only needed to set </span>
-<span class="sd">        when wanting to run multiple different tasks.</span>
+<span class="sd">        The name for the timing task. This parameter only really</span>
+<span class="sd">        needs to be set when wanting to run multiple different </span>
+<span class="sd">        tasks.</span>
 <span class="sd">    taskcode : string, default = &quot;0 7 * * *&quot;</span>
 <span class="sd">        The taskcode representing the schedule for the image script</span>
 <span class="sd">        to be executed, based on CRON scheduling. The parts it</span>
@@ -11867,7 +11866,7 @@ div#notebook {
     <span class="n">cron</span> <span class="o">=</span> <span class="n">crontab</span><span class="o">.</span><span class="n">CronTab</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s1">&#39;pi&#39;</span><span class="p">)</span>
     
     <span class="c1"># set-up storing of logfiles</span>
-    <span class="n">logfolder</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/imglog/&quot;</span>
+    <span class="n">logfolder</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/SERVER/imglogs/&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">logfolder</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">logfolder</span><span class="p">)</span>
 
@@ -11875,7 +11874,7 @@ div#notebook {
     <span class="n">exe</span> <span class="o">=</span> <span class="s2">&quot;/usr/local/bin/runp&quot;</span>
     <span class="n">scriptloc</span> <span class="o">=</span> <span class="s2">&quot; /home/pi/AnimRec/imgrec.py&quot;</span>
     <span class="n">fcode</span> <span class="o">=</span> <span class="s2">&quot; record:imgwait=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgnr=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,imgtime=&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
-    <span class="n">write</span> <span class="o">=</span> <span class="s2">&quot; &gt;&gt; /home/pi/imglog/`date +\%y\%m\</span><span class="si">%d</span><span class="s2">`.log 2&gt;&amp;1&quot;</span>
+    <span class="n">write</span> <span class="o">=</span> <span class="s2">&quot; &gt;&gt; /home/pi/SERVER/imglogs/`date +\%y\%m\</span><span class="si">%d</span><span class="s2">`_$HOSTNAME.log 2&gt;&amp;1&quot;</span>
     <span class="n">taskcommand</span> <span class="o">=</span> <span class="n">exe</span><span class="o">+</span><span class="n">scriptloc</span><span class="o">+</span><span class="n">fcode</span><span class="o">+</span><span class="n">write</span>
     
     <span class="c1"># create job functions</span>
@@ -11892,7 +11891,7 @@ div#notebook {
         <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
         <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
         <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span> <span class="s2">&quot; cron job created succesfully&quot;</span>
+        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span> <span class="s2">&quot; recording job created succesfully&quot;</span>
 
     <span class="k">def</span> <span class="nf">modifyjob</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">taskset</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span><span class="p">:</span>
@@ -11901,7 +11900,7 @@ div#notebook {
             <span class="n">job</span><span class="o">.</span><span class="n">setall</span><span class="p">(</span><span class="n">taskcode</span><span class="p">)</span>
         <span class="n">enablejob</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
         <span class="n">cron</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; cron job modified successfully&quot;</span>
+        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">taskname</span><span class="o">+</span><span class="s2">&quot; recording job modified successfully&quot;</span>
 
     <span class="c1"># check if already jobs exist; if not create job</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cron</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
