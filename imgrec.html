@@ -11786,6 +11786,7 @@ div#notebook {
 <span class="c1"># Version: 1.0.0                      #</span>
 <span class="c1">#######################################</span>
 
+<span class="c1">#1.1.0: it is now possible to record images at low shutterspeeds of up to 1s</span>
 <span class="c1">#1.0.0: imgrec final and published</span>
 
 <span class="c1"># import packages</span>
@@ -11830,8 +11831,8 @@ div#notebook {
 <span class="sd">            automatically created folders each day.</span>
 <span class="sd">        imgwait : float, default = 5.0</span>
 <span class="sd">            The delay between subsequent images in seconds. When a </span>
-<span class="sd">            delay is provided that is less than shutterspeed + </span>
-<span class="sd">            processingtime, it will be automatically set to 0 </span>
+<span class="sd">            delay is provided that is less than ~0.5s (shutterspeed + </span>
+<span class="sd">            processingtime) it will be automatically set to 0 </span>
 <span class="sd">            and images thus taken immideately one after the other.</span>
 <span class="sd">        imgnr : int, default = 100</span>
 <span class="sd">            The number of images that should be taken. When this </span>
@@ -11852,7 +11853,13 @@ div#notebook {
 <span class="sd">            Shutter speed of the camera in microseconds, i.e. the</span>
 <span class="sd">            default of 10000 is equivalent to 1/100th of a second. A</span>
 <span class="sd">            longer shutterspeed will result in a brighter image but</span>
-<span class="sd">            more motion blur.</span>
+<span class="sd">            more motion blur. Important: the framerate of the camera</span>
+<span class="sd">            will be adjusted based on the shutterspeed. At shutter-</span>
+<span class="sd">            speeds above ~ 0.2s this results in increasingly longer</span>
+<span class="sd">            waiting times between images so a standard imgwait time</span>
+<span class="sd">            should be chosen that is 6+ times more than the</span>
+<span class="sd">            shutterspeed. For example, for a shutterspeed of 300000</span>
+<span class="sd">            imgwait should be &gt; 1.8s.</span>
 <span class="sd">        iso : int, default = 200</span>
 <span class="sd">            The camera ISO value, an integer value in sequence </span>
 <span class="sd">            [200,400,800,1600]. Higher values are more light</span>
@@ -11890,7 +11897,7 @@ div#notebook {
     <span class="n">rpi</span> <span class="o">=</span> <span class="n">gethostname</span><span class="p">()</span>
     
     <span class="c1"># print starting statement</span>
-    <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - imgrec started. The date is &quot;</span><span class="o">+</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;. Ready in 5s...&quot;</span>           
+    <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - imgrec started. The date is &quot;</span><span class="o">+</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;. Warming up...&quot;</span>           
     
     <span class="c1"># convert input to right type (for using runp)</span>
     <span class="n">imgwait</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span>
@@ -11987,6 +11994,7 @@ div#notebook {
               <span class="s2">&quot;, sleeping &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;s..&quot;</span>
         <span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
         <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">print</span> <span class="n">bef</span>
 
     <span class="c1"># release camera when finished</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

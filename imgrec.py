@@ -14,6 +14,7 @@
 # Version: 1.0.0                      #
 #######################################
 
+#1.1.0: it is now possible to record images at low shutterspeeds of up to 1s
 #1.0.0: imgrec final and published
 
 # import packages
@@ -58,8 +59,8 @@ def record(location = "pi",
             automatically created folders each day.
         imgwait : float, default = 5.0
             The delay between subsequent images in seconds. When a 
-            delay is provided that is less than shutterspeed + 
-            processingtime, it will be automatically set to 0 
+            delay is provided that is less than ~0.5s (shutterspeed + 
+            processingtime) it will be automatically set to 0 
             and images thus taken immideately one after the other.
         imgnr : int, default = 100
             The number of images that should be taken. When this 
@@ -80,7 +81,13 @@ def record(location = "pi",
             Shutter speed of the camera in microseconds, i.e. the
             default of 10000 is equivalent to 1/100th of a second. A
             longer shutterspeed will result in a brighter image but
-            more motion blur.
+            more motion blur. Important: the framerate of the camera
+            will be adjusted based on the shutterspeed. At shutter-
+            speeds above ~ 0.2s this results in increasingly longer
+            waiting times between images so a standard imgwait time
+            should be chosen that is 6+ times more than the
+            shutterspeed. For example, for a shutterspeed of 300000
+            imgwait should be > 1.8s.
         iso : int, default = 200
             The camera ISO value, an integer value in sequence 
             [200,400,800,1600]. Higher values are more light
@@ -118,7 +125,7 @@ def record(location = "pi",
     rpi = gethostname()
     
     # print starting statement
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")+". Ready in 5s..."           
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")+". Warming up..."           
     
     # convert input to right type (for using runp)
     imgwait = float(imgwait)
@@ -214,6 +221,7 @@ def record(location = "pi",
         print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +              ", sleeping " + str(round(delay,2)) + "s.."
         sleep(delay)
         bef = datetime.datetime.now()
+        print bef
 
     # release camera when finished
     camera.close()
