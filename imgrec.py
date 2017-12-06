@@ -185,7 +185,7 @@ def record(location = "pi",
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
-    camera.framerate = fps
+    #camera.framerate = fps
     camera.resolution = resolution
     camera.zoom = zoom
     camera.exposure_compensation = compensation
