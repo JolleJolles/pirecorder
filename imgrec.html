@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11929,9 +11927,12 @@ div#notebook {
     <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span> <span class="o">+</span> <span class="n">daystamp</span> <span class="o">+</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">ftype</span>
     
     <span class="c1"># set the roi</span>
-    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
-    <span class="n">zoom</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>        
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">roifile</span><span class="p">):</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">zoom</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>

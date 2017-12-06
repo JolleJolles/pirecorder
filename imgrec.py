@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+
 #!/usr/bin/python
 
 #######################################
@@ -154,9 +155,12 @@ def record(location = "pi",
     filename = rpi + daystamp + counter + timestamp + ftype
     
     # set the roi
-    reader = csv.reader(open(roifile, "r"))
-    zoom = next(reader)[0]
-    zoom = literal_eval(zoom)        
+    if os.path.exists(roifile):
+        reader = csv.reader(open(roifile, "r"))
+        zoom = next(reader)[0]
+        zoom = literal_eval(zoom)
+    else:
+        zoom = (0.0,0.0,1.0,1.0)
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
