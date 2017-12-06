@@ -149,7 +149,7 @@ def record(location = "pi",
         fps = int(1/shuttsec)-1
     else:
         fps = Fraction(1,int(shuttsec)+1)
-    fps = 5
+    fps = Fraction(1,3)
     
     # bound fps to min (40fps) and max (1/6th fps)
     fps = 40 if fps>40 else fps
