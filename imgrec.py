@@ -149,7 +149,7 @@ def record(location = "pi",
         fps = int(1/shuttsec)-1
     else:
         fps = Fraction(1,int(shuttsec)+1)
-    fps = 25
+    fps = 5
     
     # bound fps to min (40fps) and max (1/6th fps)
     fps = 40 if fps>40 else fps
@@ -198,7 +198,6 @@ def record(location = "pi",
     camera.iso = iso
     camera.contrast = contrast
     camera.saturation = saturation
-    camera.color_effects = (128,128)
     camera.brightness = brightness
     
     # start taking images

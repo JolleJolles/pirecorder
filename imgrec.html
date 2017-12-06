@@ -11921,7 +11921,7 @@ div#notebook {
         <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">fps</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="mi">5</span>
     
     <span class="c1"># bound fps to min (40fps) and max (1/6th fps)</span>
     <span class="n">fps</span> <span class="o">=</span> <span class="mi">40</span> <span class="k">if</span> <span class="n">fps</span><span class="o">&gt;</span><span class="mi">40</span> <span class="k">else</span> <span class="n">fps</span>
@@ -11970,7 +11970,6 @@ div#notebook {
     <span class="n">camera</span><span class="o">.</span><span class="n">iso</span> <span class="o">=</span> <span class="n">iso</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">contrast</span> <span class="o">=</span> <span class="n">contrast</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">saturation</span> <span class="o">=</span> <span class="n">saturation</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">color_effects</span> <span class="o">=</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="mi">128</span><span class="p">)</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span>
     
     <span class="c1"># start taking images</span>
