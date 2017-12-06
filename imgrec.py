@@ -118,7 +118,7 @@ def record(location = "pi",
     rpi = gethostname()
     
     # print starting statement
-    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")           
+    print strftime("[%H:%M:%S][") + rpi + "] - imgrec started. The date is "+strftime("%y/%m/%d")+". Ready in 5s..."           
     
     # convert input to right type (for using runp)
     imgwait = float(imgwait)
@@ -149,7 +149,7 @@ def record(location = "pi",
 #        fps = int(1/shuttsec)-1
 #    else:
 #        fps = Fraction(1,int(shuttsec)+1)
-    fps = 2
+    fps = 1
     
 #    # bound fps to min (40fps) and max (1/6th fps)
 #    fps = 40 if fps>40 else fps
