@@ -11916,16 +11916,16 @@ div#notebook {
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
     
     <span class="c1"># set fps based on shutterspeed</span>
-    <span class="n">shuttsec</span> <span class="o">=</span> <span class="n">shutterspeed</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">shuttsec</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1">#    shuttsec = shutterspeed / float(1000000)</span>
+<span class="c1">#    if shuttsec &lt;= 1:</span>
+<span class="c1">#        fps = int(1/shuttsec)-1</span>
+<span class="c1">#    else:</span>
+<span class="c1">#        fps = Fraction(1,int(shuttsec)+1)</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
     
-    <span class="c1"># bound fps to min (40fps) and max (1/6th fps)</span>
-    <span class="n">fps</span> <span class="o">=</span> <span class="mi">40</span> <span class="k">if</span> <span class="n">fps</span><span class="o">&gt;</span><span class="mi">40</span> <span class="k">else</span> <span class="n">fps</span>
-    <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="k">if</span> <span class="mi">1</span><span class="o">/</span><span class="n">fps</span><span class="o">&gt;</span><span class="mi">6</span> <span class="k">else</span> <span class="n">fps</span>
+<span class="c1">#    # bound fps to min (40fps) and max (1/6th fps)</span>
+<span class="c1">#    fps = 40 if fps&gt;40 else fps</span>
+<span class="c1">#    fps = Fraction(1,6) if 1/fps&gt;6 else fps</span>
     
     <span class="c1"># set the directory </span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pi&quot;</span><span class="p">:</span>
