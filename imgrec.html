@@ -11921,6 +11921,7 @@ div#notebook {
         <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="mi">25</span>
     
     <span class="c1"># bound fps to min (40fps) and max (1/6th fps)</span>
     <span class="n">fps</span> <span class="o">=</span> <span class="mi">40</span> <span class="k">if</span> <span class="n">fps</span><span class="o">&gt;</span><span class="mi">40</span> <span class="k">else</span> <span class="n">fps</span>
