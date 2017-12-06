@@ -198,6 +198,7 @@ def record(location = "pi",
     camera.iso = iso
     camera.contrast = contrast
     camera.saturation = saturation
+    camera.color_effects = (128,128)
     camera.brightness = brightness
     
     # start taking images
