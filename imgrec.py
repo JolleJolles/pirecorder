@@ -144,17 +144,15 @@ def record(location = "pi",
     imgnr = min(imgnr, totimg)
     
     # set fps based on shutterspeed
-#    shuttsec = shutterspeed / float(1000000)
-#    if shuttsec <= 1:
-#        fps = int(1/shuttsec)-1
-#    else:
-#        fps = Fraction(1,int(shuttsec)+1)
-    fps = Fraction(1,2)
-    
-#    # bound fps to min (40fps) and max (1/6th fps)
-#    fps = 40 if fps>40 else fps
-#    fps = Fraction(1,6) if 1/fps>6 else fps
-    
+    shuttsec = shutterspeed / float(1000000)
+    if shuttsec < 0.025:
+        fps = 40
+    elif shuttsec <= 1:
+        fps = int(1/shuttsec)
+    else:
+        print "shutterspeed too low.. reverting back to framerate of 1fps"
+        fps = 1
+
     # set the directory 
     if location == "pi":
         server = "/home/pi/SERVER/"
