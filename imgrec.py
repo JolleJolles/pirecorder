@@ -124,6 +124,15 @@ def record(location = "pi",
     imgwait = float(imgwait)
     imgnr = int(imgnr)
     imgtime = int(imgtime)
+    resolution = tuple(resolution)
+    compensation = int(compensation)
+    shutterspeed = int(shutterspeed)
+    iso = int(iso)
+    brightness = int(brightness)
+    sharpness = int(sharpness)
+    contrast = int(contrast)
+    saturation = int(saturation)
+    quality = int(quality)
     
     # when imgwait is close to zero, change to mininum
     # value that roughly equals time to take image
