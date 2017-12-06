@@ -149,7 +149,7 @@ def record(location = "pi",
 #        fps = int(1/shuttsec)-1
 #    else:
 #        fps = Fraction(1,int(shuttsec)+1)
-    #fps = 1
+    fps = 4
     
 #    # bound fps to min (40fps) and max (1/6th fps)
 #    fps = 40 if fps>40 else fps
@@ -185,7 +185,7 @@ def record(location = "pi",
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
-    #camera.framerate = fps
+    camera.framerate = fps
     camera.resolution = resolution
     camera.zoom = zoom
     camera.exposure_compensation = compensation
