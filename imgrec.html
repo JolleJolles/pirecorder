@@ -11915,6 +11915,17 @@ div#notebook {
     <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">)</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
     
+    <span class="c1"># set fps based on shutterspeed</span>
+    <span class="n">shuttsec</span> <span class="o">=</span> <span class="n">shutterspeed</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">shuttsec</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">shuttsec</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># bound fps to min (40fps) and max (1/6th fps)</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="mi">40</span> <span class="k">if</span> <span class="n">fps</span><span class="o">&gt;</span><span class="mi">40</span> <span class="k">else</span> <span class="n">fps</span>
+    <span class="n">fps</span> <span class="o">=</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span> <span class="k">if</span> <span class="mi">1</span><span class="o">/</span><span class="n">fps</span><span class="o">&gt;</span><span class="mi">6</span> <span class="k">else</span> <span class="n">fps</span>
+    
     <span class="c1"># set the directory </span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pi&quot;</span><span class="p">:</span>
         <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/SERVER/&quot;</span>
@@ -11945,6 +11956,7 @@ div#notebook {
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">framerate</span> <span class="o">=</span> <span class="n">fps</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">exposure_compensation</span> <span class="o">=</span> <span class="n">compensation</span>

@@ -143,6 +143,17 @@ def record(location = "pi",
     totimg = int(imgtime / imgwait)
     imgnr = min(imgnr, totimg)
     
+    # set fps based on shutterspeed
+    shuttsec = shutterspeed / float(1000000)
+    if shuttsec <= 1:
+        fps = int(1/shuttsec)-1
+    else:
+        fps = Fraction(1,int(shuttsec)+1)
+    
+    # bound fps to min (40fps) and max (1/6th fps)
+    fps = 40 if fps>40 else fps
+    fps = Fraction(1,6) if 1/fps>6 else fps
+    
     # set the directory 
     if location == "pi":
         server = "/home/pi/SERVER/"
@@ -173,6 +184,7 @@ def record(location = "pi",
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
+    camera.framerate = fps
     camera.resolution = resolution
     camera.zoom = zoom
     camera.exposure_compensation = compensation
