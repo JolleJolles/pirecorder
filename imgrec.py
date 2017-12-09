@@ -32,7 +32,8 @@ def record(location = "pi",
            imgwait = 5.0,
            imgnr = 100,
            imgtime = 600,
-           resolution = (1000, 1000),
+           width = 1000,
+           height = 1000,
            compensation = 0,
            shutterspeed = 8000,
            iso = 200,
@@ -70,9 +71,10 @@ def record(location = "pi",
             The time in seconds during which images should be taken.
             The minimum of a) imgnr and b) nr of images based on 
             imgwait and imgtime will be selected.
-        resolution : tuple, default = (1000, 1000)
-            The width and height of the to-be recorded images in 
-            pixels.
+        width : int, default = 1000
+            The width of the image in pixels.
+        height : int, default = 1000
+            The height of the image in pixels.
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.
             Compensation artificially adds extra light to the image.
@@ -119,10 +121,6 @@ def record(location = "pi",
         naming convention: piXX_YYMMDD_im%04d_HHMMSS.jpg
         
         """
-    print resolution
-    print type(resolution)
-    print literal_eval(resolution)
-    
     # acquire rpi name
     rpi = gethostname()
     
@@ -133,7 +131,7 @@ def record(location = "pi",
     imgwait = float(imgwait)
     imgnr = int(imgnr)
     imgtime = int(imgtime)
-    resolution = literal_eval(resolution)
+    resolution = (int(width),int(height))
     compensation = int(compensation)
     shutterspeed = int(shutterspeed)
     iso = int(iso)

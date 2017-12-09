@@ -11807,7 +11807,8 @@ div#notebook {
            <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
            <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
            <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-           <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+           <span class="n">width</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+           <span class="n">height</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
            <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
@@ -11845,9 +11846,10 @@ div#notebook {
 <span class="sd">            The time in seconds during which images should be taken.</span>
 <span class="sd">            The minimum of a) imgnr and b) nr of images based on </span>
 <span class="sd">            imgwait and imgtime will be selected.</span>
-<span class="sd">        resolution : tuple, default = (1000, 1000)</span>
-<span class="sd">            The width and height of the to-be recorded images in </span>
-<span class="sd">            pixels.</span>
+<span class="sd">        width : int, default = 1000</span>
+<span class="sd">            The width of the image in pixels.</span>
+<span class="sd">        height : int, default = 1000</span>
+<span class="sd">            The height of the image in pixels.</span>
 <span class="sd">        compensation : int, default = 0</span>
 <span class="sd">            Camera lighting compensation. Ranges between 0 and 20.</span>
 <span class="sd">            Compensation artificially adds extra light to the image.</span>
@@ -11894,10 +11896,6 @@ div#notebook {
 <span class="sd">        naming convention: piXX_YYMMDD_im%04d_HHMMSS.jpg</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    <span class="k">print</span> <span class="n">resolution</span>
-    <span class="k">print</span> <span class="nb">type</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
-    <span class="k">print</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
-    
     <span class="c1"># acquire rpi name</span>
     <span class="n">rpi</span> <span class="o">=</span> <span class="n">gethostname</span><span class="p">()</span>
     
@@ -11908,7 +11906,7 @@ div#notebook {
     <span class="n">imgwait</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span>
     <span class="n">imgtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">height</span><span class="p">))</span>
     <span class="n">compensation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">compensation</span><span class="p">)</span>
     <span class="n">shutterspeed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">shutterspeed</span><span class="p">)</span>
     <span class="n">iso</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
