@@ -119,6 +119,9 @@ def record(location = "pi",
         naming convention: piXX_YYMMDD_im%04d_HHMMSS.jpg
         
         """
+    print resolution
+    print type(resolution)
+    print literal_eval(resolution)
     
     # acquire rpi name
     rpi = gethostname()
