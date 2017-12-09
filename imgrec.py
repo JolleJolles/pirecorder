@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 #!/usr/bin/python
 
 #######################################
@@ -131,7 +130,7 @@ def record(location = "pi",
     imgwait = float(imgwait)
     imgnr = int(imgnr)
     imgtime = int(imgtime)
-    resolution = tuple(resolution)
+    resolution = literal_eval(resolution)
     compensation = int(compensation)
     shutterspeed = int(shutterspeed)
     iso = int(iso)

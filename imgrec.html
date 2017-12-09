@@ -11726,7 +11726,9 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}@media print {
+}
+
+@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11747,7 +11749,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11903,7 +11905,7 @@ div#notebook {
     <span class="n">imgwait</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span>
     <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span>
     <span class="n">imgtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span>
     <span class="n">compensation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">compensation</span><span class="p">)</span>
     <span class="n">shutterspeed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">shutterspeed</span><span class="p">)</span>
     <span class="n">iso</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
