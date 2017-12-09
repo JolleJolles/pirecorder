@@ -10,9 +10,11 @@
 # slow framerate videos with the rpi  #
 # Author: J. W. Jolles                #
 # Last updated: 4 Dec 2017            #
-# Version: 1.0.0                      #
+# Version: 1.1.2                      #
 #######################################
 
+#1.1.2: change default parameters to get images with even smaller filesize
+#1.1.1: fixed resolution issue
 #1.1.0: it is now possible to record images at low shutterspeeds of up to 1s
 #1.0.0: imgrec final and published
 
@@ -32,8 +34,8 @@ def record(location = "pi",
            imgwait = 5.0,
            imgnr = 100,
            imgtime = 600,
-           width = 1000,
-           height = 1000,
+           width = 800,
+           height = 800,
            compensation = 0,
            shutterspeed = 8000,
            iso = 200,
@@ -41,7 +43,7 @@ def record(location = "pi",
            sharpness = 0,
            contrast = 10,
            saturation = -100,
-           quality = 17,
+           quality = 11,
            roifile = "/home/pi/roifile.txt"):
     
     """
@@ -71,9 +73,9 @@ def record(location = "pi",
             The time in seconds during which images should be taken.
             The minimum of a) imgnr and b) nr of images based on 
             imgwait and imgtime will be selected.
-        width : int, default = 1000
+        width : int, default = 800
             The width of the image in pixels.
-        height : int, default = 1000
+        height : int, default = 800
             The height of the image in pixels.
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.

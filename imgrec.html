@@ -11785,9 +11785,11 @@ div#notebook {
 <span class="c1"># slow framerate videos with the rpi  #</span>
 <span class="c1"># Author: J. W. Jolles                #</span>
 <span class="c1"># Last updated: 4 Dec 2017            #</span>
-<span class="c1"># Version: 1.0.0                      #</span>
+<span class="c1"># Version: 1.1.2                      #</span>
 <span class="c1">#######################################</span>
 
+<span class="c1">#1.1.2: change default parameters to get images with even smaller filesize</span>
+<span class="c1">#1.1.1: fixed resolution issue</span>
 <span class="c1">#1.1.0: it is now possible to record images at low shutterspeeds of up to 1s</span>
 <span class="c1">#1.0.0: imgrec final and published</span>
 
@@ -11807,8 +11809,8 @@ div#notebook {
            <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
            <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
            <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-           <span class="n">width</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-           <span class="n">height</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+           <span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+           <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
            <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
@@ -11816,7 +11818,7 @@ div#notebook {
            <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">contrast</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
            <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
            <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/roifile.txt&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
@@ -11846,9 +11848,9 @@ div#notebook {
 <span class="sd">            The time in seconds during which images should be taken.</span>
 <span class="sd">            The minimum of a) imgnr and b) nr of images based on </span>
 <span class="sd">            imgwait and imgtime will be selected.</span>
-<span class="sd">        width : int, default = 1000</span>
+<span class="sd">        width : int, default = 800</span>
 <span class="sd">            The width of the image in pixels.</span>
-<span class="sd">        height : int, default = 1000</span>
+<span class="sd">        height : int, default = 800</span>
 <span class="sd">            The height of the image in pixels.</span>
 <span class="sd">        compensation : int, default = 0</span>
 <span class="sd">            Camera lighting compensation. Ranges between 0 and 20.</span>
