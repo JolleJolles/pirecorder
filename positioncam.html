@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>imgrec</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>positioncam</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11778,235 +11778,48 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="ch">#!/usr/bin/python</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Import the necessary packages</span>
+<span class="kn">from</span> <span class="nn">picamera.array</span> <span class="kn">import</span> <span class="n">PiRGBArray</span>
+<span class="kn">from</span> <span class="nn">picamera</span> <span class="kn">import</span> <span class="n">PiCamera</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+ 
+<span class="c1"># Initialize the camera and grab a reference to the raw camera capture</span>
+<span class="n">camera</span> <span class="o">=</span> <span class="n">PiCamera</span><span class="p">()</span>
+<span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">624</span><span class="p">)</span>
+<span class="n">rawCapture</span> <span class="o">=</span> <span class="n">PiRGBArray</span><span class="p">(</span><span class="n">camera</span><span class="p">)</span>
+<span class="n">camera</span><span class="o">.</span><span class="n">framerate</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">rawCapture</span> <span class="o">=</span> <span class="n">PiRGBArray</span><span class="p">(</span><span class="n">camera</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">624</span><span class="p">))</span>
+<span class="c1">#camera.zoom = (0.0,0.0,1.0,1.0)</span>
+<span class="c1">#camera.exposure_compensation = 0</span>
+ 
+<span class="c1"># Allow the camera to warmup</span>
+<span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+ 
+<span class="c1"># Capture frames from the camera</span>
+<span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="n">rawCapture</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s2">&quot;bgr&quot;</span><span class="p">,</span> <span class="n">use_video_port</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    
+    <span class="c1"># Grab the raw NumPy array representing the image, then initialise the timestamp</span>
+    <span class="c1"># and occupied/unoccupied text</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">array</span>
 
-<span class="c1">#######################################</span>
-<span class="c1"># Script for automatically recording  #</span>
-<span class="c1"># slow framerate videos with the rpi  #</span>
-<span class="c1"># Author: J. W. Jolles                #</span>
-<span class="c1"># Last updated: 4 Dec 2017            #</span>
-<span class="c1"># Version: 1.1.2                      #</span>
-<span class="c1">#######################################</span>
+    <span class="c1"># Resize</span>
+    <span class="c1">#image = cv2.resize(image,(832, 624))</span>
 
-<span class="c1">#1.1.2: change default parameters to get images with even smaller filesize</span>
-<span class="c1">#1.1.1: fixed resolution issue</span>
-<span class="c1">#1.1.0: it is now possible to record images at low shutterspeeds of up to 1s</span>
-<span class="c1">#1.0.0: imgrec final and published</span>
+    <span class="c1"># Draw lines</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">624</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="mi">832</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">624</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
-<span class="c1"># import packages</span>
-<span class="kn">import</span> <span class="nn">picamera</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span><span class="p">,</span> <span class="n">strftime</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">socket</span> <span class="kn">import</span> <span class="n">gethostname</span>
-<span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
-<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+    <span class="c1"># Display the image on screen</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFF</span>
 
-<span class="c1"># define recording function</span>
-<span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;pi&quot;</span><span class="p">,</span>
-           <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
-           <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-           <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-           <span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
-           <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
-           <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
-           <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
-           <span class="n">brightness</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
-           <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-           <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
-           <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/roifile.txt&quot;</span><span class="p">):</span>
+    <span class="c1"># Clear the stream in preparation for the next frame</span>
+    <span class="n">rawCapture</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        A fully automated image recording script for the rpi</span>
-<span class="sd">                </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        location : str, default = &quot;pi&quot;</span>
-<span class="sd">            The location where the images are stored. By default, </span>
-<span class="sd">            when location is &quot;pi&quot;, this is automatically set to </span>
-<span class="sd">            the folder on the server corresponding to the rpi name, </span>
-<span class="sd">            for example /home/pi/SERVER/pi41. If different, a folder </span>
-<span class="sd">            with name corresponding to location will be created</span>
-<span class="sd">            inside the home directory. Images are stored in separate </span>
-<span class="sd">            automatically created folders each day.</span>
-<span class="sd">        imgwait : float, default = 5.0</span>
-<span class="sd">            The delay between subsequent images in seconds. When a </span>
-<span class="sd">            delay is provided that is less than ~0.5s (shutterspeed + </span>
-<span class="sd">            processingtime) it will be automatically set to 0 </span>
-<span class="sd">            and images thus taken immideately one after the other.</span>
-<span class="sd">        imgnr : int, default = 100</span>
-<span class="sd">            The number of images that should be taken. When this </span>
-<span class="sd">            number is reached, the script will automatically terminate.</span>
-<span class="sd">            The minimum of a) imgnr and b) nr of images based on </span>
-<span class="sd">            imgwait and imgtime will be selected.</span>
-<span class="sd">        imgtime : integer, default = 600</span>
-<span class="sd">            The time in seconds during which images should be taken.</span>
-<span class="sd">            The minimum of a) imgnr and b) nr of images based on </span>
-<span class="sd">            imgwait and imgtime will be selected.</span>
-<span class="sd">        width : int, default = 800</span>
-<span class="sd">            The width of the image in pixels.</span>
-<span class="sd">        height : int, default = 800</span>
-<span class="sd">            The height of the image in pixels.</span>
-<span class="sd">        compensation : int, default = 0</span>
-<span class="sd">            Camera lighting compensation. Ranges between 0 and 20.</span>
-<span class="sd">            Compensation artificially adds extra light to the image.</span>
-<span class="sd">        shutterspeed : int, detault = 10000</span>
-<span class="sd">            Shutter speed of the camera in microseconds, i.e. the</span>
-<span class="sd">            default of 10000 is equivalent to 1/100th of a second. A</span>
-<span class="sd">            longer shutterspeed will result in a brighter image but</span>
-<span class="sd">            more motion blur. Important: the framerate of the camera</span>
-<span class="sd">            will be adjusted based on the shutterspeed. At shutter-</span>
-<span class="sd">            speeds above ~ 0.2s this results in increasingly longer</span>
-<span class="sd">            waiting times between images so a standard imgwait time</span>
-<span class="sd">            should be chosen that is 6+ times more than the</span>
-<span class="sd">            shutterspeed. For example, for a shutterspeed of 300000</span>
-<span class="sd">            imgwait should be &gt; 1.8s.</span>
-<span class="sd">        iso : int, default = 200</span>
-<span class="sd">            The camera ISO value, an integer value in sequence </span>
-<span class="sd">            [200,400,800,1600]. Higher values are more light</span>
-<span class="sd">            sensitive but have higher gain.</span>
-<span class="sd">        brightness : int, default = 55</span>
-<span class="sd">            The brightness level of the camera, an integer value </span>
-<span class="sd">            between 0 and 100.</span>
-<span class="sd">        sharpness : int, default = 50</span>
-<span class="sd">            The sharpness of the camera, an integer value between </span>
-<span class="sd">            -100 and 100.</span>
-<span class="sd">        contrast : int, default = 20</span>
-<span class="sd">            The image contrast, an integer value between 0 and 100.</span>
-<span class="sd">        saturation : int, default -100</span>
-<span class="sd">            The color saturation level of the image, an integer</span>
-<span class="sd">            value between -100 and 100.</span>
-<span class="sd">        quality : int, default = 20</span>
-<span class="sd">            The quality of the JPEG encoder, as an integer</span>
-<span class="sd">            ranging from 1 to 100. Defaults to 20.</span>
-<span class="sd">        roifile : str, default = /home/pi/roifile.txt</span>
-<span class="sd">            The filename for the txt file that contains the region </span>
-<span class="sd">            of interest. This should be provided on one line as </span>
-<span class="sd">            (x, y, w, h) with parentheses, i.e. a tuple of floating </span>
-<span class="sd">            point values ranging from 0.0 to 1.0. The default value </span>
-<span class="sd">            is (0.0, 0.0, 1.0, 1.0).</span>
-<span class="sd">        </span>
-<span class="sd">        Output</span>
-<span class="sd">        -------</span>
-<span class="sd">        A series of JPEG images, automatically named based on </span>
-<span class="sd">        the rpi number, date, and time, following the standard </span>
-<span class="sd">        naming convention: piXX_YYMMDD_im%04d_HHMMSS.jpg</span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-    <span class="c1"># acquire rpi name</span>
-    <span class="n">rpi</span> <span class="o">=</span> <span class="n">gethostname</span><span class="p">()</span>
-    
-    <span class="c1"># print starting statement</span>
-    <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - imgrec started. The date is &quot;</span><span class="o">+</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;. Warming up...&quot;</span>           
-    
-    <span class="c1"># convert input to right type (for using runp)</span>
-    <span class="n">imgwait</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">imgwait</span><span class="p">)</span>
-    <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgnr</span><span class="p">)</span>
-    <span class="n">imgtime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span><span class="p">)</span>
-    <span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">height</span><span class="p">))</span>
-    <span class="n">compensation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">compensation</span><span class="p">)</span>
-    <span class="n">shutterspeed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">shutterspeed</span><span class="p">)</span>
-    <span class="n">iso</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span>
-    <span class="n">brightness</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">brightness</span><span class="p">)</span>
-    <span class="n">sharpness</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sharpness</span><span class="p">)</span>
-    <span class="n">contrast</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">contrast</span><span class="p">)</span>
-    <span class="n">saturation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">saturation</span><span class="p">)</span>
-    <span class="n">quality</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span>
-    
-    <span class="c1"># when imgwait is close to zero, change to mininum</span>
-    <span class="c1"># value that roughly equals time to take image</span>
-    <span class="n">mintime</span> <span class="o">=</span> <span class="mf">0.45</span>
-    <span class="n">imgwait</span> <span class="o">=</span> <span class="n">mintime</span> <span class="k">if</span> <span class="n">imgwait</span> <span class="o">&lt;</span> <span class="n">mintime</span> <span class="k">else</span> <span class="n">imgwait</span>
-
-    <span class="c1"># get number of images to record</span>
-    <span class="n">totimg</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">imgtime</span> <span class="o">/</span> <span class="n">imgwait</span><span class="p">)</span>
-    <span class="n">imgnr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">imgnr</span><span class="p">,</span> <span class="n">totimg</span><span class="p">)</span>
-    
-    <span class="c1"># set fps based on shutterspeed</span>
-    <span class="n">shuttsec</span> <span class="o">=</span> <span class="n">shutterspeed</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">shuttsec</span> <span class="o">&lt;</span> <span class="mf">0.025</span><span class="p">:</span>
-        <span class="n">fps</span> <span class="o">=</span> <span class="mi">40</span>
-    <span class="k">elif</span> <span class="n">shuttsec</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">fps</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">shuttsec</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s2">&quot;shutterspeed too low.. reverting back to framerate of 1fps&quot;</span>
-        <span class="n">fps</span> <span class="o">=</span> <span class="mi">1</span>
-
-    <span class="c1"># set the directory </span>
-    <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pi&quot;</span><span class="p">:</span>
-        <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/NAS/&quot;</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">server</span> <span class="o">+</span> <span class="n">rpi</span>
-        
-        <span class="c1"># add date folder</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">location</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;/%y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/&quot;</span><span class="o">+</span><span class="n">location</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-    
-    <span class="c1"># set-up automatic filenaming</span>
-    <span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
-    <span class="n">counter</span> <span class="o">=</span> <span class="s2">&quot;_im{counter:05d}&quot;</span>
-    <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
-    <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span> <span class="o">+</span> <span class="n">daystamp</span> <span class="o">+</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">ftype</span>
-    
-    <span class="c1"># set the roi</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">roifile</span><span class="p">):</span>
-        <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">))</span>
-        <span class="n">zoom</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">reader</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">zoom</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">zoom</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
-    
-    <span class="c1"># set-up the camera with the right parameters</span>
-    <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">framerate</span> <span class="o">=</span> <span class="n">fps</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">zoom</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">exposure_compensation</span> <span class="o">=</span> <span class="n">compensation</span>
-    <span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">exposure_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">awb_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">awb_gains</span> <span class="o">=</span> <span class="p">(</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">405</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">57</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">shutter_speed</span> <span class="o">=</span> <span class="n">shutterspeed</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">sharpness</span> <span class="o">=</span> <span class="n">sharpness</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">iso</span> <span class="o">=</span> <span class="n">iso</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">contrast</span> <span class="o">=</span> <span class="n">contrast</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">saturation</span> <span class="o">=</span> <span class="n">saturation</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="n">brightness</span>
-    
-    <span class="c1"># start taking images</span>
-    <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">camera</span><span class="o">.</span><span class="n">capture_continuous</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
-                            <span class="n">format</span><span class="o">=</span><span class="s2">&quot;jpeg&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="n">quality</span><span class="p">)):</span>
-        
-        <span class="c1"># stop when image number is reached</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="p">(</span><span class="n">imgnr</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - captured &quot;</span> <span class="o">+</span> <span class="n">img</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="k">break</span>
-        
-        <span class="c1"># calculate delay and wait before taking next image</span>
-        <span class="n">delay</span> <span class="o">=</span> <span class="n">imgwait</span><span class="o">-</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">-</span><span class="n">bef</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
-        <span class="n">delay</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">delay</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">delay</span>
-        <span class="k">print</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;[%H:%M:%S][&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">rpi</span> <span class="o">+</span> <span class="s2">&quot;] - captured &quot;</span> <span class="o">+</span> <span class="n">img</span> <span class="o">+</span>\
-              <span class="s2">&quot;, sleeping &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;s..&quot;</span>
-        <span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
-        <span class="n">bef</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="k">print</span> <span class="n">bef</span>
-
-    <span class="c1"># release camera when finished</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
-<span class="c1"># only execute record function when file is run</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">record</span><span class="p">()</span>
+    <span class="c1"># Stop when escape is pressed</span>
+    <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">27</span><span class="p">:</span>
+        <span class="k">break</span>
 </pre></div>
 
 </div>

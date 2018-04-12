@@ -164,7 +164,7 @@ def record(location = "pi",
 
     # set the directory 
     if location == "pi":
-        server = "/home/pi/SERVER/"
+        server = "/home/pi/NAS/"
         location = server + rpi
         
         # add date folder

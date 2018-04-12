@@ -49,8 +49,8 @@ from ast import literal_eval
 def record(location = "NAS",
            task = "pilot", 
            single = "no", 
-           duration = 600, 
-           delay = 30, 
+           duration = 10, 
+           delay = 0, 
            width = 1640, 
            height = 1232, 
            compensation = 0, 
@@ -68,6 +68,11 @@ def record(location = "NAS",
         
         Parameters
         ----------
+        location : str, default = "NAS"
+            Location where videos will be stored. Default is "NAS",
+            which is the automatically mounted NAS drive. New folder
+            will be created based on alternative location name. Providing
+            no name stores in home directory.
         task : str, default = "pilot"
             Name of task used. Always use five characters.
         single : str, default = "no"
@@ -75,14 +80,9 @@ def record(location = "NAS",
             Alternatively, user is asked for session 
             information and id information continuously until 
             the user quits the script.
-        location : str, default = "NAS"
-            Location where videos will be stored. Default is "NAS",
-            which is the automatically mounted NAS drive. New folder
-            will be created based on alternative location name. Providing
-            no name stores in home directory.
-        duration : int, default = 600
+        duration : int, default = 10
             Total duration of the trials in seconds.
-        delay : int, default = 30
+        delay : int, default = 0
             Extra recording time in seconds. Main use is for
             wanting to film acclimatisation time. 
         width : int, default = 1640
@@ -126,11 +126,11 @@ def record(location = "NAS",
         h264 video of trial
 
         Note: Filenaming convention is \
-        date(yymmdd)_task(5char)_RPI(C+2nr)_session(S+2nr)_ID(F+3nr/GR+2nr).h264
+        date(yymmdd)_task_RPI(RP+2nr)_session(S+2nr)_ID(F+3nr/GR+2nr).h264
             
     """
     
-    # convert input parameters (all string), needed when using runp 
+    # Convert input parameters (all string), needed when using runp 
     # external function calling
     duration = int(duration)
     delay = int(delay)
@@ -145,33 +145,31 @@ def record(location = "NAS",
     saturation = int(saturation)
     quality = int(quality)
       
-    # load automatic settings
+    # Load automatic settings
     rpi = socket.gethostname()
-    rpi = "C"+rpi[5:7]
+    rpi = "RP"+rpi[5:7]
     date = time.strftime("%y%m%d")
     if os.path.exists("setup.gains.pk"):
         awb = cPickle.load(open('setup.gains.pk', 'rb'))[0]
     else:
         awb = (1.5, 2.4)
 
-    # change location where videos are stored
+    # Change location where videos are stored
     location = "/home/pi/"+location
     if not os.path.exists(location):
         os.makedirs(location)
     os.chdir(location)
 
-    # print recording settings
+    # Print recording settings
     print time.strftime("%H:%M:%S")+" - Recording with following settings: location: "+location+"; duration "+str(duration+delay)+"sec; resolution: "+str(resolution)+"; shutterspeed: "+str(shutterspeed/1000)+"ms; compensation: "+str(compensation)+"; fps: "+str(fps)+"; sharpness: "+str(sharpness)+"; iso: "+str(iso)+"; contrast: "+str(contrast)+"; brightness: "+str(brightness)+"; saturation: "+str(saturation)+"; and quality: "+str(quality)+"\n"
 
     while True:
         print(time.strftime("%H:%M:%S")+" - New session started")
 
-        # ask for session and id information when not single
-        if single == "yes":
-            filename = date+"_"+task+"_"+rpi+"_"+time.strftime("%H%M%S")+"_U.h264"
+        # Ask for session and id information when not single
+        if single == "no":
             
-        else:
-            # ask for session nr and check if input is correct
+            # Ask for session nr and check if input is correct
             while True:
                 session = raw_input("Session nr (e.g. S01): ")
                 if len(session) != 3:
@@ -180,7 +178,7 @@ def record(location = "NAS",
                 else:
                     break
 
-            # ask for ID nr and check if input is correct
+            # Ask for ID nr and check if input is correct
             while True:
                 idnr = raw_input("Fish/Group ID (e.g. F101 or GR20): ")
                 if len(idnr) != 4:
@@ -188,16 +186,23 @@ def record(location = "NAS",
                     continue
                 else:
                     break
+                    
+        # Single
+        else:
+            filename = date+"_"+task+"_"+rpi+"_"+time.strftime("%H%M%S")+"_U.h264"
+            
+            
 
-            # create filename
+            # Create filename
             filename = date+"_"+task+"_"+rpi+"_"+session+"_"+idnr+".h264"
         
-        # start recording
+        # Start recording
         print(time.strftime("%H:%M:%S")+" - Starting up...")
         with picamera.PiCamera() as camera:
             camera.resolution = resolution
             camera.exposure_compensation = compensation
             camera.framerate = fps
+            camera.rotation = 90
             time.sleep(1)
             camera.exposure_mode = 'off'
             camera.awb_mode = 'off'

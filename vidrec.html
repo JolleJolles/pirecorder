@@ -11824,8 +11824,8 @@ div#notebook {
 <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;NAS&quot;</span><span class="p">,</span>
            <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;pilot&quot;</span><span class="p">,</span> 
            <span class="n">single</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span> 
-           <span class="n">duration</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> 
-           <span class="n">delay</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> 
+           <span class="n">duration</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+           <span class="n">delay</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
            <span class="n">width</span> <span class="o">=</span> <span class="mi">1640</span><span class="p">,</span> 
            <span class="n">height</span> <span class="o">=</span> <span class="mi">1232</span><span class="p">,</span> 
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
@@ -11843,6 +11843,11 @@ div#notebook {
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
+<span class="sd">        location : str, default = &quot;NAS&quot;</span>
+<span class="sd">            Location where videos will be stored. Default is &quot;NAS&quot;,</span>
+<span class="sd">            which is the automatically mounted NAS drive. New folder</span>
+<span class="sd">            will be created based on alternative location name. Providing</span>
+<span class="sd">            no name stores in home directory.</span>
 <span class="sd">        task : str, default = &quot;pilot&quot;</span>
 <span class="sd">            Name of task used. Always use five characters.</span>
 <span class="sd">        single : str, default = &quot;no&quot;</span>
@@ -11850,14 +11855,9 @@ div#notebook {
 <span class="sd">            Alternatively, user is asked for session </span>
 <span class="sd">            information and id information continuously until </span>
 <span class="sd">            the user quits the script.</span>
-<span class="sd">        location : str, default = &quot;NAS&quot;</span>
-<span class="sd">            Location where videos will be stored. Default is &quot;NAS&quot;,</span>
-<span class="sd">            which is the automatically mounted NAS drive. New folder</span>
-<span class="sd">            will be created based on alternative location name. Providing</span>
-<span class="sd">            no name stores in home directory.</span>
-<span class="sd">        duration : int, default = 600</span>
+<span class="sd">        duration : int, default = 10</span>
 <span class="sd">            Total duration of the trials in seconds.</span>
-<span class="sd">        delay : int, default = 30</span>
+<span class="sd">        delay : int, default = 0</span>
 <span class="sd">            Extra recording time in seconds. Main use is for</span>
 <span class="sd">            wanting to film acclimatisation time. </span>
 <span class="sd">        width : int, default = 1640</span>
@@ -11901,11 +11901,11 @@ div#notebook {
 <span class="sd">        h264 video of trial</span>
 
 <span class="sd">        Note: Filenaming convention is \</span>
-<span class="sd">        date(yymmdd)_task(5char)_RPI(C+2nr)_session(S+2nr)_ID(F+3nr/GR+2nr).h264</span>
+<span class="sd">        date(yymmdd)_task_RPI(RP+2nr)_session(S+2nr)_ID(F+3nr/GR+2nr).h264</span>
 <span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
-    <span class="c1"># convert input parameters (all string), needed when using runp </span>
+    <span class="c1"># Convert input parameters (all string), needed when using runp </span>
     <span class="c1"># external function calling</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">duration</span><span class="p">)</span>
     <span class="n">delay</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
@@ -11920,33 +11920,31 @@ div#notebook {
     <span class="n">saturation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">saturation</span><span class="p">)</span>
     <span class="n">quality</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span>
       
-    <span class="c1"># load automatic settings</span>
+    <span class="c1"># Load automatic settings</span>
     <span class="n">rpi</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
-    <span class="n">rpi</span> <span class="o">=</span> <span class="s2">&quot;C&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+    <span class="n">rpi</span> <span class="o">=</span> <span class="s2">&quot;RP&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;setup.gains.pk&quot;</span><span class="p">):</span>
         <span class="n">awb</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;setup.gains.pk&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">awb</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>
 
-    <span class="c1"># change location where videos are stored</span>
+    <span class="c1"># Change location where videos are stored</span>
     <span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/&quot;</span><span class="o">+</span><span class="n">location</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
 
-    <span class="c1"># print recording settings</span>
+    <span class="c1"># Print recording settings</span>
     <span class="k">print</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; - Recording with following settings: location: &quot;</span><span class="o">+</span><span class="n">location</span><span class="o">+</span><span class="s2">&quot;; duration &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">duration</span><span class="o">+</span><span class="n">delay</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;sec; resolution: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">resolution</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; shutterspeed: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">shutterspeed</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;ms; compensation: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">compensation</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; fps: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">fps</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; sharpness: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">sharpness</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; iso: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">iso</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; contrast: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">contrast</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; brightness: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">brightness</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; saturation: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">saturation</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;; and quality: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
 
     <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
         <span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; - New session started&quot;</span><span class="p">)</span>
 
-        <span class="c1"># ask for session and id information when not single</span>
-        <span class="k">if</span> <span class="n">single</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;_U.h264&quot;</span>
+        <span class="c1"># Ask for session and id information when not single</span>
+        <span class="k">if</span> <span class="n">single</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
             
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># ask for session nr and check if input is correct</span>
+            <span class="c1"># Ask for session nr and check if input is correct</span>
             <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
                 <span class="n">session</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s2">&quot;Session nr (e.g. S01): &quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">session</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -11955,7 +11953,7 @@ div#notebook {
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
 
-            <span class="c1"># ask for ID nr and check if input is correct</span>
+            <span class="c1"># Ask for ID nr and check if input is correct</span>
             <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
                 <span class="n">idnr</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s2">&quot;Fish/Group ID (e.g. F101 or GR20): &quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">idnr</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
@@ -11963,16 +11961,23 @@ div#notebook {
                     <span class="k">continue</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
+                    
+        <span class="c1"># Single</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;_U.h264&quot;</span>
+            
+            
 
-            <span class="c1"># create filename</span>
+            <span class="c1"># Create filename</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">session</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">idnr</span><span class="o">+</span><span class="s2">&quot;.h264&quot;</span>
         
-        <span class="c1"># start recording</span>
+        <span class="c1"># Start recording</span>
         <span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; - Starting up...&quot;</span><span class="p">)</span>
         <span class="k">with</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span> <span class="k">as</span> <span class="n">camera</span><span class="p">:</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">exposure_compensation</span> <span class="o">=</span> <span class="n">compensation</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">framerate</span> <span class="o">=</span> <span class="n">fps</span>
+            <span class="n">camera</span><span class="o">.</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span>
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">exposure_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">awb_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
