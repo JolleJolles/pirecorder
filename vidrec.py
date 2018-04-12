@@ -11,6 +11,7 @@
 # Last updated: 12 Apr 2018           #
 #######################################
 
+#3.10.6: Changed loading of gains file
 #3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder
 #3.10.4: Added automatic rotation based on the rpi number
 #3.10.3: Added some more description
@@ -155,8 +156,8 @@ def record(location = "NAS",
     rpi = socket.gethostname()
     rpi = "RPi"+rpi[6:8]
     date = time.strftime("%y%m%d")
-    if os.path.exists("setup.gains.pk"):
-        awb = cPickle.load(open('setup.gains.pk', 'rb'))[0]
+    if os.path.exists("setup/gains.pk"):
+        awb = cPickle.load(open('setup/gains.pk', 'rb'))[0]
     else:
         awb = (1.5, 2.4)
         

@@ -11786,6 +11786,7 @@ div#notebook {
 <span class="c1"># Last updated: 12 Apr 2018           #</span>
 <span class="c1">#######################################</span>
 
+<span class="c1">#3.10.6: Changed loading of gains file</span>
 <span class="c1">#3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder</span>
 <span class="c1">#3.10.4: Added automatic rotation based on the rpi number</span>
 <span class="c1">#3.10.3: Added some more description</span>
@@ -11930,8 +11931,8 @@ div#notebook {
     <span class="n">rpi</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostname</span><span class="p">()</span>
     <span class="n">rpi</span> <span class="o">=</span> <span class="s2">&quot;RPi&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
     <span class="n">date</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;setup.gains.pk&quot;</span><span class="p">):</span>
-        <span class="n">awb</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;setup.gains.pk&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;setup/gains.pk&quot;</span><span class="p">):</span>
+        <span class="n">awb</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;setup/gains.pk&#39;</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">awb</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>
         
