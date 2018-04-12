@@ -11,11 +11,13 @@
 # Last updated: 25 Nov 2017           #
 #######################################
 
+#3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder
+#3.10.4: Added automatic rotation based on the rpi number
 #3.10.3: Added some more description
 #3.10.2: Fixed folder naming and filenaming when running single
 #3.10.1: Improved storage location naming to record to different folders
 #3.10.0: Integrated shutterspeed
-#3.9.3: Rpi name now changes jolpi names to CXX nr
+#3.9.3: Rpi name now changes jolpi names to RPiXX nr
 #3.9.2: Decided to make tasks 5 characters and standard task "pilot"
 #3.9.1: Changed file naming convention
 #3.8.3: Made some small corrections
@@ -61,7 +63,8 @@ def record(location = "NAS",
            contrast = 15,
            saturation = -100, 
            quality = 18,
-           fps = 12):
+           fps = 12,
+           autorotate = "yes"):
     
     """
         Run automated recording sessions with the rpi camera
@@ -120,6 +123,9 @@ def record(location = "NAS",
             Specifies the quality that the encoder should attempt
             to maintain. Valid values are between 10 and 40, where
             10 is extremely high quality, and 40 is extremely low.
+        autorotate : bool, default True
+            If the camera image should be automatically rotated based 
+            on the raspberrpi location (1,3,5,7 are rotated 180)
             
         Output
         -------
@@ -144,18 +150,29 @@ def record(location = "NAS",
     brightness = int(brightness)
     saturation = int(saturation)
     quality = int(quality)
-      
+    
     # Load automatic settings
     rpi = socket.gethostname()
-    rpi = "RP"+rpi[5:7]
+    rpi = "RPi"+rpi[6:8]
     date = time.strftime("%y%m%d")
     if os.path.exists("setup.gains.pk"):
         awb = cPickle.load(open('setup.gains.pk', 'rb'))[0]
     else:
         awb = (1.5, 2.4)
+        
+    # Camera rotation
+    if autorotate == "yes":
+        rotation = 180 if rpi in ["RPi01","RPi03","RPi05","RPi07"] else 0
+
+    
+    # Check if NAS is mounted, if not store in home folder instead
+    if not os.path.ismount("NAS"):
+        location = ""
 
     # Change location where videos are stored
     location = "/home/pi/"+location
+    
+    # Check if folder exisrts
     if not os.path.exists(location):
         os.makedirs(location)
     os.chdir(location)
@@ -200,7 +217,7 @@ def record(location = "NAS",
             camera.resolution = resolution
             camera.exposure_compensation = compensation
             camera.framerate = fps
-            camera.rotation = 90
+            camera.rotation = rotation
             time.sleep(1)
             camera.exposure_mode = 'off'
             camera.awb_mode = 'off'
