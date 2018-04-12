@@ -11962,14 +11962,12 @@ div#notebook {
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">break</span>
                     
+            <span class="c1"># Create filename</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">session</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">idnr</span><span class="o">+</span><span class="s2">&quot;.h264&quot;</span>
+                    
         <span class="c1"># Single</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;_U.h264&quot;</span>
-            
-            
-
-            <span class="c1"># Create filename</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">date</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">task</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">rpi</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">session</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">idnr</span><span class="o">+</span><span class="s2">&quot;.h264&quot;</span>
         
         <span class="c1"># Start recording</span>
         <span class="k">print</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot; - Starting up...&quot;</span><span class="p">)</span>

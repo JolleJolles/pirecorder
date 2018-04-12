@@ -187,14 +187,12 @@ def record(location = "NAS",
                 else:
                     break
                     
+            # Create filename
+            filename = date+"_"+task+"_"+rpi+"_"+session+"_"+idnr+".h264"
+                    
         # Single
         else:
             filename = date+"_"+task+"_"+rpi+"_"+time.strftime("%H%M%S")+"_U.h264"
-            
-            
-
-            # Create filename
-            filename = date+"_"+task+"_"+rpi+"_"+session+"_"+idnr+".h264"
         
         # Start recording
         print(time.strftime("%H:%M:%S")+" - Starting up...")
