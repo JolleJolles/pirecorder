@@ -7,8 +7,8 @@
 
 #######################################
 # Script for recording video with RPi #
-# Author: J. Jolles ; Version: 3.10   #
-# Last updated: 25 Nov 2017           #
+# Author: J. Jolles ; Version: 3.10.5 #
+# Last updated: 12 Apr 2018           #
 #######################################
 
 #3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder
@@ -131,7 +131,7 @@ def record(location = "NAS",
         -------
         h264 video of trial
 
-        Note: Filenaming convention is \
+        Note: Filenaming convention is:
         date(yymmdd)_task_RPI(RP+2nr)_session(S+2nr)_ID(F+3nr/GR+2nr).h264
             
     """
@@ -163,7 +163,6 @@ def record(location = "NAS",
     # Camera rotation
     if autorotate == "yes":
         rotation = 180 if rpi in ["RPi01","RPi03","RPi05","RPi07"] else 0
-
     
     # Check if NAS is mounted, if not store in home folder instead
     if not os.path.ismount("NAS"):
@@ -178,7 +177,7 @@ def record(location = "NAS",
     os.chdir(location)
 
     # Print recording settings
-    print time.strftime("%H:%M:%S")+" - Recording with following settings: location: "+location+"; duration "+str(duration+delay)+"sec; resolution: "+str(resolution)+"; shutterspeed: "+str(shutterspeed/1000)+"ms; compensation: "+str(compensation)+"; fps: "+str(fps)+"; sharpness: "+str(sharpness)+"; iso: "+str(iso)+"; contrast: "+str(contrast)+"; brightness: "+str(brightness)+"; saturation: "+str(saturation)+"; and quality: "+str(quality)+"\n"
+    print time.strftime("%H:%M:%S")+" - Recording with following settings: location: "+location+           "; duration "+str(duration+delay)+"sec; resolution: "+str(resolution)+"; shutterspeed: "+           str(shutterspeed/1000)+"ms; compensation: "+str(compensation)+"; fps: "+str(fps)+           "; sharpness: "+str(sharpness)+"; iso: "+str(iso)+"; contrast: "+str(contrast)+           "; brightness: "+str(brightness)+"; saturation: "+str(saturation)+"; and quality: "+str(quality)+"\n"
 
     while True:
         print(time.strftime("%H:%M:%S")+" - New session started")
