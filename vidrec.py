@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+
 #!/usr/bin/python
 
 #######################################
@@ -57,14 +58,14 @@ def record(location = "NAS",
            width = 1640, 
            height = 1232, 
            compensation = 0, 
-           shutterspeed = 10000, 
+           shutterspeed = 5000, 
            iso = 200, 
-           brightness = 55, 
+           brightness = 40, 
            sharpness = 50, 
-           contrast = 15,
-           saturation = -100, 
-           quality = 18,
-           fps = 12,
+           contrast = 35,
+           saturation = 0, 
+           quality = 25,
+           fps = 24,
            autorotate = "yes"):
     
     """
@@ -95,9 +96,9 @@ def record(location = "NAS",
             The height dimension of the camera resolution. Max 
             possible resolution is pixel size of default. Beyond
             that size, camera will throw an error.
-        shutterspeed : int, detault = 10000
+        shutterspeed : int, detault = 5000
             Shutter speed of the camera in microseconds. Thus the
-            default of 10000 is equivalent to 1/100th of a second
+            default of 5000 is equivalent to 1/200th of a second
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.
         fps : int, default = 12
@@ -111,16 +112,16 @@ def record(location = "NAS",
             The camera iso value. Higher values are more light
             sensitive but have higher gain. Valid
             values are between 0 (auto) and 1600.
-        contrast : int, default = 15
+        contrast : int, default = 35
             The camera contrast. Valid values are 
             between -100 and 100.
-        brightness : int, default = 55
+        brightness : int, default = 40
             The brightness level of the camera. Valid values
             are between 0 and 100.
-        saturation : int, default -100
+        saturation : int, default 0
             The color saturation level of the camera. Valid 
             values are between -100 and 100.
-        quality : int, default 18
+        quality : int, default 25
             Specifies the quality that the encoder should attempt
             to maintain. Valid values are between 10 and 40, where
             10 is extremely high quality, and 40 is extremely low.
@@ -163,7 +164,7 @@ def record(location = "NAS",
         
     # Camera rotation
     if autorotate == "yes":
-        rotation = 180 if rpi in ["RPi01","RPi03","RPi05","RPi07"] else 0
+        rotation = 180 if rpi in ["jolpi101","jolpi103","jolpi105","jolpi107"] else 0
     
     # Check if NAS is mounted, if not store in home folder instead
     if not os.path.ismount("NAS"):

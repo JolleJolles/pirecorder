@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11832,14 +11830,14 @@ div#notebook {
            <span class="n">width</span> <span class="o">=</span> <span class="mi">1640</span><span class="p">,</span> 
            <span class="n">height</span> <span class="o">=</span> <span class="mi">1232</span><span class="p">,</span> 
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
-           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> 
+           <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span> 
            <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> 
-           <span class="n">brightness</span> <span class="o">=</span> <span class="mi">55</span><span class="p">,</span> 
+           <span class="n">brightness</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> 
            <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> 
-           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
-           <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> 
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
-           <span class="n">fps</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+           <span class="n">contrast</span> <span class="o">=</span> <span class="mi">35</span><span class="p">,</span>
+           <span class="n">saturation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+           <span class="n">fps</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
            <span class="n">autorotate</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
@@ -11870,9 +11868,9 @@ div#notebook {
 <span class="sd">            The height dimension of the camera resolution. Max </span>
 <span class="sd">            possible resolution is pixel size of default. Beyond</span>
 <span class="sd">            that size, camera will throw an error.</span>
-<span class="sd">        shutterspeed : int, detault = 10000</span>
+<span class="sd">        shutterspeed : int, detault = 5000</span>
 <span class="sd">            Shutter speed of the camera in microseconds. Thus the</span>
-<span class="sd">            default of 10000 is equivalent to 1/100th of a second</span>
+<span class="sd">            default of 5000 is equivalent to 1/200th of a second</span>
 <span class="sd">        compensation : int, default = 0</span>
 <span class="sd">            Camera lighting compensation. Ranges between 0 and 20.</span>
 <span class="sd">        fps : int, default = 12</span>
@@ -11886,16 +11884,16 @@ div#notebook {
 <span class="sd">            The camera iso value. Higher values are more light</span>
 <span class="sd">            sensitive but have higher gain. Valid</span>
 <span class="sd">            values are between 0 (auto) and 1600.</span>
-<span class="sd">        contrast : int, default = 15</span>
+<span class="sd">        contrast : int, default = 35</span>
 <span class="sd">            The camera contrast. Valid values are </span>
 <span class="sd">            between -100 and 100.</span>
-<span class="sd">        brightness : int, default = 55</span>
+<span class="sd">        brightness : int, default = 40</span>
 <span class="sd">            The brightness level of the camera. Valid values</span>
 <span class="sd">            are between 0 and 100.</span>
-<span class="sd">        saturation : int, default -100</span>
+<span class="sd">        saturation : int, default 0</span>
 <span class="sd">            The color saturation level of the camera. Valid </span>
 <span class="sd">            values are between -100 and 100.</span>
-<span class="sd">        quality : int, default 18</span>
+<span class="sd">        quality : int, default 25</span>
 <span class="sd">            Specifies the quality that the encoder should attempt</span>
 <span class="sd">            to maintain. Valid values are between 10 and 40, where</span>
 <span class="sd">            10 is extremely high quality, and 40 is extremely low.</span>
@@ -11938,7 +11936,7 @@ div#notebook {
         
     <span class="c1"># Camera rotation</span>
     <span class="k">if</span> <span class="n">autorotate</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
-        <span class="n">rotation</span> <span class="o">=</span> <span class="mi">180</span> <span class="k">if</span> <span class="n">rpi</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;RPi01&quot;</span><span class="p">,</span><span class="s2">&quot;RPi03&quot;</span><span class="p">,</span><span class="s2">&quot;RPi05&quot;</span><span class="p">,</span><span class="s2">&quot;RPi07&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="mi">180</span> <span class="k">if</span> <span class="n">rpi</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jolpi101&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi103&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi105&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi107&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
     
     <span class="c1"># Check if NAS is mounted, if not store in home folder instead</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">ismount</span><span class="p">(</span><span class="s2">&quot;NAS&quot;</span><span class="p">):</span>
