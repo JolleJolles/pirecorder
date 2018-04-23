@@ -11784,6 +11784,7 @@ div#notebook {
 <span class="c1"># Last updated: 12 Apr 2018           #</span>
 <span class="c1">#######################################</span>
 
+<span class="c1">#3.10.7: Changed defaults to better fit experimental data</span>
 <span class="c1">#3.10.6: Changed loading of gains file</span>
 <span class="c1">#3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder</span>
 <span class="c1">#3.10.4: Added automatic rotation based on the rpi number</span>
@@ -11823,9 +11824,9 @@ div#notebook {
 
 <span class="c1"># define recording function</span>
 <span class="k">def</span> <span class="nf">record</span><span class="p">(</span><span class="n">location</span> <span class="o">=</span> <span class="s2">&quot;NAS&quot;</span><span class="p">,</span>
-           <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;pilot&quot;</span><span class="p">,</span> 
+           <span class="n">task</span> <span class="o">=</span> <span class="s2">&quot;PAU&quot;</span><span class="p">,</span> 
            <span class="n">single</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span><span class="p">,</span> 
-           <span class="n">duration</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+           <span class="n">duration</span> <span class="o">=</span> <span class="mi">1200</span><span class="p">,</span> 
            <span class="n">delay</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
            <span class="n">width</span> <span class="o">=</span> <span class="mi">1640</span><span class="p">,</span> 
            <span class="n">height</span> <span class="o">=</span> <span class="mi">1232</span><span class="p">,</span> 
@@ -11838,7 +11839,7 @@ div#notebook {
            <span class="n">saturation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
            <span class="n">quality</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
            <span class="n">fps</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
-           <span class="n">autorotate</span> <span class="o">=</span> <span class="s2">&quot;yes&quot;</span><span class="p">):</span>
+           <span class="n">autorotate</span> <span class="o">=</span> <span class="s2">&quot;no&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run automated recording sessions with the rpi camera</span>

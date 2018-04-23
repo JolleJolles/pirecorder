@@ -12,6 +12,7 @@
 # Last updated: 12 Apr 2018           #
 #######################################
 
+#3.10.7: Changed defaults to better fit experimental data
 #3.10.6: Changed loading of gains file
 #3.10.5: Check if NAS folder is mountpoint, otherwise write files to home folder
 #3.10.4: Added automatic rotation based on the rpi number
@@ -51,9 +52,9 @@ from ast import literal_eval
 
 # define recording function
 def record(location = "NAS",
-           task = "pilot", 
+           task = "PAU", 
            single = "no", 
-           duration = 10, 
+           duration = 1200, 
            delay = 0, 
            width = 1640, 
            height = 1232, 
@@ -66,7 +67,7 @@ def record(location = "NAS",
            saturation = 0, 
            quality = 25,
            fps = 24,
-           autorotate = "yes"):
+           autorotate = "no"):
     
     """
         Run automated recording sessions with the rpi camera
