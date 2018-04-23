@@ -60,7 +60,7 @@ def record(location = "NAS",
            compensation = 0, 
            shutterspeed = 5000, 
            iso = 200, 
-           brightness = 40, 
+           brightness = 35, 
            sharpness = 50, 
            contrast = 35,
            saturation = 0, 
@@ -115,7 +115,7 @@ def record(location = "NAS",
         contrast : int, default = 35
             The camera contrast. Valid values are 
             between -100 and 100.
-        brightness : int, default = 40
+        brightness : int, default = 35
             The brightness level of the camera. Valid values
             are between 0 and 100.
         saturation : int, default 0
