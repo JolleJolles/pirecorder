@@ -164,6 +164,7 @@ def record(location = "NAS",
         awb = (1.5, 2.4)
         
     # Camera rotation
+    rotation = 0
     if autorotate == "yes":
         rotation = 180 if rpi in ["jolpi101","jolpi103","jolpi105","jolpi107"] else 0
     
