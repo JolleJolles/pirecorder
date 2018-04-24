@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 #!/usr/bin/python
 
 #######################################
@@ -59,9 +58,9 @@ def record(location = "NAS",
            width = 1640, 
            height = 1232, 
            compensation = 0, 
-           shutterspeed = 5000, 
+           shutterspeed = 10000, 
            iso = 200, 
-           brightness = 35, 
+           brightness = 50, 
            sharpness = 50, 
            contrast = 35,
            saturation = 0, 
@@ -97,12 +96,12 @@ def record(location = "NAS",
             The height dimension of the camera resolution. Max 
             possible resolution is pixel size of default. Beyond
             that size, camera will throw an error.
-        shutterspeed : int, detault = 5000
+        shutterspeed : int, detault = 10000
             Shutter speed of the camera in microseconds. Thus the
-            default of 5000 is equivalent to 1/200th of a second
+            default of 10000 is equivalent to 1/100th of a second
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.
-        fps : int, default = 12
+        fps : int, default = 24
             The recording framerate. After 30 fps, camera will 
             start to automatically lower resolution to accomodate
             the requested fps.
@@ -116,7 +115,7 @@ def record(location = "NAS",
         contrast : int, default = 35
             The camera contrast. Valid values are 
             between -100 and 100.
-        brightness : int, default = 35
+        brightness : int, default = 50
             The brightness level of the camera. Valid values
             are between 0 and 100.
         saturation : int, default 0
