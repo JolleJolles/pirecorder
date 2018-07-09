@@ -11809,8 +11809,8 @@ div#notebook {
            <span class="n">imgwait</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
            <span class="n">imgnr</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
            <span class="n">imgtime</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
-           <span class="n">width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
-           <span class="n">height</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
+           <span class="n">width</span> <span class="o">=</span> <span class="mi">3280</span><span class="p">,</span>
+           <span class="n">height</span> <span class="o">=</span> <span class="mi">2464</span><span class="p">,</span>
            <span class="n">compensation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">shutterspeed</span> <span class="o">=</span> <span class="mi">8000</span><span class="p">,</span>
            <span class="n">iso</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
@@ -11954,11 +11954,14 @@ div#notebook {
     <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
     
     <span class="c1"># set-up automatic filenaming</span>
-    <span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
-    <span class="n">counter</span> <span class="o">=</span> <span class="s2">&quot;_im{counter:05d}&quot;</span>
-    <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
-    <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span> <span class="o">+</span> <span class="n">daystamp</span> <span class="o">+</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">ftype</span>
+    <span class="k">if</span> <span class="n">single</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span> <span class="o">+</span> <span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M%S&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">daystamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%Y%m</span><span class="si">%d</span><span class="s2">}&quot;</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="s2">&quot;_im{counter:05d}&quot;</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="s2">&quot;_{timestamp:%H%M%S}&quot;</span>
+        <span class="n">ftype</span> <span class="o">=</span> <span class="s2">&quot;.jpg&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">rpi</span> <span class="o">+</span> <span class="n">daystamp</span> <span class="o">+</span> <span class="n">counter</span> <span class="o">+</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">ftype</span>
     
     <span class="c1"># set the roi</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">roifile</span><span class="p">):</span>

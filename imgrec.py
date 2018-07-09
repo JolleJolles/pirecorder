@@ -37,8 +37,8 @@ def record(location = "pi",
            imgwait = 5.0,
            imgnr = 100,
            imgtime = 600,
-           width = 800,
-           height = 800,
+           width = 3280,
+           height = 2464,
            compensation = 0,
            shutterspeed = 8000,
            iso = 200,
@@ -182,11 +182,14 @@ def record(location = "pi",
     os.chdir(location)
     
     # set-up automatic filenaming
-    daystamp = "_{timestamp:%Y%m%d}"
-    counter = "_im{counter:05d}"
-    timestamp = "_{timestamp:%H%M%S}"
-    ftype = ".jpg"
-    filename = rpi + daystamp + counter + timestamp + ftype
+    if single == "yes":
+        filename = rpi + strftime("%H%M%S")
+    else:
+        daystamp = "_{timestamp:%Y%m%d}"
+        counter = "_im{counter:05d}"
+        timestamp = "_{timestamp:%H%M%S}"
+        ftype = ".jpg"
+        filename = rpi + daystamp + counter + timestamp + ftype
     
     # set the roi
     if os.path.exists(roifile):
