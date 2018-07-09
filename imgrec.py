@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+
 #!/usr/bin/python
 
 #######################################
@@ -13,6 +14,7 @@
 # Version: 1.1.2                      #
 #######################################
 
+#1.2.0
 #1.1.2: change default parameters to get images with even smaller filesize
 #1.1.1: fixed resolution issue
 #1.1.0: it is now possible to record images at low shutterspeeds of up to 1s
@@ -31,6 +33,7 @@ from fractions import Fraction
 
 # define recording function
 def record(location = "pi",
+           single = "no",
            imgwait = 5.0,
            imgnr = 100,
            imgtime = 600,
@@ -44,7 +47,7 @@ def record(location = "pi",
            contrast = 10,
            saturation = -100,
            quality = 11,
-           roifile = "/home/pi/roifile.txt"):
+           roifile = "/home/pi/setup/roifile.txt"):
     
     """
         A fully automated image recording script for the rpi
@@ -59,6 +62,8 @@ def record(location = "pi",
             with name corresponding to location will be created
             inside the home directory. Images are stored in separate 
             automatically created folders each day.
+        single : str, default = "no"
+            If a single image should be record, yes or no. 
         imgwait : float, default = 5.0
             The delay between subsequent images in seconds. When a 
             delay is provided that is less than ~0.5s (shutterspeed + 
@@ -109,7 +114,7 @@ def record(location = "pi",
         quality : int, default = 20
             The quality of the JPEG encoder, as an integer
             ranging from 1 to 100. Defaults to 20.
-        roifile : str, default = /home/pi/roifile.txt
+        roifile : str, default = /home/pi/setup/roifile.txt
             The filename for the txt file that contains the region 
             of interest. This should be provided on one line as 
             (x, y, w, h) with parentheses, i.e. a tuple of floating 
@@ -165,10 +170,11 @@ def record(location = "pi",
     # set the directory 
     if location == "pi":
         server = "/home/pi/NAS/"
-        location = server + rpi
+        location = server  #location = server + rpi --> no longer needed because all rpi's standard mount their own folder
         
         # add date folder
-        location = location + strftime("/%y%m%d")
+        if single == "no":
+            location = location + strftime("/%y%m%d")
     else:
         location = "/home/pi/"+location
     if not os.path.exists(location):
@@ -190,6 +196,12 @@ def record(location = "pi",
     else:
         zoom = (0.0,0.0,1.0,1.0)
     
+    # set the gains
+    if os.path.exists("setup/gains.pk"):
+        awb = cPickle.load(open('setup/gains.pk', 'rb'))[0]
+    else:
+        awb = (1.5, 2.4)
+    
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
     camera.framerate = fps
@@ -199,7 +211,7 @@ def record(location = "pi",
     sleep(5)
     camera.exposure_mode = 'off'
     camera.awb_mode = 'off'
-    camera.awb_gains = (Fraction(405, 256), Fraction(57, 32))
+    camera.awb_gains = awb
     camera.shutter_speed = shutterspeed
     camera.sharpness = sharpness
     camera.iso = iso
@@ -209,21 +221,24 @@ def record(location = "pi",
     
     # start taking images
     bef = datetime.datetime.now()
-    for i, img in enumerate(camera.capture_continuous(filename, 
-                            format="jpeg", quality=quality)):
-        
-        # stop when image number is reached
-        if i == (imgnr-1):
-            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + "\n"
-            break
-        
-        # calculate delay and wait before taking next image
-        delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
-        delay = 0 if delay < 0 else delay
-        print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +              ", sleeping " + str(round(delay,2)) + "s.."
-        sleep(delay)
-        bef = datetime.datetime.now()
-        print bef
+    if single == "yes":
+        camera.capture(filename, format="jpeg", quality=quality)
+    else:
+        for i, img in enumerate(camera.capture_continuous(filename, 
+                                format="jpeg", quality=quality)):
+
+            # stop when image number is reached
+            if i == (imgnr-1):
+                print strftime("[%H:%M:%S][") + rpi + "] - captured " + img + "\n"
+                break
+
+            # calculate delay and wait before taking next image
+            delay = imgwait-(datetime.datetime.now()-bef).total_seconds()
+            delay = 0 if delay < 0 else delay
+            print strftime("[%H:%M:%S][") + rpi + "] - captured " + img +                  ", sleeping " + str(round(delay,2)) + "s.."
+            sleep(delay)
+            bef = datetime.datetime.now()
+            print bef
 
     # release camera when finished
     camera.close()
