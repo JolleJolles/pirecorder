@@ -183,7 +183,7 @@ def record(location = "pi",
     
     # set-up automatic filenaming
     if single == "yes":
-        filename = rpi + strftime("%H%M%S")
+        filename = rpi + "_" + strftime("%H%M%S") + ".jpg"
     else:
         daystamp = "_{timestamp:%Y%m%d}"
         counter = "_im{counter:05d}"
