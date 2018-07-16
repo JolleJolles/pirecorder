@@ -64,7 +64,7 @@ while True:
 
         print points
         points = str([i*2 for i in points])
-        prints points
+        print points
 
         # write edge info to file
         with open("setup/edgecoords.yml", 'w') as f:
