@@ -56,9 +56,7 @@ image_clone2 = image.copy()
 
 points = []
 
-cv2.namedWindow('Image', cv2.WINDOW_AUTOSIZE) #cv2.WINDOW_NORMAL)
-if width < 800:
-    cv2.resizeWindow('image', width*2, height*2)
+cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('Image', drawmask)
 
 
