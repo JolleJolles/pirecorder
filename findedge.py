@@ -61,7 +61,15 @@ while True:
 
     # Store the data
     if k == ord('s') and len(points)>0:
-        #filename = filename+"_mask.jpg"
+
+        print points
+        points = str([i*2 for i in points])
+        prints points
+
+        # write edge info to file
+        with open("setup/edgecoords.yml", 'w') as f:
+            yaml.safe_dump(points, f, default_flow_style=False)
+    
         print "Edge info written to file.."
         break
 
@@ -73,11 +81,4 @@ while True:
 # close video and windows
 cv2.destroyAllWindows()
 cv2.waitKey(1)
-
-# convert points
-points = str([i*2 for i in points])
-
-# write edge info to file
-with open("setup/edgecoords.yml", 'w') as f:
-    yaml.safe_dump(points, f, default_flow_style=False)
 
