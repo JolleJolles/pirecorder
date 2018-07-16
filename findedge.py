@@ -56,7 +56,7 @@ image_clone2 = image.copy()
 
 points = []
 
-cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
+cv2.namedWindow('Image', cv2.WINDOW_AUTOSIZE) #cv2.WINDOW_NORMAL)
 if width < 800:
     cv2.resizeWindow('image', width*2, height*2)
 cv2.setMouseCallback('Image', drawmask)
@@ -78,7 +78,7 @@ while True:
         points = rescale(points, width, height)
 
         with open("setup/edgecoords.yml", 'w') as f:
-            yaml.safe_dump(points, f, default_flow_style=False)
+            yaml.safe_dump(str(points), f, default_flow_style=False)
     
         print "Edge info written to file.."
         break
