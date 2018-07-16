@@ -19,7 +19,7 @@
 import picamera
 import picamera.array
 import numpy as np
-import cPickle
+import yaml
 gains = []
 
 # Open camera stream to get the right gains
