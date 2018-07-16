@@ -61,7 +61,7 @@ with picamera.PiCamera() as camera:
             output.truncate()
 
 # Store gains
-gains = [(rg, bg)]
+gains = str(rg, bg)
 with open("setup/gains.yml", 'w') as f:
     yaml.safe_dump(gains, f, default_flow_style=False)
 print "Gains:", gains, "stored..!"
