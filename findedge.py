@@ -10,15 +10,26 @@ from time import sleep
 import cv2
 import yaml
 
-def take_img(res = (416, 320)):
+width = 416
+height = 320
+
+def rescale(points, width, height, realwidth = 1640, realheight = 1232):
     
-    res = (int(res[0]),int(res[1]))
+    xrz = (float(realwidth)/width)
+    yrz = (float(realheight)/height)
+    points = [(int(p[0]*xrz), int(p[1]*yrz)) for p in points]
+    
+    return points
+
+
+def take_img(width, height):
+    
     camera = picamera.PiCamera()
-    camera.resolution = res
+    camera.resolution = (width, height)
     sleep(1)
-    image = np.empty((res[1] * res[0] * 3,), dtype=np.uint8)
+    image = np.empty((height * width * 3,), dtype=np.uint8)
     camera.capture(image, 'bgr')
-    image = image.reshape((res[1], res[0], 3))
+    image = image.reshape((height, width, 3))
 
     return image
 
@@ -46,7 +57,8 @@ image_clone2 = image.copy()
 points = []
 
 cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-cv2.resizeWindow('image', 832,640)
+if width < 800:
+    cv2.resizeWindow('image', width*2, height*2)
 cv2.setMouseCallback('Image', drawmask)
 
 
@@ -63,7 +75,7 @@ while True:
     # Store the data
     if k == ord('s') and len(points)>0:
 
-        points = str([(i[0]i*2 for i in points])
+        points = rescale(points, width, height)
 
         with open("setup/edgecoords.yml", 'w') as f:
             yaml.safe_dump(points, f, default_flow_style=False)

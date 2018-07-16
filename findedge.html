@@ -11782,15 +11782,26 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
-<span class="k">def</span> <span class="nf">take_img</span><span class="p">(</span><span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="mi">416</span><span class="p">,</span> <span class="mi">320</span><span class="p">)):</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">416</span>
+<span class="n">height</span> <span class="o">=</span> <span class="mi">320</span>
+
+<span class="k">def</span> <span class="nf">rescale</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">realwidth</span> <span class="o">=</span> <span class="mi">1640</span><span class="p">,</span> <span class="n">realheight</span> <span class="o">=</span> <span class="mi">1232</span><span class="p">):</span>
     
-    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">xrz</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">realwidth</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">)</span>
+    <span class="n">yrz</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">realheight</span><span class="p">)</span><span class="o">/</span><span class="n">height</span><span class="p">)</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">xrz</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">yrz</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="k">def</span> <span class="nf">take_img</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="n">res</span>
+    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
     <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">height</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s1">&#39;bgr&#39;</span><span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">image</span>
 
@@ -11818,7 +11829,8 @@ div#notebook {
 <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
-<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="mi">832</span><span class="p">,</span><span class="mi">640</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">width</span> <span class="o">&lt;</span> <span class="mi">800</span><span class="p">:</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">cv2</span><span class="o">.</span><span class="n">setMouseCallback</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">,</span> <span class="n">drawmask</span><span class="p">)</span>
 
 
@@ -11835,7 +11847,7 @@ div#notebook {
     <span class="c1"># Store the data</span>
     <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 
-        <span class="n">points</span> <span class="o">=</span> <span class="nb">str</span><span class="p">([(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">rescale</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;setup/edgecoords.yml&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
