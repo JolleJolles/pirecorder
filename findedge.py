@@ -46,6 +46,7 @@ image_clone2 = image.copy()
 points = []
 
 cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
+cv2.resizeWindow('image', 832,640)
 cv2.setMouseCallback('Image', drawmask)
 
 
@@ -62,11 +63,8 @@ while True:
     # Store the data
     if k == ord('s') and len(points)>0:
 
-        print points
-        points = str([i*2 for i in points])
-        print points
+        points = str([(i[0]i*2 for i in points])
 
-        # write edge info to file
         with open("setup/edgecoords.yml", 'w') as f:
             yaml.safe_dump(points, f, default_flow_style=False)
     

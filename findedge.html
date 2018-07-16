@@ -11818,6 +11818,7 @@ div#notebook {
 <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="n">cv2</span><span class="o">.</span><span class="n">namedWindow</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">WINDOW_NORMAL</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">resizeWindow</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="mi">832</span><span class="p">,</span><span class="mi">640</span><span class="p">)</span>
 <span class="n">cv2</span><span class="o">.</span><span class="n">setMouseCallback</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">,</span> <span class="n">drawmask</span><span class="p">)</span>
 
 
@@ -11834,11 +11835,8 @@ div#notebook {
     <span class="c1"># Store the data</span>
     <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 
-        <span class="k">print</span> <span class="n">points</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="nb">str</span><span class="p">([</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
-        <span class="n">prints</span> <span class="n">points</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="nb">str</span><span class="p">([(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
 
-        <span class="c1"># write edge info to file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;setup/edgecoords.yml&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
     
