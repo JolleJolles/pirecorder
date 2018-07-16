@@ -50,7 +50,7 @@ def drawmask(event, x, y, flags, param):
 
 
         
-image = take_img()
+image = take_img(width, height)
 image_clone = image.copy()
 image_clone2 = image.copy()
 
