@@ -3,6 +3,7 @@
 
 # In[ ]:
 
+
 # Script to automatically find gains on a rpi<
 # Author: JW Jolles
 # Version 2.0
@@ -61,6 +62,7 @@ with picamera.PiCamera() as camera:
 
 # Store gains
 gains = [(rg, bg)]
+with open("setup/gains.yml", 'w') as f:
+    yaml.safe_dump(gains, f, default_flow_style=False)
 print "Gains:", gains, "stored..!"
-cPickle.dump(gains, open("setup/gains.pk", 'wb'))
 

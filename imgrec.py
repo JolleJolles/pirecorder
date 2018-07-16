@@ -78,9 +78,9 @@ def record(location = "pi",
             The time in seconds during which images should be taken.
             The minimum of a) imgnr and b) nr of images based on 
             imgwait and imgtime will be selected.
-        width : int, default = 800
+        width : int, default = 3280
             The width of the image in pixels.
-        height : int, default = 800
+        height : int, default = 2464
             The height of the image in pixels.
         compensation : int, default = 0
             Camera lighting compensation. Ranges between 0 and 20.
