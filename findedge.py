@@ -10,7 +10,7 @@ from time import sleep
 import cv2
 import yaml
 
-def take_img(res = (410, 308)):
+def take_img(res = (416, 320)):
     
     res = (int(res[0]),int(res[1]))
     camera = picamera.PiCamera()
