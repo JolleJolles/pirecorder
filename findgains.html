@@ -11833,7 +11833,7 @@ div#notebook {
             <span class="n">output</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
 
 <span class="c1"># Store gains</span>
-<span class="n">gains</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)</span>
+<span class="n">gains</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">))</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;setup/gains.yml&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">gains</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
 <span class="k">print</span> <span class="s2">&quot;Gains:&quot;</span><span class="p">,</span> <span class="n">gains</span><span class="p">,</span> <span class="s2">&quot;stored..!&quot;</span>

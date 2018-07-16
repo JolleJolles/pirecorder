@@ -75,7 +75,7 @@ cv2.destroyAllWindows()
 cv2.waitKey(1)
 
 # convert points
-points = [i*2 for i in points]
+points = str([i*2 for i in points])
 
 # write edge info to file
 with open("setup/edgecoords.yml", 'w') as f:
