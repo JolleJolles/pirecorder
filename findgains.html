@@ -11805,7 +11805,7 @@ div#notebook {
     <span class="n">brightfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusbright.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">brightfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">brightfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">brightness</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     
     <span class="c1"># Start off with ridiculously low gains</span>
     <span class="n">rg</span><span class="p">,</span> <span class="n">bg</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
