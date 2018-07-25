@@ -33,7 +33,7 @@ with picamera.PiCamera() as camera:
     brightfile = "setup/cusbright.yml"
     if os.path.exists(brightfile):
         with open(brightfile) as f:
-            brightness += yaml.load(f)
+            camera.brightness += yaml.load(f)
     
     # Start off with ridiculously low gains
     rg, bg = (0.5, 0.5)
