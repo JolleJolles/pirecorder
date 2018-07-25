@@ -21,7 +21,6 @@ import picamera.array
 import numpy as np
 import yaml
 import os
-gains = []
 
 # Open camera stream to get the right gains
 with picamera.PiCamera() as camera:
@@ -45,7 +44,7 @@ with picamera.PiCamera() as camera:
             
             # Capture a tiny resized image in RGB format, and extract the
             # average R, G, and B values
-            camera.capture(output, format='rgb', resize=(128, 72), use_video_port=True)
+            camera.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
             r, g, b = (np.mean(output.array[..., i]) for i in range(3))
             print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (
                 rg, bg, r, g, b))
@@ -69,7 +68,8 @@ with picamera.PiCamera() as camera:
             output.truncate()
 
 # Store gains
+gains = str((round(rg,2), round(bg,2)
 with open("setup/cusgains.yml", 'w') as f:
-    yaml.safe_dump(str((rg, bg)), f, default_flow_style=False)
+    yaml.safe_dump(gains), f, default_flow_style=False)
 print "Gains:", gains, "stored..!"
 
