@@ -20,6 +20,7 @@ import picamera
 import picamera.array
 import numpy as np
 import yaml
+import os
 gains = []
 
 # Open camera stream to get the right gains
