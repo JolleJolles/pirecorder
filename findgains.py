@@ -27,6 +27,13 @@ with picamera.PiCamera() as camera:
     camera.resolution = (1280, 720)
     camera.awb_mode = 'off'
     
+    # set custom brightness
+    camera.brightness = 45
+    brightfile = "setup/cusbright.yml"
+    if os.path.exists(brightfile):
+        with open(brightfile) as f:
+            brightness += yaml.load(f)
+    
     # Start off with ridiculously low gains
     rg, bg = (0.5, 0.5)
     camera.awb_gains = (rg, bg)
@@ -61,8 +68,7 @@ with picamera.PiCamera() as camera:
             output.truncate()
 
 # Store gains
-gains = str((rg, bg))
-with open("setup/gains.yml", 'w') as f:
-    yaml.safe_dump(gains, f, default_flow_style=False)
+with open("setup/cusgains.yml", 'w') as f:
+    yaml.safe_dump(str((rg, bg)), f, default_flow_style=False)
 print "Gains:", gains, "stored..!"
 

@@ -46,8 +46,7 @@ def record(location = "pi",
            sharpness = 0,
            contrast = 10,
            saturation = -100,
-           quality = 11,
-           roifile = "/home/pi/setup/roifile.txt"):
+           quality = 11):
     
     """
         A fully automated image recording script for the rpi
@@ -192,16 +191,28 @@ def record(location = "pi",
         filename = rpi + daystamp + counter + timestamp + ftype
     
     # set the roi
+    roifile = "setup/roifile.yml"
     if os.path.exists(roifile):
-        reader = csv.reader(open(roifile, "r"))
-        zoom = next(reader)[0]
+        with open(roifile) as f:
+            zoom += yaml.load(f)
         zoom = literal_eval(zoom)
+        print "Custom roi loaded..",
     else:
         zoom = (0.0,0.0,1.0,1.0)
     
-    # set the gains
-    if os.path.exists("setup/gains.pk"):
-        awb = cPickle.load(open('setup/gains.pk', 'rb'))[0]
+    # set custom brightness
+    brightfile = "setup/cusbright.yml"
+    if os.path.exists(brightfile):
+        with open(brightfile) as f:
+            brightness += yaml.load(f)
+            print "Custom brightness loaded..",
+    
+    # set custom gains
+    gainsfile = "setup/cusgains.yml"
+    if os.path.exists(gainsfile):
+        with open(gainsfile) as f:
+            awb = literal_eval
+            print "Custom gains loaded..",
     else:
         awb = (1.5, 2.4)
     

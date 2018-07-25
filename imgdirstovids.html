@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>findgains</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>imgdirstovids</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11726,7 +11726,9 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}@media print {
+}
+
+@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11747,7 +11749,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11773,76 +11775,146 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># coding: utf-8</span>
+<span class="c1">#!/usr/bin/env python2.7</span>
+<span class="c1"># author JW Jolles</span>
+<span class="c1"># Last updated: 23 July 2018</span>
+
+<span class="c1"># Import libraries</span>
+<span class="c1">#-----------------------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+
+<span class="c1"># load functions</span>
+<span class="c1">#-----------------------</span>
+<span class="k">def</span> <span class="nf">iswin</span><span class="p">():</span>    
+    <span class="k">return</span> <span class="bp">True</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span> <span class="k">else</span> <span class="bp">False</span>
+
+        
+<span class="k">def</span> <span class="nf">isjup</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;checks if script is run interactivelly&#39;&#39;&#39;</span>
+    <span class="kn">import</span> <span class="nn">__main__</span> <span class="kn">as</span> <span class="nn">main</span>
+    
+    <span class="k">return</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">main</span><span class="p">,</span> <span class="s1">&#39;__file__&#39;</span><span class="p">)</span>
+    
+
+<span class="k">def</span> <span class="nf">listfiles</span><span class="p">(</span><span class="n">filedir</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">filetype</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.jpg&quot;</span><span class="p">),</span> <span class="n">dirs</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;list directories in a folder&#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">dirs</span><span class="p">:</span>
+        <span class="n">outlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">filedir</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filedir</span><span class="p">,</span> <span class="n">i</span><span class="p">))]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">outlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">each</span> <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">filedir</span><span class="p">)</span> <span class="k">if</span> <span class="n">each</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">filetype</span><span class="p">)]</span>
+        <span class="n">outlist</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">outlist</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)]</span>
+    <span class="n">outlist</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">outlist</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">outlist</span>
+
+
+<span class="k">def</span> <span class="nf">createdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+    
+    <span class="sd">&#39;&#39;&#39;creates a subdirectory&#39;&#39;&#39;</span>
+    
+    <span class="k">try</span><span class="p">:</span> 
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+            <span class="k">raise</span>
+                
+
+<span class="k">def</span> <span class="nf">dirconvert</span><span class="p">(</span><span class="n">maindir</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">viddirname</span> <span class="o">=</span> <span class="s2">&quot;videos&quot;</span><span class="p">):</span>
+    
+    <span class="sd">&#39;&#39;&#39;convert images in sub-directories&#39;&#39;&#39;</span>
+    
+    <span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="s2">&quot;- Image to video conversion started!</span><span class="se">\n</span><span class="s2"> </span><span class="se">\</span>
+<span class="s2">    =============================================&quot;</span>
+    
+    <span class="c1"># Change working directory to main directory</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">maindir</span><span class="p">)</span>
+    
+    <span class="c1"># Get list of all rpi directories</span>
+    <span class="n">pidirs</span> <span class="o">=</span> <span class="n">listfiles</span><span class="p">(</span><span class="n">dirs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">selectlist</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="p">[</span><span class="n">selectlist</span><span class="p">]</span>
+
+    <span class="c1"># Create directory for videos</span>
+    <span class="n">createdir</span><span class="p">(</span><span class="n">viddirname</span><span class="p">)</span>
+
+    <span class="c1"># Create counter</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Check each pidir</span>
+    <span class="k">for</span> <span class="n">pidir</span> <span class="ow">in</span> <span class="n">pidirs</span><span class="p">:</span>
+
+        <span class="c1"># Create sub videos dir</span>
+        <span class="n">subviddir</span> <span class="o">=</span> <span class="n">maindir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">viddirname</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pidir</span>
+        <span class="n">createdir</span><span class="p">(</span><span class="n">subviddir</span><span class="p">)</span>
+                  
+        <span class="c1"># Change working directory</span>
+        <span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="s2">&quot;- Processing folders for &quot;</span> <span class="o">+</span> <span class="n">pidir</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">maindir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pidir</span><span class="p">)</span>
+
+        <span class="c1"># Get directories per dir</span>
+        <span class="n">subdirs</span> <span class="o">=</span> <span class="n">listfiles</span><span class="p">(</span><span class="n">dirs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+        <span class="c1"># For each day make a video and place in viddirname with pidir</span>
+        <span class="k">for</span> <span class="n">subdir</span> <span class="ow">in</span> <span class="n">subdirs</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">maindir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pidir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">subdir</span><span class="p">)</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+            <span class="k">print</span> <span class="n">subdir</span><span class="p">,</span><span class="s2">&quot;-&quot;</span><span class="p">,</span>
+
+            <span class="n">vidname</span> <span class="o">=</span> <span class="n">subviddir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pidir</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">subdir</span> <span class="o">+</span> <span class="s2">&quot;.mp4&quot;</span>
+            <span class="k">if</span> <span class="n">iswin</span><span class="p">():</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;(for </span><span class="si">%i</span><span class="s2"> in (*.jpg) do @echo file &#39;</span><span class="si">%i</span><span class="s2">&#39;)|sort /o imglist.txt&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;ffmpeg -f concat -i imglist.txt -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y &quot;</span> <span class="o">+</span> <span class="n">vidname</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bashCommand</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">,</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;ffmpeg -pattern_type glob -i &quot;*.jpg&quot; -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y &#39;</span> <span class="o">+</span> <span class="n">vidname</span><span class="p">]</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">bashCommand</span><span class="p">)</span>
+            
+            <span class="n">timediff</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
+            <span class="k">print</span> <span class="s2">&quot;Video created in &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">timediff</span><span class="o">+</span><span class="s2">&quot; sec..&quot;</span>
+
+        <span class="k">print</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">print</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="s2">&quot;- Done converting all &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; folders..&quot;</span>
+
+
+<span class="c1"># Load the user settings </span>
+<span class="c1">#-----------------------</span>
+<span class="k">if</span> <span class="n">isjup</span><span class="p">():</span>
+    <span class="n">filedir</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s2">&quot;Main directory that holds sub-directories with images to convert: &quot;</span><span class="p">)</span>
+    <span class="n">selectlist</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s2">&quot;List of subdirectories to convert (blank is all): &quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;video directory&quot;</span><span class="p">)</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--select&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;selection of sub directories&quot;</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
+    <span class="n">filedir</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;dir&quot;</span><span class="p">]</span>
+    <span class="n">selectlist</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># Start convert script</span>
+<span class="c1">#-----------------------</span>
+<span class="n">dirconvert</span><span class="p">(</span><span class="n">filedir</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Script to automatically find gains on a rpi&lt;</span>
-<span class="c1"># Author: JW Jolles</span>
-<span class="c1"># Version 2.0</span>
-<span class="c1"># Last updated: 12 Apr 2018</span>
-<span class="c1"># Script written based on tips from Dave Jones.</span>
-
-<span class="c1"># Latest changes</span>
-<span class="c1"># 2.0 Updated function to be part of Animrec, new name, better comments</span>
-<span class="c1"># 1.2 Prepared script for integration with github jolpi project</span>
-<span class="c1"># 1.1 file now stores best gains in file</span>
-
-<span class="c1"># Set workspace</span>
-<span class="kn">import</span> <span class="nn">picamera</span>
-<span class="kn">import</span> <span class="nn">picamera.array</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="n">gains</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># Open camera stream to get the right gains</span>
-<span class="k">with</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span> <span class="k">as</span> <span class="n">camera</span><span class="p">:</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">resolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">awb_mode</span> <span class="o">=</span> <span class="s1">&#39;off&#39;</span>
-    
-    <span class="c1"># set custom brightness</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">brightness</span> <span class="o">=</span> <span class="mi">45</span>
-    <span class="n">brightfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusbright.yml&quot;</span>
-    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">brightfile</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">brightfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">brightness</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    
-    <span class="c1"># Start off with ridiculously low gains</span>
-    <span class="n">rg</span><span class="p">,</span> <span class="n">bg</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="n">camera</span><span class="o">.</span><span class="n">awb_gains</span> <span class="o">=</span> <span class="p">(</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">picamera</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">PiRGBArray</span><span class="p">(</span><span class="n">camera</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
-        
-        <span class="c1"># Allow 50 attempts to fix AWB</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
-            
-            <span class="c1"># Capture a tiny resized image in RGB format, and extract the</span>
-            <span class="c1"># average R, G, and B values</span>
-            <span class="n">camera</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">resize</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">72</span><span class="p">),</span> <span class="n">use_video_port</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-            <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">array</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;R:</span><span class="si">%5.2f</span><span class="s1">, B:</span><span class="si">%5.2f</span><span class="s1"> = (</span><span class="si">%5.2f</span><span class="s1">, </span><span class="si">%5.2f</span><span class="s1">, </span><span class="si">%5.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span>
-                <span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
-            
-            <span class="c1"># Adjust R and B relative to G, but only if they&#39;re significantly</span>
-            <span class="c1"># different (delta +/- 2)</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="n">g</span><span class="p">:</span>
-                    <span class="n">rg</span> <span class="o">-=</span> <span class="mf">0.1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">rg</span> <span class="o">+=</span> <span class="mf">0.1</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="n">g</span><span class="p">:</span>
-                    <span class="n">bg</span> <span class="o">-=</span> <span class="mf">0.1</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">bg</span> <span class="o">+=</span> <span class="mf">0.1</span>
-            
-            <span class="c1"># Show output</span>
-            <span class="n">camera</span><span class="o">.</span><span class="n">awb_gains</span> <span class="o">=</span> <span class="p">(</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-            <span class="n">output</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
-
-<span class="c1"># Store gains</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;setup/cusgains.yml&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="nb">str</span><span class="p">((</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)),</span> <span class="n">f</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="k">print</span> <span class="s2">&quot;Gains:&quot;</span><span class="p">,</span> <span class="n">gains</span><span class="p">,</span> <span class="s2">&quot;stored..!&quot;</span>
+<div class=" highlight hl-ipython2"><pre><span></span> 
 </pre></div>
 
 </div>
