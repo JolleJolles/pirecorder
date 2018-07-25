@@ -11811,8 +11811,8 @@ div#notebook {
     <span class="n">camera</span><span class="o">.</span><span class="n">awb_gains</span> <span class="o">=</span> <span class="p">(</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">picamera</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">PiRGBArray</span><span class="p">(</span><span class="n">camera</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span> <span class="k">as</span> <span class="n">output</span><span class="p">:</span>
         
-        <span class="c1"># Allow 50 attempts to fix AWB</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+        <span class="c1"># Allow 100 attempts to fix AWB</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
             
             <span class="c1"># Capture a tiny resized image in RGB format, and extract the</span>
             <span class="c1"># average R, G, and B values</span>
@@ -11825,14 +11825,14 @@ div#notebook {
             <span class="c1"># different (delta +/- 2)</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;</span> <span class="n">g</span><span class="p">:</span>
-                    <span class="n">rg</span> <span class="o">-=</span> <span class="mf">0.1</span>
+                    <span class="n">rg</span> <span class="o">-=</span> <span class="mf">0.05</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">rg</span> <span class="o">+=</span> <span class="mf">0.1</span>
+                    <span class="n">rg</span> <span class="o">+=</span> <span class="mf">0.05</span>
             <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="n">g</span><span class="p">:</span>
-                    <span class="n">bg</span> <span class="o">-=</span> <span class="mf">0.1</span>
+                    <span class="n">bg</span> <span class="o">-=</span> <span class="mf">0.05</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">bg</span> <span class="o">+=</span> <span class="mf">0.1</span>
+                    <span class="n">bg</span> <span class="o">+=</span> <span class="mf">0.05</span>
             
             <span class="c1"># Show output</span>
             <span class="n">camera</span><span class="o">.</span><span class="n">awb_gains</span> <span class="o">=</span> <span class="p">(</span><span class="n">rg</span><span class="p">,</span> <span class="n">bg</span><span class="p">)</span>

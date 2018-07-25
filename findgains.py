@@ -39,8 +39,8 @@ with picamera.PiCamera() as camera:
     camera.awb_gains = (rg, bg)
     with picamera.array.PiRGBArray(camera, size=(128, 72)) as output:
         
-        # Allow 50 attempts to fix AWB
-        for i in range(50):
+        # Allow 100 attempts to fix AWB
+        for i in range(100):
             
             # Capture a tiny resized image in RGB format, and extract the
             # average R, G, and B values
@@ -53,14 +53,14 @@ with picamera.PiCamera() as camera:
             # different (delta +/- 2)
             if abs(r - g) > 2:
                 if r > g:
-                    rg -= 0.1
+                    rg -= 0.05
                 else:
-                    rg += 0.1
+                    rg += 0.05
             if abs(b - g) > 1:
                 if b > g:
-                    bg -= 0.1
+                    bg -= 0.05
                 else:
-                    bg += 0.1
+                    bg += 0.05
             
             # Show output
             camera.awb_gains = (rg, bg)
