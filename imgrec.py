@@ -211,7 +211,7 @@ def record(location = "pi",
     gainsfile = "setup/cusgains.yml"
     if os.path.exists(gainsfile):
         with open(gainsfile) as f:
-            awb = literal_eval
+            awb = literal_eval(awb)
             print "Custom gains loaded..",
     else:
         awb = (1.5, 2.4)

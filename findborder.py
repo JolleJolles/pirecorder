@@ -75,7 +75,7 @@ while True:
 
         points = rescale(points, width, height)
 
-        with open("setup/edgecoords.yml", 'w') as f:
+        with open("setup/cusborder.yml", 'w') as f:
             yaml.safe_dump(str(points), f, default_flow_style=False)
     
         print "Edge info written to file.."

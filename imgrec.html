@@ -11983,7 +11983,7 @@ div#notebook {
     <span class="n">gainsfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusgains.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span>
+            <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>
             <span class="k">print</span> <span class="s2">&quot;Custom gains loaded..&quot;</span><span class="p">,</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">awb</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>

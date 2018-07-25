@@ -4,16 +4,8 @@
 # In[ ]:
 
 
-# Script to automatically find gains on a rpi<
+# Script to automatically find gains on a rpi
 # Author: JW Jolles
-# Version 2.0
-# Last updated: 12 Apr 2018
-# Script written based on tips from Dave Jones.
-
-# Latest changes
-# 2.0 Updated function to be part of Animrec, new name, better comments
-# 1.2 Prepared script for integration with github jolpi project
-# 1.1 file now stores best gains in file
 
 # Set workspace
 import picamera
