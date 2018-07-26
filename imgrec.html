@@ -11819,7 +11819,8 @@ div#notebook {
            <span class="n">sharpness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
            <span class="n">contrast</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
            <span class="n">saturation</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span>
-           <span class="n">quality</span> <span class="o">=</span> <span class="mi">11</span><span class="p">):</span>
+           <span class="n">quality</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+           <span class="n">awb</span> <span class="o">=</span> <span class="s2">&quot;(1.5, 2.4)&quot;</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A fully automated image recording script for the rpi</span>
@@ -11919,6 +11920,7 @@ div#notebook {
     <span class="n">contrast</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">contrast</span><span class="p">)</span>
     <span class="n">saturation</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">saturation</span><span class="p">)</span>
     <span class="n">quality</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">quality</span><span class="p">)</span>
+    <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>
     
     <span class="c1"># when imgwait is close to zero, change to mininum</span>
     <span class="c1"># value that roughly equals time to take image</span>
@@ -11987,11 +11989,8 @@ div#notebook {
     <span class="n">gainsfile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/setup/cusgains.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>
+            <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">print</span> <span class="s2">&quot;Custom gains loaded:&quot;</span><span class="p">,</span><span class="n">awb</span><span class="p">,</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">awb</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>
-        <span class="k">print</span> <span class="s2">&quot;standard gains..&quot;</span><span class="p">,</span>
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>

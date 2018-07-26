@@ -47,7 +47,8 @@ def record(location = "pi",
            sharpness = 0,
            contrast = 10,
            saturation = -100,
-           quality = 11):
+           quality = 11,
+           awb = "(1.5, 2.4)"):
     
     """
         A fully automated image recording script for the rpi
@@ -147,6 +148,7 @@ def record(location = "pi",
     contrast = int(contrast)
     saturation = int(saturation)
     quality = int(quality)
+    awb = literal_eval(awb)
     
     # when imgwait is close to zero, change to mininum
     # value that roughly equals time to take image
@@ -215,11 +217,8 @@ def record(location = "pi",
     gainsfile = "/home/pi/setup/cusgains.yml"
     if os.path.exists(gainsfile):
         with open(gainsfile) as f:
-            awb = literal_eval(awb)
+            awb = literal_eval(f)
         print "Custom gains loaded:",awb,
-    else:
-        awb = (1.5, 2.4)
-        print "standard gains..",
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
