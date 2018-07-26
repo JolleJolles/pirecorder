@@ -48,7 +48,8 @@ def record(location = "pi",
            contrast = 10,
            saturation = -100,
            quality = 11,
-           awb = "(1.5, 2.4)"):
+           awb = "(1.5, 2.4)",
+           autorotate = "yes"):
     
     """
         A fully automated image recording script for the rpi
