@@ -11726,9 +11726,7 @@ body {
 div#notebook {
   overflow: visible;
   border-top: none;
-}
-
-@media print {
+}@media print {
   div.cell {
     display: block;
     page-break-inside: avoid;
@@ -11749,7 +11747,7 @@ div#notebook {
 
 <!-- Loading mathjax macro -->
 <!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -11781,7 +11779,7 @@ div#notebook {
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># coding: utf-8</span>
 <span class="c1">#!/usr/bin/env python2.7</span>
 <span class="c1"># author JW Jolles</span>
-<span class="c1"># Last updated: 23 July 2018</span>
+<span class="c1"># Last updated: 25 July 2018</span>
 
 <span class="c1"># Import libraries</span>
 <span class="c1">#-----------------------</span>
@@ -11841,6 +11839,8 @@ div#notebook {
     
     <span class="c1"># Get list of all rpi directories</span>
     <span class="n">pidirs</span> <span class="o">=</span> <span class="n">listfiles</span><span class="p">(</span><span class="n">dirs</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">selectlist</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="p">[</span><span class="n">selectlist</span><span class="p">]</span>
+    
+    <span class="n">pidirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pidirs</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">exclude</span><span class="p">]</span>
 
     <span class="c1"># Create directory for videos</span>
     <span class="n">createdir</span><span class="p">(</span><span class="n">viddirname</span><span class="p">)</span>
@@ -11872,13 +11872,19 @@ div#notebook {
             <span class="n">vidname</span> <span class="o">=</span> <span class="n">subviddir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pidir</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">subdir</span> <span class="o">+</span> <span class="s2">&quot;.mp4&quot;</span>
             <span class="k">if</span> <span class="n">iswin</span><span class="p">():</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;(for </span><span class="si">%i</span><span class="s2"> in (*.jpg) do @echo file &#39;</span><span class="si">%i</span><span class="s2">&#39;)|sort /o imglist.txt&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-                <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;ffmpeg -f concat -i imglist.txt -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y &quot;</span> <span class="o">+</span> <span class="n">vidname</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">imglistonly</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="s2">&quot;ffmpeg -f concat -i imglist.txt -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y &quot;</span> <span class="o">+</span> <span class="n">vidname</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">timediff</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
+                    <span class="k">print</span> <span class="s2">&quot;Imglist created in &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">timediff</span><span class="o">+</span><span class="s2">&quot; sec..&quot;</span>
+                    
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">bashCommand</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bash&#39;</span><span class="p">,</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;ffmpeg -pattern_type glob -i &quot;*.jpg&quot; -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y &#39;</span> <span class="o">+</span> <span class="n">vidname</span><span class="p">]</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">check_output</span><span class="p">(</span><span class="n">bashCommand</span><span class="p">)</span>
             
-            <span class="n">timediff</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
-            <span class="k">print</span> <span class="s2">&quot;Video created in &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">timediff</span><span class="o">+</span><span class="s2">&quot; sec..&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">imglistonly</span><span class="p">:</span>
+                <span class="n">timediff</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t1</span>
+                <span class="k">print</span> <span class="s2">&quot;Video created in &quot;</span><span class="o">+</span><span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">timediff</span><span class="o">+</span><span class="s2">&quot; sec..&quot;</span>
 
         <span class="k">print</span> <span class="s2">&quot;&quot;</span>
 
@@ -11894,27 +11900,18 @@ div#notebook {
     <span class="n">ap</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
     <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;--dir&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;video directory&quot;</span><span class="p">)</span>
     <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-s&quot;</span><span class="p">,</span> <span class="s2">&quot;--select&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;selection of sub directories&quot;</span><span class="p">)</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-e&quot;</span><span class="p">,</span> <span class="s2">&quot;--exclude&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;exclude directories&quot;</span><span class="p">)</span>
+    <span class="n">ap</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--imglistonly&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;only create imglist or not&quot;</span><span class="p">)</span>
     <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">ap</span><span class="o">.</span><span class="n">parse_args</span><span class="p">())</span>
     <span class="n">filedir</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;dir&quot;</span><span class="p">]</span>
     <span class="n">selectlist</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;select&quot;</span><span class="p">]</span>
+    <span class="n">exclude</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;exclude&quot;</span><span class="p">]</span>
+    <span class="n">imglistonly</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;imglistonly&quot;</span><span class="p">]</span>
 
 
 <span class="c1"># Start convert script</span>
 <span class="c1">#-----------------------</span>
 <span class="n">dirconvert</span><span class="p">(</span><span class="n">filedir</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span> 
 </pre></div>
 
 </div>
