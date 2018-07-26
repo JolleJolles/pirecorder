@@ -11992,6 +11992,11 @@ div#notebook {
         <span class="k">print</span> <span class="s2">&quot;Custom gains loaded:&quot;</span><span class="p">,</span><span class="n">awb</span><span class="p">,</span>
     <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>
     
+    <span class="c1"># camera rotation</span>
+    <span class="n">rotation</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">autorotate</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="mi">180</span> <span class="k">if</span> <span class="n">rpi</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jolpi101&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi103&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi105&quot;</span><span class="p">,</span><span class="s2">&quot;jolpi107&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="mi">0</span>
+    
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>
     <span class="n">camera</span><span class="o">.</span><span class="n">framerate</span> <span class="o">=</span> <span class="n">fps</span>
