@@ -11941,7 +11941,7 @@ div#notebook {
     <span class="c1"># set the directory </span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">==</span> <span class="s2">&quot;pi&quot;</span><span class="p">:</span>
         <span class="n">server</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/NAS/&quot;</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">server</span>  <span class="c1">#location = server + rpi --&gt; no longer needed because all rpi&#39;s standard mount their own folder</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="n">server</span>
         
         <span class="c1"># add date folder</span>
         <span class="k">if</span> <span class="n">single</span> <span class="o">==</span> <span class="s2">&quot;no&quot;</span><span class="p">:</span>
@@ -11977,16 +11977,19 @@ div#notebook {
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">brightfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">brightfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">brightness</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s2">&quot;Custom brightness loaded..&quot;</span><span class="p">,</span>
+        <span class="k">print</span> <span class="s2">&quot;Custom brightness loaded:&quot;</span><span class="p">,</span><span class="n">brightness</span><span class="p">,</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s2">&quot;standard brightness..&quot;</span><span class="p">,</span>
     
     <span class="c1"># set custom gains</span>
     <span class="n">gainsfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusgains.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s2">&quot;Custom gains loaded..&quot;</span><span class="p">,</span>
+        <span class="k">print</span> <span class="s2">&quot;Custom gains loaded:&quot;</span><span class="p">,</span><span class="n">awb</span><span class="p">,</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">awb</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s2">&quot;standard gains..&quot;</span><span class="p">,</span>
     
     <span class="c1"># set-up the camera with the right parameters</span>
     <span class="n">camera</span> <span class="o">=</span> <span class="n">picamera</span><span class="o">.</span><span class="n">PiCamera</span><span class="p">()</span>

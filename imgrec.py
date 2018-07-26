@@ -169,7 +169,7 @@ def record(location = "pi",
     # set the directory 
     if location == "pi":
         server = "/home/pi/NAS/"
-        location = server  #location = server + rpi --> no longer needed because all rpi's standard mount their own folder
+        location = server
         
         # add date folder
         if single == "no":
@@ -205,16 +205,19 @@ def record(location = "pi",
     if os.path.exists(brightfile):
         with open(brightfile) as f:
             brightness += yaml.load(f)
-            print "Custom brightness loaded..",
+        print "Custom brightness loaded:",brightness,
+    else:
+        print "standard brightness..",
     
     # set custom gains
     gainsfile = "setup/cusgains.yml"
     if os.path.exists(gainsfile):
         with open(gainsfile) as f:
             awb = literal_eval(awb)
-            print "Custom gains loaded..",
+        print "Custom gains loaded:",awb,
     else:
         awb = (1.5, 2.4)
+        print "standard gains..",
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
