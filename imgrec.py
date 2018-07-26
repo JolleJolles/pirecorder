@@ -148,7 +148,6 @@ def record(location = "pi",
     contrast = int(contrast)
     saturation = int(saturation)
     quality = int(quality)
-    awb = literal_eval(awb)
     
     # when imgwait is close to zero, change to mininum
     # value that roughly equals time to take image
@@ -217,8 +216,9 @@ def record(location = "pi",
     gainsfile = "/home/pi/setup/cusgains.yml"
     if os.path.exists(gainsfile):
         with open(gainsfile) as f:
-            awb = literal_eval(f)
+            awb = yaml.load(f)
         print "Custom gains loaded:",awb,
+    awb = literal_eval(awb)
     
     # set-up the camera with the right parameters
     camera = picamera.PiCamera()
