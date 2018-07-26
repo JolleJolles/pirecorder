@@ -11964,7 +11964,7 @@ div#notebook {
     
     
     <span class="c1"># set the roi</span>
-    <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;setup/roifile.yml&quot;</span>
+    <span class="n">roifile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/setup/roifile.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">roifile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">roifile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">zoom</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -11974,7 +11974,7 @@ div#notebook {
         <span class="n">zoom</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
     
     <span class="c1"># set custom brightness</span>
-    <span class="n">brightfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusbright.yml&quot;</span>
+    <span class="n">brightfile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/setup/cusbright.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">brightfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">brightfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">brightness</span> <span class="o">+=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -11983,7 +11983,7 @@ div#notebook {
         <span class="k">print</span> <span class="s2">&quot;standard brightness..&quot;</span><span class="p">,</span>
     
     <span class="c1"># set custom gains</span>
-    <span class="n">gainsfile</span> <span class="o">=</span> <span class="s2">&quot;setup/cusgains.yml&quot;</span>
+    <span class="n">gainsfile</span> <span class="o">=</span> <span class="s2">&quot;/home/pi/setup/cusgains.yml&quot;</span>
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">gainsfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">awb</span> <span class="o">=</span> <span class="n">literal_eval</span><span class="p">(</span><span class="n">awb</span><span class="p">)</span>

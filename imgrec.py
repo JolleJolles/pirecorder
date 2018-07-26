@@ -192,7 +192,7 @@ def record(location = "pi",
     
     
     # set the roi
-    roifile = "setup/roifile.yml"
+    roifile = "/home/pi/setup/roifile.yml"
     if os.path.exists(roifile):
         with open(roifile) as f:
             zoom += yaml.load(f)
@@ -202,7 +202,7 @@ def record(location = "pi",
         zoom = (0.0,0.0,1.0,1.0)
     
     # set custom brightness
-    brightfile = "setup/cusbright.yml"
+    brightfile = "/home/pi/setup/cusbright.yml"
     if os.path.exists(brightfile):
         with open(brightfile) as f:
             brightness += yaml.load(f)
@@ -211,7 +211,7 @@ def record(location = "pi",
         print "standard brightness..",
     
     # set custom gains
-    gainsfile = "setup/cusgains.yml"
+    gainsfile = "/home/pi/setup/cusgains.yml"
     if os.path.exists(gainsfile):
         with open(gainsfile) as f:
             awb = literal_eval(awb)
