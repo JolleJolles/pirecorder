@@ -190,6 +190,7 @@ def record(location = "pi",
         ftype = ".jpg"
         filename = rpi + daystamp + counter + timestamp + ftype
     
+    
     # set the roi
     roifile = "setup/roifile.yml"
     if os.path.exists(roifile):
