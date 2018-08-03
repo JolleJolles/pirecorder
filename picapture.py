@@ -3,7 +3,6 @@
 
 # In[ ]:
 
-
 #!/usr/bin/python
 
 # Import packages
@@ -298,7 +297,7 @@ def record(location = "NAS",
     
     # Take video(s)
     else:
-        if single == "yes"
+        if single == "yes":
             filenamefull = filename
         else:
             print lineprint, "New session started"
