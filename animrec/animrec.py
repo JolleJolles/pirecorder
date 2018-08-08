@@ -1,104 +1,254 @@
 # coding: utf-8
+from __future__ import print_function
 
 import picamera
 import time
-import datetime
+from datetime import datetime
 import os
 
+from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 
-from animlab.utils import homedir, isscript, loadyml
+from animlab.utils import homedir, isscript
 
-class AnimRec:
-
-    """
-        A fully automated image recording script for the rpi
-
-        Parameters
-        ----------
-        location : str, default = "NAS"
-            The location where media is stored. Default is "NAS",
-            which is the automatically mounted NAS drive. If different,
-            a folder with name corresponding to location will be created
-            inside the home directory. Images are stored in separate
-            automatically created folders each day. Providing no name
-            stores in home directory.
-        single : str, default = "no"
-            If a single image should be record, yes or no.
-        task : str, default = "test"
-            Name of task used.
-        rectype : str, default = "img"
-            Recording type, either img or video.
-        duration : int, default = 10
-            *Video parameter only*. Total duration of the trials in
-            seconds.
-        delay : int, default = 0
-            *Video parameter only*. Extra recording time in seconds.
-            Main use is for filming acclimatisation time.
-        imgwait : float, default = 1.0
-            *Image parameter only*. The delay between subsequent images
-            in seconds. When a delay is provided that is less than ~0.5s
-            (shutterspeed + processingtime) it will be automatically set
-            to 0 and images thus taken immideately one after the other.
-        imgnr : int, default = 60
-            *Image parameter only*. The number of images that should be
-            taken. When this number is reached, the script will
-            automatically terminate.
-        imgtime : integer, default = 60
-            *Image parameter only*. The time in seconds during which images
-            should be taken. The minimum of a) imgnr and b) nr of images
-            based on imgwait and imgtime will be selected.
-        width : int, default = 1640
-            The width of the image in pixels.
-        height : int, default = 1232
-            The height of the image in pixels. For video recording,
-            max dimensions are 1640 x 1232.
-        compensation : int, default = 0
-            Camera lighting compensation. Ranges between 0 and 20.
-            Compensation artificially adds extra light to the image.
-        shutterspeed : int, detault = 10000
-            Shutter speed of the camera in microseconds, i.e. the
-            default of 10000 is equivalent to 1/100th of a second. A
-            longer shutterspeed will result in a brighter image but
-            more motion blur. Important: the framerate of the camera
-            will be adjusted based on the shutterspeed. At shutter-
-            speeds above ~ 0.2s this results in increasingly longer
-            waiting times between images so a standard imgwait time
-            should be chosen that is 6+ times more than the
-            shutterspeed. For example, for a shutterspeed of 300000
-            imgwait should be > 1.8s.
-        iso : int, default = 200
-            The camera ISO value, an integer value in sequence
-            [200,400,800,1600]. Higher values are more light
-            sensitive but have higher gain.
-        brightness : int, default = 45
-            The brightness level of the camera, an integer value
-            between 0 and 100.
-        sharpness : int, default = 50
-            The sharpness of the camera, an integer value between
-            -100 and 100.
-        contrast : int, default = 20
-            The image contrast, an integer value between 0 and 100.
-        saturation : int, default -100
-            The color saturation level of the image, an integer
-            value between -100 and 100.
-        quality : int, default = 11
-            Specifies the quality that the encoder should attempt
-            to maintain. Valid values are between 10 and 40, where
-            10 is extremely high quality, and 40 is extremely low.
-        autorotate : bool, default True
-            If the camera image should be automatically rotated based
-            on the raspberrpi location (1,3,5,7 are rotated 180)
-
-        Output
-        -------
-        For videos a .h264 file and for images a .jpg file. When not
-        single, a series of JPEG images will be created. All files are
-        automatically named based on the rpi name, date, and time.
+class Recorder:
 
     """
+    Recorder class for setting up the rpi to record images or video.
+
+    Parameters
+    ----------
+    recdir : str, default = "NAS"
+        The directory where media will be stored. Default is "NAS",
+        which is the automatically mounted NAS drive. If different,
+        a folder with name corresponding to location will be created
+        inside the home directory. Providing no name stores in home directory.
+    setupdir : str, default = "setup"
+        The directory where setup files are stored relative to home directory.
+    single : str, default = "no"
+        If a single image should be record, yes or no.
+    taskname : str, default = "test"
+        Name of task used.
+    rectype : ["img","vid"], default = "img"
+        Recording type, either img or video.
+
+    Config settings
+    ---------------
+    rotation : [0, 180], default = 0
+        Custom rotation specific to the RPi
+    brighttune : [-10,10], default = 0
+        Custom brightness tuning specific to the RPi
+    gains : tuple, default = (1.0, 2.5)
+        Custom gains specific to the RPi to have a 'normal' colorspace
+
+    brightness : int, default = 45
+        The brightness level of the camera, an integer value
+        between 0 and 100.
+    contrast : int, default = 20
+        The image contrast, an integer value between 0 and 100.
+    saturation : int, default -100
+        The color saturation level of the image, an integer
+        value between -100 and 100.
+    iso : int, default = 200
+        The camera ISO value, an integer value in sequence
+        [200,400,800,1600]. Higher values are more light
+        sensitive but have higher gain.
+    sharpness : int, default = 50
+        The sharpness of the camera, an integer value between
+        -100 and 100.
+    compensation : int, default = 0
+        Camera lighting compensation. Ranges between 0 and 20.
+        Compensation artificially adds extra light to the image.
+    shutterspeed : int, detault = 10000
+        Shutter speed of the camera in microseconds, i.e. the
+        default of 10000 is equivalent to 1/100th of a second. A
+        longer shutterspeed will result in a brighter image but
+        more motion blur. Important: the framerate of the camera
+        will be adjusted based on the shutterspeed. At shutter-
+        speeds above ~ 0.2s this results in increasingly longer
+        waiting times between images so a standard imgwait time
+        should be chosen that is 6+ times more than the
+        shutterspeed. For example, for a shutterspeed of 300000
+        imgwait should be > 1.8s.
+    quality : int, default = 11
+        Specifies the quality that the encoder should attempt
+        to maintain. Valid values are between 10 and 40, where
+        10 is extremely high quality, and 40 is extremely low.
+    imgdims : tuple, default = (3280,2464)
+        The resolution of the images to be taken in pixels.
+    viddims : tuple, default = (1640,1232)
+        The resolution of the videos to be taken in pixels.
+    imgfps : int, default = 1
+        The framerate for recording images. Will be set automatically
+        based on the imgwait setting.
+    vidfps : int, default = 24
+        The framerate for recording video.
+    imgwait : float, default = 1.0
+        *Image parameter only*. The delay between subsequent images
+        in seconds. When a delay is provided that is less than ~0.5s
+        (shutterspeed + processingtime) it will be automatically set
+        to 0 and images thus taken immideately one after the other.
+    imgnr : int, default = 60
+        *Image parameter only*. The number of images that should be
+        taken. When this number is reached, the script will
+        automatically terminate.
+    imgtime : integer, default = 60
+        *Image parameter only*. The time in seconds during which images
+        should be taken. The minimum of a) imgnr and b) nr of images
+        based on imgwait and imgtime will be selected.
+    vidduration : int, default = 10
+        Duration of video recording in seconds.
+    viddelay : int, default = 0
+        Extra recording time in seconds that will be added to vidduration. Its
+        use is for filming acclimatisation time that can then easily be cropped
+        for tracking.
+
+    Output
+    -------
+    Either one or multiple .h264 or .jpg files depending on the filetype and
+    single input. All files are automatically named according to the task,
+    the host name, date, time and potentially session number or count nr, e.g.:
+    - single image: 'pilot_20180312_PI13_101300.jpg
+    - multiple images: 'pilot_20180312_PI13_img00231_101300.jpg
+    - single video: 'pilot_20180312_PI13_101300.h264
+    - multiple videos: 'pilot_20180312_PI13_S03_101300.h264
+
+    Returns
+    -------
+    self : class
+        Recorder class instance
+
+    """
+
+    def __init__(recdir = "NAS", setupdir = "setup", single = True,
+                 taskname = "test", rectype = "img"):
+
+        lineprint("AnimRec started. The date is: " + strftime("%y/%m/%d"))
+        lineprint("====================================")
+
+        self.line = ""
+        self.host = gethostname()
+        self.single = single
+        self.rectype = rectype
+        self.filetype = ".jpg" if rectype == "img" else ".h264"
+        self.task = taskname
+
+        self.home = homedir()
+        if recdir == "NAS"
+            if not os.path.ismount(recdir):
+                self.recdir = self.home
+        if not os.path.exists(self.recdir):
+            os.makedirs(self.recdir)
+        self.recdir = self.home + recdir
+        self.setupdir = self.home + setupdir
+        if not os.path.exists(self.setupdir):
+            os.makedirs(self.setupdir)
+        os.chdir(self.recdir)
+
+        self.configfile = self.setupdir + "/animrec.conf"
+        self.config = LocalConfig(self.configfile, compact_form = True)
+        if not os.path.isfile(self.configfile):
+            for section in ['cam','cus', 'img','vid']:
+                if section not in list(config):
+                    self.config.add_section(section)
+            self.set_config(brightness = 45, contrast = 10, saturation = -100,
+                            iso = 200, sharpness = 0, compensation = 0,
+                            shutterspeed = 8000, quality = 11, gains = (1.0, 2.5),
+                            rotation = 0, brighttune = 0, imgdims = (3280, 2464),
+                            imgfps = 1, imgwait = 5.0, imgnr = 100, imgtime = 600,
+                            imgdims = (1640, 1232), vidfps = 24, vidduration = 10,
+                            viddelay = 10)
+        else:
+            lineprint("Config settings loaded", False, True)
+
+
+    def set_config(self, **kwargs):
+
+        if "brightness" in kwargs:
+            self.config.cam.brightness = kwargs["brightness"]
+        if "contrast" in kwargs:
+            self.config.cam.contrast = kwargs["contrast"]
+        if "saturation" in kwargs:
+            self.config.cam.saturation = kwargs["saturation"]
+        if "iso" in kwargs:
+            self.config.cam.iso = kwargs["iso"]
+        if "sharpness" in kwargs:
+            self.config.cam.sharpness = kwargs["sharpness"]
+        if "compensation" in kwargs:
+            self.config.cam.compensation = kwargs["compensation"]
+        if "shutterspeed" in kwargs:
+            self.config.cam.shutterspeed = kwargs["shutterspeed"]
+        if "quality" in kwargs:
+            self.config.cam.quality = kwargs["quality"]
+
+        if "rotation" in kwargs:
+            self.config.cus.rotation = kwargs["rotation"]
+        if "brighttune" in kwargs:
+            self.config.cus.brighttune = kwargs["brighttune"]
+        if "gains" in kwargs:
+            self.config.cus.gains = literal_eval(str(kwargs["gains"]))
+
+        if "imgdims" in kwargs:
+            self.config.img.dims = literal_eval(str(kwargs["imgdims"]))
+        if "viddims" in kwargs:
+            self.config.vid.dims = literal_eval(str(kwargs["viddims"]))
+        if "imgfps" in kwargs:
+            self.config.img.fps = kwargs["imgfps"]
+        if "vidfps" in kwargs:
+            self.config.vid.fps = kwargs["vidfps"]
+
+        if "imgwait" in kwargs:
+            self.config.img.wait = kwargs["imgwait"]
+        if "imgnr" in kwargs:
+            self.config.img.nr = kwargs["imgnr"]
+        if "imgtime" in kwargs:
+            self.config.img.time = kwargs["imgtime"]
+
+        if "vidduration" in kwargs:
+            self.config.vid.duration = kwargs["vidduration"]
+        if "viddelay" in kwargs:
+            self.config.vid.delay = kwargs["viddelay"]
+
+        if len(kwargs) > 0:
+
+            if True in ["img" in i for i in kwargs]:
+                self.imgparams()
+                self.shuttertofps()
+
+            self.config.save()
+            lineprint("Recording settings stored..", False, True)
+
+
+    def setup_cam(self):
+
+        self.cam = picamera.PiCamera()
+
+        self.cam.rotation = self.config.cus.rotation
+        self.cam.exposure_compensation = self.config.cam.compensation
+
+        if self.rectype == "img":
+            self.cam.framerate = self.config.img.fps
+            self.cam.resolution = self.config.img.dims
+        if self.rectype == "vid":
+            self.cam.framerate = self.config.vid.fps
+            self.cam.resolution = self.config.vid.dims
+
+        time.sleep(1)
+
+        self.cam.exposure_mode = 'off'
+        self.cam.awb_mode = 'off'
+        self.cam.awb_gains = self.config.cus.gains
+        self.cam.shutter_speed = self.config.cam.shutterspeed
+        self.cam.brightness = self.config.cam.brightness
+        self.cam.contrast = self.config.cam.contrast
+        self.cam.saturation = self.config.cam.saturation
+        self.cam.iso = self.config.cam.iso
+        self.cam.sharpness = self.config.cam.sharpness
+
+        lineprint("Camera started..")
+
 
     def lineprint(self, text, stamp = True, sameline = False, reset = False):
 
@@ -114,128 +264,31 @@ class AnimRec:
             self.line = "\r" + text
         else:
             self.line = text if self.line == "" else "\n" + text
-        print self.line,
+        print(self.line, end=" ")
 
 
     def imgparams(self, mintime = 0.45):
 
-        """ Calculates minimum possible imgwait and imgnr based on imgtime.
+        """
+            Calculates minimum possible imgwait and imgnr based on imgtime.
+
             The minimum time between subsequent images is by default set to
             0.45s, the time it takes to  take an image with max resolution.
+
         """
 
-        self.imgwait = max(mintime, self.imgwait)
-        totimg = int(self.imgtime / self.imgwait)
-        self.imgnr = min(self.imgnr, totimg)
+        self.config.img.wait = max(mintime, self.config.img.wait)
+        totimg = int(self.config.img.time / self.config.img.wait)
+        self.config.img.nr = min(self.config.img.nr, totimg)
 
 
     def shuttertofps(self, minfps = 1, maxfps = 40):
 
-        """ Computes fps based on shutterspeed within a range"""
+        """ Computes image fps based on shutterspeed within provided range """
 
-        self.fps = int(1./(self.shutterspeed/1000000.))
-        self.fps = max(fps, minfps)
-        self.fps = min(fps, maxfps)
-
-
-    def __init__(location = "NAS", single = True, filetype = ".jpg", taskname = "test", setupdir = "setup"):
-
-        lineprint("AnimRec started. The date is: " + strftime("%y/%m/%d"))
-        lineprint("====================================")
-
-        self.home = _homedir()
-        self.setupdir = self.home + setupdir
-        self.location = self.home + location
-        if location == "NAS":
-            if not os.path.ismount(location):
-                self.location = self.home
-        if not os.path.exists(self.location):
-            os.makedirs(self.location)
-        os.chdir(self.location)
-
-        self.line = ""
-        self.host = gethostname()
-        self.single = single
-        self.filetype = filetype
-        self.task = taskname
-
-        self.settings_cam()
-        self.settings_rec()
-        self.settings_cus()
-
-        self.shuttertofps()
-
-        if self.filetype == ".jpg":
-            self.imgparams()
-
-        self.record()
-
-
-    def settings_cam(width = 3280, height = 2464, compensation = 0, shutterspeed = 8000,
-                     iso = 200, brightness = 45, sharpness = 0, contrast = 10,
-                     saturation = -100, quality = 11, fps = 24, zoom = (0.0,0.0,1.0,1.0),
-                     rotation = 0):
-
-        self.resolution = (int(width),int(height))
-        self.compensation = int(compensation)
-        self.shutterspeed = int(shutterspeed)
-        self.iso = int(iso)
-        self.brightness = int(brightness)
-        self.sharpness = int(sharpness)
-        self.contrast = int(contrast)
-        self.saturation = int(saturation)
-        self.quality = int(quality)
-        self.fps = int(fps)
-        self.zoom = literal_eval(str(zoom))
-        self.rotation = int(rotation)
-
-        lineprint("Camera settings stored..")
-
-
-    def settings_rec(imgwait = 5.0, imgnr = 100, imgtime = 600, duration = 10, delay = 10):
-
-        self.imgwait = int(imgwait)
-        self.imgnr = int(imgnr)
-        self.imgtime = int(imgtime)
-        self.duration = int(duration+delay)
-
-        lineprint("Recording settings stored..")
-
-
-    def settings_cus(self):
-
-        os.chdir(self.setupdir)
-
-        self.zoom = loadyml("roifile.yml", value = self.zoom, add = False)
-        self.brightness = loadyml("cusbright.yml", value = self.brightness, add = True)
-        self.awb = loadyml("cusgains.yml", value = self.awb, add = False)
-        self.rotation = loadyml("cusrotate.yml", value = self.rotation, add = False)
-
-        lineprint("Custom settings for "+self.host+" loaded..")
-
-
-    def setup_cam(self):
-
-        self.camera = picamera.PiCamera()
-        self.camera.framerate = self.fps
-        self.camera.resolution = self.resolution
-        self.camera.zoom = self.zoom
-        self.camera.rotation = selfrotation
-        self.camera.exposure_compensation = self.compensation
-
-        time.sleep(1)
-
-        self.camera.exposure_mode = 'off'
-        self.camera.awb_mode = 'off'
-        self.camera.awb_gains = self.awb
-        self.camera.shutter_speed = self.shutterspeed
-        self.camera.sharpness = self.sharpness
-        self.camera.iso = self.iso
-        self.camera.contrast = self.contrast
-        self.camera.saturation = self.saturation
-        self.camera.brightness = self.brightness
-
-        lineprint("Camera started..")
+        fps = int(1./(self.config.cam.shutterspeed/1000000.))
+        fps = max(fps, minfps)
+        self.config.img.fps = min(fps, maxfps)
 
 
     def namefile(self):
@@ -249,25 +302,23 @@ class AnimRec:
 
         """
 
-        filename = self.task + "_" + daystamp + self.host
-
         if self.filetype == ".jpg" and not self.single:
-            daystamp = "{timestamp:%Y%m%d}_"
-            counter = "_im{counter:05d}"
-            timestamp = "_{timestamp:%H%M%S}"
-            self.filename = filename + counter + timestamp
+            date = "{timestamp:%Y%m%d}"
+            counter = "im{counter:05d}"
+            time = "{timestamp:%H%M%S}"
+            self.filename = print(self.task,date,self.host,counter,time,sep="_")
         else:
-            daystamp = time.strftime("%Y%m%d")
-            timestamp = time.strftime("%H%M%S")
-            self.filename = filename + timestamp
+            date = time.strftime("%Y%m%d")
+            time = time.strftime("%H%M%S")
+            self.filename = print(self.task,date,self.host,time,sep="_")
 
 
     def vidrecord(self, filename):
 
         lineprint("Recording "+filename)
-        self.camera.start_recording(filename, quality = self.quality)
-        self.camera.wait_recording(self.duration)
-        self.camera.stop_recording()
+        self.cam.start_recording(filename, quality = self.config.cam.quality)
+        self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
+        self.cam.stop_recording()
         lineprint("Finished")
 
 
@@ -282,20 +333,21 @@ class AnimRec:
 
             if self.single:
 
-                self.camera.capture(self.filename, format = "jpeg", quality = self.quality)
+                self.cam.capture(self.filename, format = "jpeg",
+                                 quality = self.config.rec.quality)
                 lineprint("Captured "+self.filename)
 
             else:
 
-                timepoint = datetime.datetime.now()
-                for i, img in enumerate(self.camera.capture_continuous(self.filename,
-                                        format = "jpeg", quality = self.quality)):
+                timepoint = datetime.now()
+                for i, img in enumerate(self.cam.capture_continuous(self.filename,
+                                        quality = self.config.cam.quality)):
                     if i < imgnr:
-                        delay = self.imgwait - (datetime.datetime.now() - timepoint).total_seconds()
-                        delay = min(0, delay)
+                        timepassed = (datetime.now() - timepoint).total_seconds()
+                        delay = min(0, self.config.img.wait - timepassed)
                         lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                         time.sleep(delay)
-                        timepoint = datetime.datetime.now()
+                        timepoint = datetime.now()
                     else:
                         break
 
@@ -308,15 +360,15 @@ class AnimRec:
 
             else:
 
-                for filename in camera.record_sequence(
-                    self.filename+'S%02d' % i+self.filetype for i in range(9999)):
+                for filename in self.cam.record_sequence(
+                    self.filename + 'S%02d' % i + self.filetype for i in range(9999)):
                     vidrecord(filename)
                     if raw_input("\nENTER for new session, E to exit: ") == 'e':
                         break
 
-        self.camera.close()
+        self.cam.close()
 
 
 if isscript:
-    AnimRec = AnimRec()
-    AnimRec.record()
+    Recorder = Recorder()
+    Recorder.record()

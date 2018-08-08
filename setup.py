@@ -20,6 +20,10 @@ def check_dependencies():
         import yaml
     except ImportError:
         install_requires.append('yaml')
+    try:
+        import localconfig
+    except ImportError:
+        install_requires.append('localconfig==0.4.2')
 
     dependency_links = ['http://github.com/joljols/animlab/tarball/']
 
