@@ -129,7 +129,7 @@ class AnimRec:
         self.imgnr = min(self.imgnr, totimg)
 
 
-    def shuttertofps(self, minfps = 1, maxfps = 40)
+    def shuttertofps(self, minfps = 1, maxfps = 40):
 
         """ Computes fps based on shutterspeed within a range"""
 
