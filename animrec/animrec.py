@@ -136,7 +136,7 @@ class Recorder:
         self.task = taskname
 
         self.home = homedir()
-        if recdir == "NAS"
+        if recdir == "NAS":
             if not os.path.ismount(recdir):
                 self.recdir = self.home
         if not os.path.exists(self.recdir):
@@ -158,7 +158,7 @@ class Recorder:
                             shutterspeed = 8000, quality = 11, gains = (1.0, 2.5),
                             rotation = 0, brighttune = 0, imgdims = (3280, 2464),
                             imgfps = 1, imgwait = 5.0, imgnr = 100, imgtime = 600,
-                            imgdims = (1640, 1232), vidfps = 24, vidduration = 10,
+                            viddims = (1640, 1232), vidfps = 24, vidduration = 10,
                             viddelay = 10)
         else:
             lineprint("Config settings loaded", False, True)

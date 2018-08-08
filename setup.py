@@ -25,7 +25,7 @@ def check_dependencies():
     except ImportError:
         install_requires.append('localconfig==0.4.2')
 
-    dependency_links = ['http://github.com/joljols/animlab/tarball/']
+    dependency_links = ['git+ssh://git@github.com/joljols/animlab.git']
 
     return install_requires, dependency_links
 
