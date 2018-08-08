@@ -1,15 +1,11 @@
-
 # coding: utf-8
 
-# - Store file with camera settings
-
-# In[ ]:
-
 import picamera
-from time
+import time
 import datetime
-from socket import gethostname
 import os
+
+from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 
@@ -142,7 +138,6 @@ class AnimRec:
         self.fps = min(fps, maxfps)
 
 
-
     def __init__(location = "NAS", single = True, filetype = ".jpg", taskname = "test", setupdir = "setup"):
 
         lineprint("AnimRec started. The date is: " + strftime("%y/%m/%d"))
@@ -174,7 +169,6 @@ class AnimRec:
             self.imgparams()
 
         self.record()
-
 
 
     def settings_cam(width = 3280, height = 2464, compensation = 0, shutterspeed = 8000,
@@ -326,6 +320,3 @@ class AnimRec:
 if isscript:
     AnimRec = AnimRec()
     AnimRec.record()
-
-
-# In[ ]:

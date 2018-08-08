@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     install_requires, dependency_links = check_dependencies()
 
-    setup(name='animtrack',
+    setup(name='animrec',
           author='Jolle Jolles',
           author_email='j.w.jolles@gmail.com',
           description='AnimRec: controlled video recording',
