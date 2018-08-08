@@ -1,30 +1,33 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
-
-#!/usr/bin/env python2.7
 # author JW Jolles
 # Last updated: 25 July 2018
 
-# Import libraries
-#-----------------------
 import os
 import subprocess
 from datetime import datetime
 import argparse
 from time import time
+from socket import gethostname
 
-# load functions
-#-----------------------
+
 def iswin():    
     return True if os.name == 'nt' else False
 
         
+def homedir():    
+
+    return os.path.expanduser("~")+"/"
+
+
 def isjup():
+
     '''checks if script is run interactivelly'''
+    
     import __main__ as main
     
     return not hasattr(main, '__file__')
@@ -55,63 +58,53 @@ def createdir(dirname):
             raise
                 
 
-def dirconvert(maindir = ".", viddirname = "videos"):
+def dirconvert(maindir, viddir = "videos"):
     
     '''convert images in sub-directories'''
     
     print datetime.now().strftime('%H:%M:%S'), "- Image to video conversion started!\n     ============================================="
     
-    # Change working directory to main directory
-    os.chdir(maindir)
+    host = gethostname()
     
-    # Get list of all rpi directories
-    pidirs = listfiles(dirs=True) if selectlist == "" else [selectlist]
+    maindir = "/home/pi/" + maindir
+    pidir = maindir + "/" + host
+    pividdir = maindir + "/" + viddir + "/" + host
+
+    createdir(viddir)
+    createdir(pividdir)
     
-    pidirs = [i for i in pidirs if i != exclude]
-
-    # Create directory for videos
-    createdir(viddirname)
-
-    # Create counter
     counter = 0
-
-    # Check each pidir
-    for pidir in pidirs:
-
-        # Create sub videos dir
-        subviddir = maindir + "/" + viddirname + "/" + pidir
-        createdir(subviddir)
                   
-        # Change working directory
-        print datetime.now().strftime('%H:%M:%S'), "- Processing folders for " + pidir + ":"
-        os.chdir(maindir + "/" + pidir)
+    print datetime.now().strftime('%H:%M:%S'), "- Processing folders for " + host + ":"
+    os.chdir(pidir)
 
-        # Get directories per dir
-        subdirs = listfiles(dirs=True)
+    subdirs = listfiles(dirs = True)
 
-        # For each day make a video and place in viddirname with pidir
-        for subdir in subdirs:
-            os.chdir(maindir + "/" + pidir + "/" + subdir)
-            counter += 1
-            t1 = time()
-            print subdir,"-",
+    for subdir in subdirs:
+        datedir = pidir + "/" + subdir
+        os.chdir(datedir)
+        
+        counter += 1
+        t1 = time()
+        print subdir,"-",
 
-            vidname = subviddir + "/" + pidir + "_" + subdir + ".mp4"
-            if iswin():
-                output = subprocess.check_output("(for %i in (*.jpg) do @echo file '%i')|sort /o imglist.txt", shell=True)
-                if not imglistonly:
-                    output = subprocess.check_output("ffmpeg -f concat -i imglist.txt -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y " + vidname, shell=False)
-                else:
-                    timediff = time() - t1
-                    print "Imglist created in "+"%.2f" % timediff+" sec.."
-                    
-            else:
-                bashCommand = ['bash','-c', 'ffmpeg -pattern_type glob -i "*.jpg" -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y ' + vidname]
-                output = subprocess.check_output(bashCommand)
-            
+        vidname = pividdir + "/" + host + "_" + subdir + ".mp4"
+        
+        if iswin():
+            output = subprocess.check_output("(for %i in (*.jpg) do @echo file '%i')|sort /o imglist.txt", shell=True)
             if not imglistonly:
+                output = subprocess.check_output("ffmpeg -f concat -i imglist.txt -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y " + vidname, shell=False)
+            else:
                 timediff = time() - t1
-                print "Video created in "+"%.2f" % timediff+" sec.."
+                print "Imglist created in "+"%.2f" % timediff+" sec.."
+
+        else:
+            bashCommand = ['bash','-c', 'ffmpeg -pattern_type glob -i "*.jpg" -c:v libx264 -pix_fmt yuv420p -hide_banner -nostats -loglevel quiet -y ' + vidname]
+            output = subprocess.check_output(bashCommand)
+
+        if iswin() and not imglistonly:
+            timediff = time() - t1
+            print "Video created in "+"%.2f" % timediff+" sec.."
 
         print ""
 
@@ -125,7 +118,7 @@ if isjup():
     selectlist = raw_input("List of subdirectories to convert (blank is all): ")
 else:
     ap = argparse.ArgumentParser()
-    ap.add_argument("-d", "--dir", default="", help="video directory")
+    ap.add_argument("-d", "--dir", default="SERVER", help="video directory")
     ap.add_argument("-s", "--select", default="", help="selection of sub directories")
     ap.add_argument("-e", "--exclude", default="", help="exclude directories")
     ap.add_argument("-i", "--imglistonly", default=False, help="only create imglist or not")

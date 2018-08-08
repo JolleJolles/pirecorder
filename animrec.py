@@ -3,78 +3,20 @@
 
 # In[ ]:
 
-#!/usr/bin/python
-
-# Import packages
 import picamera
 from time import sleep, strftime
 import datetime
 from socket import gethostname
 import os
+
 import yaml
 from ast import literal_eval
 from fractions import Fraction
 
-# Initial setting up
-home = "/home/pi/"
-rpi = gethostname()
-lineprint = strftime("[%H:%M:%S][") + rpi + "] -",
-
-# Define functions
-def yamyam(filename, value = None, add = True):
-    if os.path.exists(filename):
-        with open(filename) as f:
-            newvalue = yaml.load(f)
-        if value is not None:
-            if add:
-                newvalue += value
-            else:
-                newvalue = value
-    else:
-        newvalue = value
-        
-    return newvalue
+from animal.utils import homedir
 
 
-def customsetup(rpi, autorotate, brightfile = "cusbright.yml", gainsfile = "cusgains.yml", roifile = "roifile.yml"):
-
-    # Set crop
-    zoom = yamyam(HOME + "setup/" + roifile, "(0.0,0.0,1.0,1.0)", False)
-    zoom = literal_eval(zoom)
-        
-    # Set brightness
-    brightness = yamyam(HOME + "setup/" + brightfile, brightness, True)
-    
-    # Set gains
-    awb = yamyam(HOME + "setup/" + gainsfile, awb, False)
-    awb = literal_eval(awb)
-    
-    # Camera rotation
-    rotation = 0
-    if autorotate == "yes":
-        rotation = 180 if rpi in ["jolpi101","jolpi103","jolpi105","jolpi107"] else 0
-    
-    return zoom, brightness, awb, rotation
-
-
-def record(location = "NAS",
-           single = "no",
-           task = "test",
-           rectype = "img",
-           imgwait = 5.0,
-           imgnr = 100,
-           imgtime = 600,
-           width = 3280,
-           height = 2464,
-           compensation = 0,
-           shutterspeed = 8000,
-           iso = 200,
-           brightness = 45,
-           sharpness = 0,
-           contrast = 10,
-           saturation = -100,
-           quality = 11,
-           autorotate = "yes"):
+class AnimRec:
     
     """
         A fully automated image recording script for the rpi
@@ -161,12 +103,82 @@ def record(location = "NAS",
         For videos a .h264 file and for images a .jpg file. When not 
         single, a series of JPEG images will be created. All files are
         automatically named based on the rpi name, date, and time.
-        """
     
-    # Print starting statement
-    print lineprint + "Recording started. The date is "+strftime("%y/%m/%d")+". Warming up..."           
+    """
+        
+    def _cusprint(host, text):
+        print strftime("[%H:%M:%S][") + host + "] -", text
+        
+        
+    def __init__(location = "NAS", single = True, rectype = "img", taskname = "test"):
+        
+        self.home = _homedir()
+        self.location = home + location
+        if location == "NAS":
+            if not os.path.ismount(location):
+                self.location = self.home      
+        if not os.path.exists(self.location):
+            os.makedirs(self.location)
+        os.chdir(self.location)
     
-    # Convert input to right type (with runp)    
+        self.rpi = gethostname()
+        self.single = single
+        self.type = rectype
+        self.task = taskname
+   
+
+        def settings_cam(width = 3280, height = 2464, compensation = 0, shutterspeed = 8000, 
+                         iso = 200, brightness = 45, sharpness = 0, contrast = 10, 
+                         saturation = -100, quality = 11, autorotate = True):
+        
+        
+        def settings_img(imgwait = 5.0, imgnr = 100, imgtime = 600):
+        
+        def settings_vid(duration, delay):
+
+        
+        def setup_cam(self):
+            
+        _cusprint(self.rpi, "Starting up camera...")
+
+        self.camera = picamera.PiCamera()
+        self.camera.framerate = self.fps
+        self.camera.resolution = self.resolution
+        self.camera.zoom = self.zoom
+        self.camera.rotation = selfrotation
+        self.camera.exposure_compensation = self.compensation
+        
+        sleep(1)
+        
+        self.camera.exposure_mode = 'off'
+        self.camera.awb_mode = 'off'
+        self.camera.awb_gains = self.awb
+        self.camera.shutter_speed = self.shutterspeed
+        self.camera.sharpness = self.sharpness
+        self.camera.iso = self.iso
+        self.camera.contrast = self.contrast
+        self.camera.saturation = self.saturation
+        self.camera.brightness = self.brightness
+    
+    
+    
+    # Add date folder for image sequence
+    if rectype == "img" and single == "no":
+        location = location + strftime("/%y%m%d")
+
+    
+    
+    
+
+
+        
+    
+
+    
+    
+    
+    
+        # Convert input to right type (with runp)    
     #----------------------------
     #general settings
     resolution = (int(width),int(height))
@@ -188,6 +200,54 @@ def record(location = "NAS",
     duration = int(duration)
     delay = int(delay)
     fps = int(fps)
+    
+    
+        
+# Define functions
+def yamyam(filename, value = None, add = True):
+    if os.path.exists(filename):
+        with open(filename) as f:
+            newvalue = yaml.load(f)
+        if value is not None:
+            if add:
+                newvalue += value
+            else:
+                newvalue = value
+    else:
+        newvalue = value
+        
+    return newvalue
+
+
+def customsetup(rpi, autorotate, brightfile = "cusbright.yml", gainsfile = "cusgains.yml", roifile = "roifile.yml"):
+
+    # Set crop
+    zoom = yamyam(HOME + "setup/" + roifile, "(0.0,0.0,1.0,1.0)", False)
+    zoom = literal_eval(zoom)
+        
+    # Set brightness
+    brightness = yamyam(HOME + "setup/" + brightfile, brightness, True)
+    
+    # Set gains
+    awb = yamyam(HOME + "setup/" + gainsfile, awb, False)
+    awb = literal_eval(awb)
+    
+    # Camera rotation
+    rotation = 0
+    if autorotate == "yes":
+        rotation = 180 if rpi in ["jolpi101","jolpi103","jolpi105","jolpi107"] else 0
+    
+    return zoom, brightness, awb, rotation
+
+
+def record():
+    
+    
+    
+    # Print starting statement
+    print lineprint + "Recording started. The date is "+strftime("%y/%m/%d")+". Warming up..."           
+    
+
     
     
     # Make sure image recording settings are correct
@@ -212,22 +272,7 @@ def record(location = "NAS",
             print "shutterspeed too low.. reverting back to framerate of 1fps"
             fps = 1
 
-    # Set directory
-    #----------------------------
-    location = HOME + location
-    
-    # Check if location is mounted when NAS
-    if not os.path.ismount(location):
-        location = ""
-    
-    # Add date folder for image sequence
-    if rectype == "img" and single == "no":
-        location = location + strftime("/%y%m%d")
 
-    # Change to directory
-    if not os.path.exists(location):
-        os.makedirs(location)
-    os.chdir(location)
     
     # Filenaming
     #----------------------------
@@ -248,25 +293,7 @@ def record(location = "NAS",
     zoom, brightness, awb, rotation = customsetup(rpi, autorotate)
     
 
-    # Set up the camera with parameters
-    #----------------------------
-    print lineprint + "Starting up camera..."
-    camera = picamera.PiCamera()
-    camera.framerate = fps
-    camera.resolution = resolution
-    camera.zoom = zoom
-    camera.rotation = rotation
-    camera.exposure_compensation = compensation
-    sleep(1)
-    camera.exposure_mode = 'off'
-    camera.awb_mode = 'off'
-    camera.awb_gains = awb
-    camera.shutter_speed = shutterspeed
-    camera.sharpness = sharpness
-    camera.iso = iso
-    camera.contrast = contrast
-    camera.saturation = saturation
-    camera.brightness = brightness
+
     
     # Print recording settings
     print lineprint + "Settings = location: "+location+"; duration "+str(duration+delay)+          "sec; resolution: "+str(resolution)+"; shutterspeed: "+           str(shutterspeed/1000)+"ms; compensation: "+str(compensation)+"; fps: "+str(fps)+           "; sharpness: "+str(sharpness)+"; iso: "+str(iso)+"; contrast: "+str(contrast)+           "; brightness: "+str(brightness)+"; saturation: "+str(saturation)+"; and quality: "+str(quality)+"\n"
@@ -299,6 +326,7 @@ def record(location = "NAS",
     else:
         if single == "yes":
             filenamefull = filename
+        
         else:
             print lineprint, "New session started"
             while True:
@@ -315,13 +343,16 @@ def record(location = "NAS",
                     continue
                 else:
                     break
+                    
             filenamefull = filename + session + idnr + ftype
-            print lineprint, "Recording " + filenamefull
-            camera.start_recording(filename, quality = quality)
-            camera.wait_recording(delay + duration)
-            camera.stop_recording()
+
+        def startrecording()
+        print lineprint, "Recording " + filenamefull
+        camera.start_recording(filenamefull, quality = quality)
+        camera.wait_recording(delay + duration)
+        camera.stop_recording()
             
-            # Continue until user breaks
+        if single == "no":
             answer = raw_input("\nPress ENTER to start new session or 'e' to exit: ")
             if answer == 'e':
                 break
