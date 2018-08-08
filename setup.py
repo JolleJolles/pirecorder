@@ -33,10 +33,10 @@ if __name__ == "__main__":
     setup(name='animtrack',
           author='Jolle Jolles',
           author_email='j.w.jolles@gmail.com',
-          description='AnimTrack: behavioural tracking of free-moving animals',
+          description='AnimRec: controlled video recording',
           url='http://jollejolles.com',
           download_url='https://github.com/jolleslab/AnimTrack',
-          version=0.0.1,
+          version="0.0.1",
           install_requires=install_requires,
           dependency_links=dependency_links,
-          packages=['animtrack'])
+          packages=['animrec'])
