@@ -1,21 +1,20 @@
 
 # coding: utf-8
 
+# - Store file with camera settings
+
 # In[ ]:
 
 import picamera
-from time import sleep, strftime
+from time
 import datetime
 from socket import gethostname
 import os
-
-import yaml
 from ast import literal_eval
 from fractions import Fraction
 
-from animal.utils import homedir
-
-
+from animal.utils import homedir, isscript, loadyml 
+        
 class AnimRec:
     
     """
@@ -42,17 +41,16 @@ class AnimRec:
         delay : int, default = 0
             *Video parameter only*. Extra recording time in seconds. 
             Main use is for filming acclimatisation time. 
-        imgwait : float, default = 5.0
+        imgwait : float, default = 1.0
             *Image parameter only*. The delay between subsequent images 
             in seconds. When a delay is provided that is less than ~0.5s 
             (shutterspeed + processingtime) it will be automatically set 
             to 0 and images thus taken immideately one after the other.
-        imgnr : int, default = 100
+        imgnr : int, default = 60
             *Image parameter only*. The number of images that should be 
-            taken. When this number is reached, the script will automatically 
-            terminate. The minimum of a) imgnr and b) nr of images based on 
-            imgwait and imgtime will be selected.
-        imgtime : integer, default = 600
+            taken. When this number is reached, the script will 
+            automatically terminate.
+        imgtime : integer, default = 60
             *Image parameter only*. The time in seconds during which images 
             should be taken. The minimum of a) imgnr and b) nr of images 
             based on imgwait and imgtime will be selected.
@@ -104,16 +102,55 @@ class AnimRec:
         single, a series of JPEG images will be created. All files are
         automatically named based on the rpi name, date, and time.
     
-    """
+    """       
+
+    def lineprint(self, text, stamp = True, sameline = False, reset = False):
         
-    def _cusprint(host, text):
-        print strftime("[%H:%M:%S][") + host + "] -", text
+        if stamp:
+            text = time.strftime("%H:%M:%S") + " [" + self.host + "] - " + text
+        if sameline:
+            if reset:
+                self.line = text
+                sys.stdout.write("\r")
+                sys.stdout.write(" "*100)
+            else:
+                text = self.line + " " + text
+            self.line = "\r" + text
+        else:
+            self.line = text if self.line == "" else "\n" + text
+        print self.line, 
         
         
-    def __init__(location = "NAS", single = True, rectype = "img", taskname = "test"):
+    def imgparams(self, mintime = 0.45):
+
+        """ Calculates minimum possible imgwait and imgnr based on imgtime.
+            The minimum time between subsequent images is by default set to 
+            0.45s, the time it takes to  take an image with max resolution.      
+        """
+
+        self.imgwait = max(mintime, self.imgwait)
+        totimg = int(self.imgtime / self.imgwait)
+        self.imgnr = min(self.imgnr, totimg)
+
+
+    def shuttertofps(self, minfps = 1, maxfps = 40)
+
+        """ Computes fps based on shutterspeed within a range"""
+
+        self.fps = int(1./(self.shutterspeed/1000000.))
+        self.fps = max(fps, minfps)
+        self.fps = min(fps, maxfps)
+
+    
+    
+    def __init__(location = "NAS", single = True, filetype = ".jpg", taskname = "test", setupdir = "setup"):
+        
+        lineprint("AnimRec started. The date is: " + strftime("%y/%m/%d"))
+        lineprint("====================================")
         
         self.home = _homedir()
-        self.location = home + location
+        self.setupdir = self.home + setupdir
+        self.location = self.home + location
         if location == "NAS":
             if not os.path.ismount(location):
                 self.location = self.home      
@@ -121,25 +158,69 @@ class AnimRec:
             os.makedirs(self.location)
         os.chdir(self.location)
     
-        self.rpi = gethostname()
+        self.line = ""
+        self.host = gethostname()
         self.single = single
-        self.type = rectype
+        self.filetype = filetype
         self.task = taskname
+        
+        self.settings_cam()
+        self.settings_rec()
+        self.settings_cus()
+        
+        self.shuttertofps()
+        
+        if self.filetype == ".jpg":
+            self.imgparams()
+        
+        self.record()
+        
    
 
-        def settings_cam(width = 3280, height = 2464, compensation = 0, shutterspeed = 8000, 
-                         iso = 200, brightness = 45, sharpness = 0, contrast = 10, 
-                         saturation = -100, quality = 11, autorotate = True):
-        
-        
-        def settings_img(imgwait = 5.0, imgnr = 100, imgtime = 600):
-        
-        def settings_vid(duration, delay):
+    def settings_cam(width = 3280, height = 2464, compensation = 0, shutterspeed = 8000, 
+                     iso = 200, brightness = 45, sharpness = 0, contrast = 10, 
+                     saturation = -100, quality = 11, fps = 24, zoom = (0.0,0.0,1.0,1.0),
+                     rotation = 0):
 
+        self.resolution = (int(width),int(height))
+        self.compensation = int(compensation)
+        self.shutterspeed = int(shutterspeed)
+        self.iso = int(iso)
+        self.brightness = int(brightness)
+        self.sharpness = int(sharpness)
+        self.contrast = int(contrast)
+        self.saturation = int(saturation)
+        self.quality = int(quality)
+        self.fps = int(fps)
+        self.zoom = literal_eval(str(zoom))
+        self.rotation = int(rotation)
+
+        lineprint("Camera settings stored..")
+
+
+    def settings_rec(imgwait = 5.0, imgnr = 100, imgtime = 600, duration = 10, delay = 10):
+
+        self.imgwait = int(imgwait)
+        self.imgnr = int(imgnr)
+        self.imgtime = int(imgtime)
+        self.duration = int(duration+delay)
+
+        lineprint("Recording settings stored..")
+
+
+    def settings_cus(self):
+
+        os.chdir(self.setupdir)
+
+        self.zoom = loadyml("roifile.yml", value = self.zoom, add = False)        
+        self.brightness = loadyml("cusbright.yml", value = self.brightness, add = True)
+        self.awb = loadyml("cusgains.yml", value = self.awb, add = False)
+        self.rotation = loadyml("cusrotate.yml", value = self.rotation, add = False)
         
-        def setup_cam(self):
-            
-        _cusprint(self.rpi, "Starting up camera...")
+        lineprint("Custom settings for "+self.host+" loaded..")
+        
+    
+    def setup_cam(self):
 
         self.camera = picamera.PiCamera()
         self.camera.framerate = self.fps
@@ -147,9 +228,9 @@ class AnimRec:
         self.camera.zoom = self.zoom
         self.camera.rotation = selfrotation
         self.camera.exposure_compensation = self.compensation
-        
-        sleep(1)
-        
+
+        time.sleep(1)
+
         self.camera.exposure_mode = 'off'
         self.camera.awb_mode = 'off'
         self.camera.awb_gains = self.awb
@@ -159,211 +240,95 @@ class AnimRec:
         self.camera.contrast = self.contrast
         self.camera.saturation = self.saturation
         self.camera.brightness = self.brightness
-    
-    
-    
-    # Add date folder for image sequence
-    if rectype == "img" and single == "no":
-        location = location + strftime("/%y%m%d")
 
-    
-    
-    
+        lineprint("Camera started..")
 
 
-        
+    def namefile(self):
     
-
-    
-    
-    
-    
-        # Convert input to right type (with runp)    
-    #----------------------------
-    #general settings
-    resolution = (int(width),int(height))
-    compensation = int(compensation)
-    shutterspeed = int(shutterspeed)
-    iso = int(iso)
-    brightness = int(brightness)
-    sharpness = int(sharpness)
-    contrast = int(contrast)
-    saturation = int(saturation)
-    quality = int(quality)
-    
-    #img settings
-    imgwait = float(imgwait)
-    imgnr = int(imgnr)
-    imgtime = int(imgtime)
-    
-    #video settings
-    duration = int(duration)
-    delay = int(delay)
-    fps = int(fps)
-    
-    
-        
-# Define functions
-def yamyam(filename, value = None, add = True):
-    if os.path.exists(filename):
-        with open(filename) as f:
-            newvalue = yaml.load(f)
-        if value is not None:
-            if add:
-                newvalue += value
-            else:
-                newvalue = value
-    else:
-        newvalue = value
-        
-    return newvalue
-
-
-def customsetup(rpi, autorotate, brightfile = "cusbright.yml", gainsfile = "cusgains.yml", roifile = "roifile.yml"):
-
-    # Set crop
-    zoom = yamyam(HOME + "setup/" + roifile, "(0.0,0.0,1.0,1.0)", False)
-    zoom = literal_eval(zoom)
-        
-    # Set brightness
-    brightness = yamyam(HOME + "setup/" + brightfile, brightness, True)
-    
-    # Set gains
-    awb = yamyam(HOME + "setup/" + gainsfile, awb, False)
-    awb = literal_eval(awb)
-    
-    # Camera rotation
-    rotation = 0
-    if autorotate == "yes":
-        rotation = 180 if rpi in ["jolpi101","jolpi103","jolpi105","jolpi107"] else 0
-    
-    return zoom, brightness, awb, rotation
-
-
-def record():
-    
-    
-    
-    # Print starting statement
-    print lineprint + "Recording started. The date is "+strftime("%y/%m/%d")+". Warming up..."           
-    
-
-    
-    
-    # Make sure image recording settings are correct
-    if rectype == "img":
-
-        # When imgwait is close to zero, change to mininum
-        # value that roughly equals time to take image
-        mintime = 0.45
-        imgwait = mintime if imgwait < mintime else imgwait
-
-        # Calculate number of images to record
-        totimg = int(imgtime / imgwait)
-        imgnr = min(imgnr, totimg)
-    
-        # Set fps based on shutterspeed
-        shuttsec = shutterspeed / float(1000000)
-        if shuttsec < 0.025:
-            fps = 40
-        elif shuttsec <= 1:
-            fps = int(1/shuttsec)
-        else:
-            print "shutterspeed too low.. reverting back to framerate of 1fps"
-            fps = 1
-
-
-    
-    # Filenaming
-    #----------------------------
-    daystamp = "{timestamp:%Y%m%d}_"
-    counter = "_im{counter:05d}"
-    timestamp = "_{timestamp:%H%M%S}"
-    filename = task + "_" + daystamp + rpi
-    ftype = ".jpg" if rectype == "img" else ".h264"
-    if single == "yes":
-        filename = filename + timestamp + ftype
-    else:
-        if rectype == "img":
-            filename = filename + counter + timestamp + ftype
+        """ 
+            Provides a filename for the media recorded.
             
-    
-    # Load custom settings
-    #----------------------------
-    zoom, brightness, awb, rotation = customsetup(rpi, autorotate)
-    
-
-
-    
-    # Print recording settings
-    print lineprint + "Settings = location: "+location+"; duration "+str(duration+delay)+          "sec; resolution: "+str(resolution)+"; shutterspeed: "+           str(shutterspeed/1000)+"ms; compensation: "+str(compensation)+"; fps: "+str(fps)+           "; sharpness: "+str(sharpness)+"; iso: "+str(iso)+"; contrast: "+str(contrast)+           "; brightness: "+str(brightness)+"; saturation: "+str(saturation)+"; and quality: "+str(quality)+"\n"
-    
-    
-    # Start recording
-    #----------------------------
-    # Take image(s)
-    if rectype == "img":
-        if single == "yes":
-            camera.capture(filename, format = "jpeg", quality = quality)
-            print lineprint, "captured", filename
-        else:
-            bef = datetime.datetime.now()
-            for i, img in enumerate(camera.capture_continuous(filename, format = "jpeg", quality = quality)):
-                
-                # Stop when required image number is reached
-                if i == (imgnr-1):
-                    break
-
-                # Calculate delay and wait before taking next image
-                delay = imgwait - (datetime.datetime.now() - bef).total_seconds()
-                delay = 0 if delay < 0 else delay
-                print lineprint, "captured" + img + ", sleeping " + str(round(delay,2)) + "s..",
-                sleep(delay)
-                bef = datetime.datetime.now()
-                print bef
-    
-    # Take video(s)
-    else:
-        if single == "yes":
-            filenamefull = filename
+            Filenames include task, date, rpi name, and time.
+            Images part of image sequence additionally contain
+            a sequence number. e.g. test_180708_pi12_S01_100410
+            
+        """
         
+        filename = self.task + "_" + daystamp + self.host
+
+        if self.filetype == ".jpg" and not self.single:
+            daystamp = "{timestamp:%Y%m%d}_"
+            counter = "_im{counter:05d}"
+            timestamp = "_{timestamp:%H%M%S}"
+            self.filename = filename + counter + timestamp
         else:
-            print lineprint, "New session started"
-            while True:
-                session = "_" + raw_input("Session nr (e.g. S01): ")
-                if len(session) != 3:
-                    print "Session nr should be 3 characters long, try again"
-                    continue
-                else:
-                    break
-            while True:
-                idnr = "_" + raw_input("Fish/Group ID (e.g. F101 or GR20): ")
-                if len(idnr) != 4:
-                    print "ID should be 4 characters long, try again"
-                    continue
-                else:
-                    break
+            daystamp = time.strftime("%Y%m%d")
+            timestamp = time.strftime("%H%M%S")
+            self.filename = filename + timestamp
+
+
+    def vidrecord(self, filename):
+        
+        lineprint("Recording "+filename)
+        self.camera.start_recording(filename, quality = self.quality)
+        self.camera.wait_recording(self.duration)
+        self.camera.stop_recording()
+        lineprint("Finished")
                     
-            filenamefull = filename + session + idnr + ftype
+    
+    def record(self):
+        
+        self.setup_cam()
+        self.namefile()
+        
+        if self.rectype == "img":
 
-        def startrecording()
-        print lineprint, "Recording " + filenamefull
-        camera.start_recording(filenamefull, quality = quality)
-        camera.wait_recording(delay + duration)
-        camera.stop_recording()
+            self.filename += self.filetype
             
-        if single == "no":
-            answer = raw_input("\nPress ENTER to start new session or 'e' to exit: ")
-            if answer == 'e':
-                break
+            if self.single:
+                
+                self.camera.capture(self.filename, format = "jpeg", quality = self.quality)
+                lineprint("Captured "+self.filename)
+
             else:
-                continue
+
+                timepoint = datetime.datetime.now()
+                for i, img in enumerate(self.camera.capture_continuous(self.filename, 
+                                        format = "jpeg", quality = self.quality)):
+                    if i < imgnr:
+                        delay = self.imgwait - (datetime.datetime.now() - timepoint).total_seconds()
+                        delay = min(0, delay)
+                        lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                        time.sleep(delay)
+                        timepoint = datetime.datetime.now()
+                    else:
+                        break
+        
+        else:
+            
+            if self.single:
+                
+                self.filename += self.filetype
+                self.vidrecord(self.filename)
+            
+            else:
+
+                for filename in camera.record_sequence(
+                    self.filename+'S%02d' % i+self.filetype for i in range(9999)):
+                    vidrecord(filename)
+                    if raw_input("\nENTER for new session, E to exit: ") == 'e':
+                        break
     
-    # Release camera when finished
-    camera.close()
+        self.camera.close()
 
     
-# Only execute record function when file is run
-if __name__ == '__main__':
-    record()
+if isscript:
+    AnimRec = AnimRec()
+    AnimRec.record()
+
+
+# In[ ]:
+
+
 
