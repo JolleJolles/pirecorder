@@ -25,22 +25,20 @@ def check_dependencies():
     except ImportError:
         install_requires.append('localconfig==0.4.2')
 
-    dependency_links = ['git+ssh://git@github.com/joljols/animlab.git']
-
-    return install_requires, dependency_links
+    return install_requires
 
 
 if __name__ == "__main__":
 
-    install_requires, dependency_links = check_dependencies()
+    install_requires = check_dependencies()
 
     setup(name='animrec',
           author='Jolle Jolles',
           author_email='j.w.jolles@gmail.com',
           description='AnimRec: controlled video recording',
           url='http://jollejolles.com',
-          download_url='https://github.com/jolleslab/AnimTrack',
-          version="0.0.1",
+          download_url='https://github.com/jolleslab/AnimRec',
+          version="1.0.0",
           install_requires=install_requires,
-          dependency_links=dependency_links,
+          dependency_links=['git+ssh://git@github.com/joljols/animlab.git'],
           packages=['animrec'])
