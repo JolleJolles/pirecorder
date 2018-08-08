@@ -28,7 +28,7 @@ def check_dependencies():
 
 if __name__ == "__main__":
 
-    install_requires = check_dependencies()
+    install_requires, dependency_links = check_dependencies()
 
     setup(name='animtrack',
           author='Jolle Jolles',
