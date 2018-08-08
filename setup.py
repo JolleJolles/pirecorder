@@ -21,9 +21,9 @@ def check_dependencies():
     except ImportError:
         install_requires.append('yaml')
 
-    dependency_links = ['http://github.com/jolleslab/AnimRec/tarball/']
+    dependency_links = ['http://github.com/joljols/animlab/tarball/']
 
-    return install_requires, dependency_links    
+    return install_requires, dependency_links
 
 
 if __name__ == "__main__":
