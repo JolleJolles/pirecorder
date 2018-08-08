@@ -19,7 +19,7 @@ def check_dependencies():
     try:
         import yaml
     except ImportError:
-        install_requires.append('yaml')
+        install_requires.append('pyyaml')
     try:
         import localconfig
     except ImportError:
@@ -40,5 +40,4 @@ if __name__ == "__main__":
           download_url='https://github.com/jolleslab/AnimRec',
           version="1.0.0",
           install_requires=install_requires,
-          dependency_links=['git+https://git@github.com/joljols/animlab.git/@master#egg=animlab-0'],
           packages=['animrec'])
