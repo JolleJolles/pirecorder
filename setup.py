@@ -40,5 +40,5 @@ if __name__ == "__main__":
           download_url='https://github.com/jolleslab/AnimRec',
           version="1.0.0",
           install_requires=install_requires,
-          dependency_links=['http://github.com/joljols/animlab/tarball/master#egg=animlab-0'],
+          dependency_links=['git+https://git@github.com/joljols/animlab.git/@master#egg=animlab-0'],
           packages=['animrec'])
