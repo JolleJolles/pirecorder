@@ -36,7 +36,7 @@ if __name__ == "__main__":
           description='AnimTrack: behavioural tracking of free-moving animals',
           url='http://jollejolles.com',
           download_url='https://github.com/jolleslab/AnimTrack',
-          version=ATversion,
+          version=0.0.1,
           install_requires=install_requires,
           dependency_links=dependency_links,
           packages=['animtrack'])
