@@ -1,8 +1,6 @@
 # coding: utf-8
-from __future__ import print_function
-
 import picamera
-import time
+from time import sleep, strftime
 from datetime import datetime
 import os
 
@@ -12,6 +10,7 @@ from ast import literal_eval
 from fractions import Fraction
 
 from animlab.utils import homedir, isscript
+from .version import version
 
 class Recorder:
 
@@ -122,14 +121,14 @@ class Recorder:
 
     """
 
-    def __init__(recdir = "NAS", setupdir = "setup", single = True,
-                 taskname = "test", rectype = "img"):
-
-        lineprint("AnimRec started. The date is: " + strftime("%y/%m/%d"))
-        lineprint("====================================")
+    def __init__(self, recdir = "NAS", setupdir = "setup", single = False,
+                 taskname = "test", rectype = "vid"):
 
         self.line = ""
         self.host = gethostname()
+        self.lineprint(strftime("%d/%m/%Y")+" AnimRec started! Version "+str(version), False)
+        self.lineprint("==========================================", False)
+
         self.single = single
         self.rectype = rectype
         self.filetype = ".jpg" if rectype == "img" else ".h264"
@@ -139,9 +138,9 @@ class Recorder:
         if recdir == "NAS":
             if not os.path.ismount(recdir):
                 self.recdir = self.home
+        self.recdir = self.home + recdir
         if not os.path.exists(self.recdir):
             os.makedirs(self.recdir)
-        self.recdir = self.home + recdir
         self.setupdir = self.home + setupdir
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
@@ -151,7 +150,7 @@ class Recorder:
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
             for section in ['cam','cus', 'img','vid']:
-                if section not in list(config):
+                if section not in list(self.config):
                     self.config.add_section(section)
             self.set_config(brightness = 45, contrast = 10, saturation = -100,
                             iso = 200, sharpness = 0, compensation = 0,
@@ -161,7 +160,7 @@ class Recorder:
                             viddims = (1640, 1232), vidfps = 24, vidduration = 10,
                             viddelay = 10)
         else:
-            lineprint("Config settings loaded", False, True)
+            self.lineprint("Config settings loaded")
 
 
     def set_config(self, **kwargs):
@@ -188,12 +187,12 @@ class Recorder:
         if "brighttune" in kwargs:
             self.config.cus.brighttune = kwargs["brighttune"]
         if "gains" in kwargs:
-            self.config.cus.gains = literal_eval(str(kwargs["gains"]))
+            self.config.cus.gains = kwargs["gains"]
 
         if "imgdims" in kwargs:
-            self.config.img.dims = literal_eval(str(kwargs["imgdims"]))
+            self.config.img.dims = kwargs["imgdims"]
         if "viddims" in kwargs:
-            self.config.vid.dims = literal_eval(str(kwargs["viddims"]))
+            self.config.vid.dims = kwargs["viddims"]
         if "imgfps" in kwargs:
             self.config.img.fps = kwargs["imgfps"]
         if "vidfps" in kwargs:
@@ -218,7 +217,7 @@ class Recorder:
                 self.shuttertofps()
 
             self.config.save()
-            lineprint("Recording settings stored..", False, True)
+            self.lineprint("Recording settings stored..")
 
 
     def setup_cam(self):
@@ -230,16 +229,16 @@ class Recorder:
 
         if self.rectype == "img":
             self.cam.framerate = self.config.img.fps
-            self.cam.resolution = self.config.img.dims
+            self.cam.resolution = literal_eval(self.config.img.dims)
         if self.rectype == "vid":
             self.cam.framerate = self.config.vid.fps
-            self.cam.resolution = self.config.vid.dims
+            self.cam.resolution = literal_eval(self.config.vid.dims)
 
-        time.sleep(1)
+        sleep(1)
 
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
-        self.cam.awb_gains = self.config.cus.gains
+        self.cam.awb_gains = literal_eval(self.config.cus.gains)
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.brightness = self.config.cam.brightness
         self.cam.contrast = self.config.cam.contrast
@@ -247,13 +246,13 @@ class Recorder:
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
-        lineprint("Camera started..")
+        self.lineprint("Camera started..")
 
 
     def lineprint(self, text, stamp = True, sameline = False, reset = False):
 
         if stamp:
-            text = time.strftime("%H:%M:%S") + " [" + self.host + "] - " + text
+            text = strftime("%H:%M:%S") + " [" + self.host + "] - " + text
         if sameline:
             if reset:
                 self.line = text
@@ -264,7 +263,7 @@ class Recorder:
             self.line = "\r" + text
         else:
             self.line = text if self.line == "" else "\n" + text
-        print(self.line, end=" ")
+        print self.line,
 
 
     def imgparams(self, mintime = 0.45):
@@ -306,20 +305,11 @@ class Recorder:
             date = "{timestamp:%Y%m%d}"
             counter = "im{counter:05d}"
             time = "{timestamp:%H%M%S}"
-            self.filename = print(self.task,date,self.host,counter,time,sep="_")
+            self.filename = "_".join([self.task,date,self.host,counter,time])
         else:
-            date = time.strftime("%Y%m%d")
-            time = time.strftime("%H%M%S")
-            self.filename = print(self.task,date,self.host,time,sep="_")
-
-
-    def vidrecord(self, filename):
-
-        lineprint("Recording "+filename)
-        self.cam.start_recording(filename, quality = self.config.cam.quality)
-        self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
-        self.cam.stop_recording()
-        lineprint("Finished")
+            date = strftime("%Y%m%d")
+            time = strftime("%H%M%S")
+            self.filename = "_".join([self.task,date,self.host,time])
 
 
     def record(self):
@@ -329,24 +319,24 @@ class Recorder:
 
         if self.rectype == "img":
 
-            self.filename += self.filetype
+            self.filename = self.filename + self.filetype
 
             if self.single:
 
                 self.cam.capture(self.filename, format = "jpeg",
-                                 quality = self.config.rec.quality)
-                lineprint("Captured "+self.filename)
+                                 quality = self.config.cam.quality)
+                self.lineprint("Captured "+self.filename)
 
             else:
 
                 timepoint = datetime.now()
                 for i, img in enumerate(self.cam.capture_continuous(self.filename,
                                         quality = self.config.cam.quality)):
-                    if i < imgnr:
+                    if i < self.config.img.nr:
                         timepassed = (datetime.now() - timepoint).total_seconds()
-                        delay = min(0, self.config.img.wait - timepassed)
-                        lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
-                        time.sleep(delay)
+                        delay = max(0, self.config.img.wait - timepassed)
+                        self.lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                        sleep(delay)
                         timepoint = datetime.now()
                     else:
                         break
@@ -355,14 +345,19 @@ class Recorder:
 
             if self.single:
 
-                self.filename += self.filetype
-                self.vidrecord(self.filename)
+                self.filename = self.filename + self.filetype
+                self.lineprint("Recording "+self.filename)
+                self.cam.start_recording(self.filename, quality = self.config.cam.quality)
+                self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
+                self.lineprint("Finished")
 
             else:
 
                 for filename in self.cam.record_sequence(
-                    self.filename + 'S%02d' % i + self.filetype for i in range(9999)):
-                    vidrecord(filename)
+                    self.filename + '_S%02d' % i + self.filetype for i in range(1,9999)):
+                    self.lineprint("Recording "+filename)
+                    self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
+                    self.lineprint("Finished")
                     if raw_input("\nENTER for new session, E to exit: ") == 'e':
                         break
 

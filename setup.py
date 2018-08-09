@@ -3,6 +3,7 @@
 # Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
 
 from setuptools import setup
+from animrec.version import version
 
 def check_dependencies():
     install_requires = []
@@ -38,6 +39,6 @@ if __name__ == "__main__":
           description='AnimRec: controlled video recording',
           url='http://jollejolles.com',
           download_url='https://github.com/jolleslab/AnimRec',
-          version="1.0.0",
+          version=version,
           install_requires=install_requires,
           packages=['animrec'])
