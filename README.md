@@ -1,7 +1,7 @@
 # AnimRec
 A python module for automated image and video recording on the RaspberryPi.
 
-![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
+![logo](https://www.dropbox.com/s/f6e22bkfo4o9ko4/AnimRec-logo.jpg?dl=1)
 
 <a name="install"></a> Installation
 ------------
@@ -28,7 +28,7 @@ The main functionality of *AnimRec* is the `Recorder` class in the `animrec` mod
 
 AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file [animrec.conf] is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
 
-![conf file](https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg)
+<center>![conf file](https://www.dropbox.com/s/6pwdwz6c7vh8o9w/animrec-conffile-screenshot.jpg?dl=1)</center>
 
 AnimRec is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The setup/animrec.conf file is directly editable (see screenshot above) or alternatively settings can be stored when running the `animrec.set_config()` function.
 
