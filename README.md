@@ -1,5 +1,5 @@
 # AnimRec
-A python module for automated image and video recording on the RaspberryPi (rpi).
+A python module for automated image and video recording on the RaspberryPi.
 
 ![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
 
@@ -23,14 +23,81 @@ Overview
 ------------
 *AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for scientists in mind. *AnimRec* is (still) currently a private package on [GitHub](https://github.com/jolleslab/AnimRec) that can be easily installed from github with the right credentials ([see above](#install)).
 
+### Recorder class
 The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the users' home directory to store all relevant setup files. In additional AnimRec automatically creates a log file [animrec.log] file that stores all output of the terminal while using the module.
 
 AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file [animrec.conf] is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
 
-<center>![conf file](https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg)
+<center>![conf file](https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg)</center>
 
-AnimRec is set up in such a way that it is very easy to set and save custom settings: A) the setup/animrec.conf file is directly editable 
+AnimRec is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The setup/animrec.conf file is directly editable (see screenshot above) or alternatively settings can be stored when running the `animrec.set_config()` function.
 
+### Recording modes
+AnimRec has three recording modes (with the addition of the imgtask function, [explained below](#task)): `img`, `imgseq`, and `vid`. Files are automatically stored in the directory set in the custom configuration (`recdir`), by default this is the a NAS drive, and automatically named according to the provided label, the computer name, the date and time, and the session number or image sequence nr (see examples below).
+
+1. `img` mode: This mode simply records a single image with the custom settings and then quits. Example of filename: "pilot\_180312\_PI13\_101300.jpg".
+2. `imgseq` mode: This mode is to create a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`). The minimum of imgnr and the calculated number of images based on `imgwait` and `imgtime` will be selected. For example, if one wishes to specifically record 100 images 10.0s after one another, one would use the settings:`imgwait=10` `imgnr=100` and `imgtime=9999`, or if one wishes to record images every 0.5s for 10 hours irrespective of their total number one would use: `imgwait=0.5` `imgnr=999999` `imgtime=36000`. Example of filename: "pilot\_180312\_PI13\_img00231_101300.jpg".
+3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each reording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps`, the framerate of the video, `vidduration`: the duration of the video, and `viddelay`: Extra recording time in seconds that will be added to vidduration, used for filming acclimatisation time that is automatically ignored in potential subsequent tracking. Example of filename: "pilot\_180312\_PI13\_S01\_101300.h264".
+        
+                
+### Other modules
+In addition to the main recording module, AnimRec contains a couple of other modules to aid in setting-up the rpi to have the best standardized recording parameters: 
+
+1. `getedge()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
+2. `getgains()`: an automatic function that tries to determine the optimal white balance for the current camera position and lighting conditions. This function stores a tuple of rg and bg values that can be further adjusted by the user.
+3. <a name="task"></a>`imgtask()`: an add-on module for the `Recorder` class that enables the scheduling of automated image recording tasks, such as to record a sequence of images from 7am > 7pm at 1 image/min every day of the week. 
+
+
+Workflow
+--------
+The workflow for which AnimRec was designed is as follows:
+
+1. Install the latest version of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) and make sure it is fully up to date with python installed: `sudo apt-get update && sudo apt-get upgrade`.
+2. Set up the rpi with an (IR) camera and position it in such a way that it records the zone of interest (using the `raspistill -t 0 -k` command).
+3. Install AnimRec [see above](#install)
+4. Run the `getedge()` function to get the right region of interest to be used for recording.
+5. Run the `getgains()` function to get the right, standardized white balance.
+6. Run `AnimRec` for the first time to determine the right brightness settings for the camera. Camera brightness depends on the following parameters: `brightness`,`iso`,`contrast`, and `compensation`. Easiest is to record a single image (use `rectype=img`) and adjust these parameters until satisfied, which are then automatically stored.
+7. Now the rpi and AnimRec configuration are fully set up, simply use AnimRec with the required custom configuration file (for some examples, [see below](#examples)).
+
+
+<a name="examples"></a>Using AnimRec
+--------
+#### Python script
+The most straight forward way is to use write a simple python script (e.g. `rpirec.py`) to run AnimRec, containing the following code:
+
+```python
+import animrec
+
+# Initiate the recorder instance
+AR = animrec.Recorder()
+
+# Further store some new settings
+AR.set_config(label = "test", rectype = "vid", saturation = -100)
+
+# Run record function
+while True:
+	AR.record()
+```
+To now run this script, you simply type in terminal: ```python rpirec.py```
+
+**Note**: Make sure that the provided parameters conform to the datatype and are within the possible range, see [settings](#settings) below, as otherwise the script will result in an error.
+
+### Alias
+To make running AnimRec even easier we can create an alias for our recording script with a custom command. For this we need to open the `.bashrc` file in our root directory:
+
+```sudo nano ~/.bashrc```
+
+and add the following to the bottom of the file:
+
+```alias rec='sudo rpirec.py```
+
+Now all you need to enter in terminal to start Animrec is ```rec```, and AnimRec automatically starts with your custom settings.
+
+              
+### Jupyter
+A nice alternative is to make use of [jupyter notebook](http://jupyter.org/install.html). This is an open-source web application that allows you to create python scripts (among many other coding languages) that contain live code, equations, and visualizations that can be executed on a cell-by-cell basis. Jupyter is a great way to sequentually run parts of your code and problem solve it.
+To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```. 
 
 <a name="settings"></a>Settings
 --------
@@ -41,9 +108,10 @@ AnimRec is set up in such a way that it is very easy to set and save custom sett
         The directory where media will be stored. Default is "NAS", which is the
         automatically mounted NAS drive. If different, a folder with name
         corresponding to location will be created inside the home directory.
-        Providing no name stores in home directory.
+        If no name is provided (""), the files are stored in the home directory.
     setupdir : str, default = "setup"
-        The directory where setup files are stored relative to home directory.
+        The directory where setup files are stored relative to home directory. Best
+        to keep this except for very rare instances. 
     Label : str, default = "test"
         Label for associating with the recording and stored in the filenames.
     rectype : ["img", "imgseq", "vid"], default = "img"
@@ -51,10 +119,11 @@ AnimRec is set up in such a way that it is very easy to set and save custom sett
 
     Config settings
     ---------------
-    rotation : [0, 180], default = 0
-        Custom rotation specific to the RPi.
-    brighttune : [-10,10], default = 0
-        Custom brightness tuning specific to the RPi.
+    rotation : int, default = 0
+        Custom rotation specific to the RPi, should be either 0 or 180.
+    brighttune : int, default = 0
+        A rpi specific brightness compensation factor to standardize light levels 
+        across multiple rpi's, an integer between -10 and 10.
     gains : tuple, default = (1.0, 2.5)
         Custom gains specific to the RPi to have a 'normal' colorspace.
 
@@ -87,26 +156,26 @@ AnimRec is set up in such a way that it is very easy to set and save custom sett
         values are between 10 and 40, where 10 is extremely high quality, and 40
         is extremely low.
     imgdims : tuple, default = (3280,2464)
-        The resolution of the images to be taken in pixels.
+        The resolution of the images to be taken in pixels. The default is the max
+        resolution that does not return an error for this mode.
     viddims : tuple, default = (1640,1232)
-        The resolution of the videos to be taken in pixels.
+        The resolution of the videos to be taken in pixels. The default is the max
+        resolution that does not return an error for this mode.
     imgfps : int, default = 1
         The framerate for recording images. Will be set automatically based on
-        the imgwait setting.
+        the imgwait setting so should not be set by user.
     vidfps : int, default = 24
         The framerate for recording video.
     imgwait : float, default = 1.0
-        *Image parameter only*. The delay between subsequent images in seconds.
-        When a delay is provided that is less than ~0.5s (shutterspeed +
-        processingtime) it will be automatically set to 0 and images thus taken
-        immideately one after the other.
+    	The delay between subsequent images in seconds. When a delay is provided
+      	that is less than ~0.5s (shutterspeed + processingtime) it will be 
+      	automatically set to 0 and images thus taken immideately one after the other.
     imgnr : int, default = 60
-        *Image parameter only*. The number of images that should be taken. When
-        this number is reached, the script will automatically terminate.
+        The number of images that should be taken. When this number is reached, the 
+        script will automatically terminate.
     imgtime : integer, default = 60
-        *Image parameter only*. The time in seconds during which images should
-        be taken. The minimum of a) imgnr and b) nr of images based on imgwait
-        and imgtime will be selected.
+        The time in seconds during which images should be taken. The minimum of a) 
+        imgnr and b) nr of images based on imgwait and imgtime will be selected.
     vidduration : int, default = 10
         Duration of video recording in seconds.
     viddelay : int, default = 0
@@ -127,12 +196,3 @@ AnimRec is set up in such a way that it is very easy to set and save custom sett
     -------
     self : class
         Recorder class instance        
-
-Using AnimRec
---------
-To use utility functions, e.g.:
-```python
-from animlab.utils import listfiles
-from animlab.imutils import crop
-from animlab.mathutils import points_to_angle
-```
