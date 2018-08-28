@@ -21,11 +21,15 @@ AnimRec depends on [Python 2.7](http://www.python.org) and the [picamera](http:/
 
 Overview
 ------------
-*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for scientists in mind. *AnimRec* is (still) currently a private package on [GitHub](https://github.com/jolleslab/AnimRec) that can be easily installed from github with the right credentials ([see above](#install)). 
+*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for scientists in mind. *AnimRec* is (still) currently a private package on [GitHub](https://github.com/jolleslab/AnimRec) that can be easily installed from github with the right credentials ([see above](#install)).
 
-The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a "setup" directory in the users' home directory to store all relevant setup files. In additional AnimRec automatically creates an "animrec.log" file that stores all output of the terminal while using the module.
+The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the users' home directory to store all relevant setup files. In additional AnimRec automatically creates a log file [animrec.log] file that stores all output of the terminal while using the module.
 
-AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file (animrec.conf) is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
+AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file [animrec.conf] is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
+
+<center>![conf file](https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg)
+
+AnimRec is set up in such a way that it is very easy to set and save custom settings: A) the setup/animrec.conf file is directly editable 
 
 
 <a name="settings"></a>Settings
