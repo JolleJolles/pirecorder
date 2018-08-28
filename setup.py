@@ -12,7 +12,9 @@ def check_dependencies():
     try:
         import picamera
     except ImportError:
-        install_requires.append('picamera')
+        print "Package picamera is required to run animrec as this package was",
+        print "designed for the RaspberryPi. To install manually: pip install",
+        print "picamera"
     try:
         import socket
     except ImportError:
@@ -25,6 +27,11 @@ def check_dependencies():
         import localconfig
     except ImportError:
         install_requires.append('localconfig==0.4.2')
+    try:
+        import animlab
+    except ImportError:
+        print "Package animlab is required. To install development version:"
+        print "pip install git+https://github.com/joljols/animlab.git"
 
     return install_requires
 
