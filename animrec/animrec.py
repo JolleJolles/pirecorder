@@ -1,16 +1,26 @@
 # coding: utf-8
+
 import picamera
 from time import sleep, strftime
 from datetime import datetime
 import os
+import sys
 
 from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 
-from animlab.utils import homedir, isscript
-from .version import version
+from animlab.utils import homedir, isscript, lineprint
+from .version import __version__
+
+class Tee:
+    def write(self, *args, **kwargs):
+        self.out1.write(*args, **kwargs)
+        self.out2.write(*args, **kwargs)
+    def __init__(self, out1, out2):
+        self.out1 = out1
+        self.out2 = out2
 
 class Recorder:
 
@@ -26,12 +36,10 @@ class Recorder:
         inside the home directory. Providing no name stores in home directory.
     setupdir : str, default = "setup"
         The directory where setup files are stored relative to home directory.
-    single : str, default = "no"
-        If a single image should be record, yes or no.
-    taskname : str, default = "test"
-        Name of task used.
-    rectype : ["img","vid"], default = "img"
-        Recording type, either img or video.
+    Label : str, default = "test"
+        Label for associating with the recording and stored in the filenames.
+    rectype : ["img","imgseq","vid"], default = "img"
+        Recording type, either a single image, a sequence of images, or a video.
 
     Config settings
     ---------------
@@ -107,12 +115,11 @@ class Recorder:
     Output
     -------
     Either one or multiple .h264 or .jpg files depending on the filetype and
-    single input. All files are automatically named according to the task,
-    the host name, date, time and potentially session number or count nr, e.g.:
-    - single image: 'pilot_20180312_PI13_101300.jpg
-    - multiple images: 'pilot_20180312_PI13_img00231_101300.jpg
-    - single video: 'pilot_20180312_PI13_101300.h264
-    - multiple videos: 'pilot_20180312_PI13_S03_101300.h264
+    single input. All files are automatically named according to the label,
+    the host name, date, time and potentially session number or count nr, e.g.
+    - single image: 'pilot_180312_PI13_101300.jpg
+    - multiple images: 'pilot_180312_PI13_img00231_101300.jpg
+    - video: 'pilot_180312_PI13_S01_101300.h264
 
     Returns
     -------
@@ -121,49 +128,60 @@ class Recorder:
 
     """
 
-    def __init__(self, recdir = "NAS", setupdir = "setup", single = False,
-                 taskname = "test", rectype = "vid"):
+    def __init__(self):
 
-        self.line = ""
         self.host = gethostname()
-        self.lineprint(strftime("%d/%m/%Y")+" AnimRec started! Version "+str(version), False)
-        self.lineprint("==========================================", False)
-
-        self.single = single
-        self.rectype = rectype
-        self.filetype = ".jpg" if rectype == "img" else ".h264"
-        self.task = taskname
-
         self.home = homedir()
-        if recdir == "NAS":
-            if not os.path.ismount(recdir):
-                self.recdir = self.home
-        self.recdir = self.home + recdir
-        if not os.path.exists(self.recdir):
-            os.makedirs(self.recdir)
-        self.setupdir = self.home + setupdir
+        self.setupdir = self.home + "setup"
+        sys.stdout = Tee(open(self.setupdir+"/animrec.log", "a"), sys.stdout)
+
+        lineprint("==========================================", False)
+        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
+        lineprint("==========================================", False)
+
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
-        os.chdir(self.recdir)
-
         self.configfile = self.setupdir + "/animrec.conf"
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            for section in ['cam','cus', 'img','vid']:
+            for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
-            self.set_config(brightness = 45, contrast = 10, saturation = -100,
-                            iso = 200, sharpness = 0, compensation = 0,
-                            shutterspeed = 8000, quality = 11, gains = (1.0, 2.5),
-                            rotation = 0, brighttune = 0, imgdims = (3280, 2464),
-                            imgfps = 1, imgwait = 5.0, imgnr = 100, imgtime = 600,
-                            viddims = (1640, 1232), vidfps = 24, vidduration = 10,
-                            viddelay = 10)
+            self.set_config(recdir="NAS", label="test", rectype="vid",
+                            brightness=45, contrast=10, saturation=-100, iso=200,
+                            sharpness=0, compensation=0, shutterspeed=8000,
+                            quality=11, gains=(1.0, 2.5), rotation=0,
+                            brighttune=0, imgdims=(3280, 2464), imgfps=1,
+                            imgwait=5.0, imgnr=100, imgtime=600,
+                            viddims=(1640, 1232), vidfps=24, vidduration=10, viddelay=10)
         else:
-            self.lineprint("Config settings loaded")
+            lineprint("Config settings loaded. Recording "+\
+                           self.config.rec.type+" @ "+self.config.rec.dir)
+
+        self.imgparams()
+        self.shuttertofps()
+
+        if self.config.rec.dir == "NAS":
+            if not os.path.ismount(self.config.rec.dir):
+                self.recdir = self.home
+                lineprint("Recdir not mounted, storing in home directory..")
+        self.recdir = self.home + self.config.rec.dir
+        if not os.path.exists(self.recdir):
+            os.makedirs(self.recdir)
+
+        self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
+
+        os.chdir(self.recdir)
 
 
     def set_config(self, **kwargs):
+
+        if "recdir" in kwargs:
+            self.config.rec.dir = kwargs["recdir"]
+        if "label" in kwargs:
+            self.config.rec.label = kwargs["label"]
+        if "rectype" in kwargs:
+            self.config.rec.type = kwargs["rectype"]
 
         if "brightness" in kwargs:
             self.config.cam.brightness = kwargs["brightness"]
@@ -212,12 +230,8 @@ class Recorder:
 
         if len(kwargs) > 0:
 
-            if True in ["img" in i for i in kwargs]:
-                self.imgparams()
-                self.shuttertofps()
-
             self.config.save()
-            self.lineprint("Recording settings stored..")
+            lineprint("Config settings stored and loaded..")
 
 
     def setup_cam(self):
@@ -227,10 +241,10 @@ class Recorder:
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if self.rectype == "img":
+        if self.config.rec.type == "img":
             self.cam.framerate = self.config.img.fps
             self.cam.resolution = literal_eval(self.config.img.dims)
-        if self.rectype == "vid":
+        if self.config.rec.type == "vid":
             self.cam.framerate = self.config.vid.fps
             self.cam.resolution = literal_eval(self.config.vid.dims)
 
@@ -246,34 +260,14 @@ class Recorder:
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
-        self.lineprint("Camera started..")
-
-
-    def lineprint(self, text, stamp = True, sameline = False, reset = False):
-
-        if stamp:
-            text = strftime("%H:%M:%S") + " [" + self.host + "] - " + text
-        if sameline:
-            if reset:
-                self.line = text
-                sys.stdout.write("\r")
-                sys.stdout.write(" "*100)
-            else:
-                text = self.line + " " + text
-            self.line = "\r" + text
-        else:
-            self.line = text if self.line == "" else "\n" + text
-        print self.line,
+        lineprint("Camera started..")
 
 
     def imgparams(self, mintime = 0.45):
 
-        """
-            Calculates minimum possible imgwait and imgnr based on imgtime.
-
+        """ Calculates minimum possible imgwait and imgnr based on imgtime.
             The minimum time between subsequent images is by default set to
             0.45s, the time it takes to  take an image with max resolution.
-
         """
 
         self.config.img.wait = max(mintime, self.config.img.wait)
@@ -292,24 +286,21 @@ class Recorder:
 
     def namefile(self):
 
-        """
-            Provides a filename for the media recorded.
-
-            Filenames include task, date, rpi name, and time.
+        """ Provides a filename for the media recorded.
+            Filenames include label, date, rpi name, and time.
             Images part of image sequence additionally contain
             a sequence number. e.g. test_180708_pi12_S01_100410
-
         """
 
-        if self.filetype == ".jpg" and not self.single:
-            date = "{timestamp:%Y%m%d}"
-            counter = "im{counter:05d}"
+        if self.config.rec.type == "imgseq":
+            date = "{timestamp:%y%m%d}"
+            counter = "im{counter:05d}" if self.config.img.nr>999 else "im{counter:03d}"
             time = "{timestamp:%H%M%S}"
-            self.filename = "_".join([self.task,date,self.host,counter,time])
+            self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
+            self.filename = self.filename+self.filetype
         else:
-            date = strftime("%Y%m%d")
-            time = strftime("%H%M%S")
-            self.filename = "_".join([self.task,date,self.host,time])
+            date = strftime("%y%m%d")
+            self.filename = "_".join([self.config.rec.label, date, self.host])
 
 
     def record(self):
@@ -317,49 +308,36 @@ class Recorder:
         self.setup_cam()
         self.namefile()
 
-        if self.rectype == "img":
+        if self.config.rec.type == "img":
 
-            self.filename = self.filename + self.filetype
+            self.filename = self.filename + strftime("%H%M%S") + self.filetype
+            self.cam.capture(self.filename, quality = self.config.cam.quality)
+            lineprint("Captured "+self.filename)
 
-            if self.single:
+        if self.config.rec.type == "imgseq":
 
-                self.cam.capture(self.filename, format = "jpeg",
-                                 quality = self.config.cam.quality)
-                self.lineprint("Captured "+self.filename)
+            timepoint = datetime.now()
+            for i, img in enumerate(self.cam.capture_continuous(self.filename,
+                                    quality = self.config.cam.quality)):
+                if i < self.config.img.nr-1:
+                    timepassed = (datetime.now() - timepoint).total_seconds()
+                    delay = max(0, self.config.img.wait - timepassed)
+                    lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                    sleep(delay)
+                    timepoint = datetime.now()
+                else:
+                    lineprint("Captured "+img)
+                    break
 
-            else:
+        if self.config.rec.type == "vid":
 
-                timepoint = datetime.now()
-                for i, img in enumerate(self.cam.capture_continuous(self.filename,
-                                        quality = self.config.cam.quality)):
-                    if i < self.config.img.nr:
-                        timepassed = (datetime.now() - timepoint).total_seconds()
-                        delay = max(0, self.config.img.wait - timepassed)
-                        self.lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
-                        sleep(delay)
-                        timepoint = datetime.now()
-                    else:
-                        break
-
-        else:
-
-            if self.single:
-
-                self.filename = self.filename + self.filetype
-                self.lineprint("Recording "+self.filename)
-                self.cam.start_recording(self.filename, quality = self.config.cam.quality)
+            for filename in self.cam.record_sequence(self.filename+strftime("%H%M%S" )+\
+                            "_S%02d" % i + self.filetype for i in range(1,9999)):
+                lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
-                self.lineprint("Finished")
-
-            else:
-
-                for filename in self.cam.record_sequence(
-                    self.filename + '_S%02d' % i + self.filetype for i in range(1,9999)):
-                    self.lineprint("Recording "+filename)
-                    self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
-                    self.lineprint("Finished")
-                    if raw_input("\nENTER for new session, E to exit: ") == 'e':
-                        break
+                lineprint("Finished")
+                if raw_input("\nn for new session, e to exit: ") == 'e':
+                    break
 
         self.cam.close()
 
