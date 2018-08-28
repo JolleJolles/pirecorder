@@ -15,4 +15,4 @@ AR.set_config(imgdims = (3280, 2464), imgfps = 1, imgwait = 5.0, imgnr = 100,
               imgtime = 600)
 
 # Run recorded
-AT.record()
+AR.record()

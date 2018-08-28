@@ -3,7 +3,7 @@
 # Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
 
 from setuptools import setup
-from animrec.version import __version__
+from .__version__ import __version__
 
 def check_dependencies():
     install_requires = []
