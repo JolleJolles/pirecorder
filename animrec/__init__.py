@@ -1,2 +1,2 @@
-from .animrec import *
-from .version import __version__
+from animrec.animrec import *
+from animrec.version import __version__
