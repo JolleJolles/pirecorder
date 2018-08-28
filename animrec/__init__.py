@@ -1,4 +1,4 @@
-from .animrec import *
+#from .animrec import *
 print "animrec done"
 from .getedge import take_img
 print "getedge done"
