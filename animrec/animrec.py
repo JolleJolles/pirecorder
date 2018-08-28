@@ -336,8 +336,3 @@ class Recorder:
                     break
 
         self.cam.close()
-
-
-if isscript:
-    Recorder = Recorder()
-    Recorder.record()
