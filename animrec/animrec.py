@@ -234,8 +234,8 @@ class Recorder:
 
         if self.config.rec.type == "vid":
 
-            for filename in self.cam.record_sequence(self.filename+strftime("%H%M%S" )+"_S%02d" % i + self.filetype for i in range(1,9999),
-                            quality = self.config.vid.quality):
+            for filename in self.cam.record_sequence(self.filename+strftime("%H%M%S" )+\
+                            "_S%02d" % i + self.filetype for i in range(1,9999)):
                 lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 lineprint("Finished")
