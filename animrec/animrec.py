@@ -26,7 +26,7 @@ class Recorder:
 
     """ Recorder class for setting up the rpi to record images or video """
 
-    def __init__(self):
+    def __init__(self, configfile = "animrec.conf"):
 
         self.host = gethostname()
         self.home = homedir()
@@ -39,9 +39,10 @@ class Recorder:
 
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
-        self.configfile = self.setupdir + "/animrec.conf"
+        self.configfile = self.setupdir + "/"+configfile
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
+            lineprint("New config file created")
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
@@ -133,8 +134,11 @@ class Recorder:
 
             self.imgparams()
             self.shuttertofps()
+
+            if os.path.isfile(self.configfile):
+                lineprint("Config settings stored and loaded..")
+
             self.config.save()
-            lineprint("Config settings stored and loaded..")
 
 
     def setup_cam(self):

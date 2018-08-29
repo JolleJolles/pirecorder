@@ -1,7 +1,8 @@
 # coding: utf-8
 
-__version__ = "1.1.3"
+__version__ = "1.2.0"
 
+#29/08/18 - 1.2.0   Integrated working with custom configuration files
 #29/08/18 - 1.1.3   Fixed quality settings of image and video recording
 #29/08/18 - 1.1.2   Removed quality parameter for single image
 #29/08/18 - 1.1.1   Fixed some information in the settings overview
