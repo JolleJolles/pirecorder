@@ -48,10 +48,11 @@ class Recorder:
             self.set_config(recdir="NAS", label="test", rectype="vid",
                             brightness=45, contrast=10, saturation=-100, iso=200,
                             sharpness=0, compensation=0, shutterspeed=8000,
-                            quality=11, gains=(1.0, 2.5), rotation=0,
-                            brighttune=0, imgdims=(3280, 2464), imgfps=1,
-                            imgwait=5.0, imgnr=100, imgtime=600,
-                            viddims=(1640, 1232), vidfps=24, vidduration=10, viddelay=10)
+                            imgquality=50, vidquality = 11, gains=(1.0, 2.5),
+                            rotation=0, brighttune=0, imgdims=(3280, 2464),
+                            imgfps=1, imgwait=5.0, imgnr=100, imgtime=600,
+                            viddims=(1640, 1232), vidfps=24, vidduration=10,
+                            viddelay=10)
         else:
             lineprint("Config settings loaded. Recording "+\
                            self.config.rec.type+" @ "+self.config.rec.dir)
@@ -95,8 +96,10 @@ class Recorder:
             self.config.cam.compensation = kwargs["compensation"]
         if "shutterspeed" in kwargs:
             self.config.cam.shutterspeed = kwargs["shutterspeed"]
-        if "quality" in kwargs:
-            self.config.cam.quality = kwargs["quality"]
+        if "imgfps" in kwargs:
+            self.config.img.fps = kwargs["imgfps"]
+        if "vidfps" in kwargs:
+            self.config.vid.fps = kwargs["vidfps"]
 
         if "rotation" in kwargs:
             self.config.cus.rotation = kwargs["rotation"]
@@ -109,10 +112,8 @@ class Recorder:
             self.config.img.dims = kwargs["imgdims"]
         if "viddims" in kwargs:
             self.config.vid.dims = kwargs["viddims"]
-        if "imgfps" in kwargs:
-            self.config.img.fps = kwargs["imgfps"]
-        if "vidfps" in kwargs:
-            self.config.vid.fps = kwargs["vidfps"]
+        if "imgquality" in kwargs:
+            self.config.img.quality = kwargs["imgquality"]
 
         if "imgwait" in kwargs:
             self.config.img.wait = kwargs["imgwait"]
@@ -125,6 +126,8 @@ class Recorder:
             self.config.vid.duration = kwargs["vidduration"]
         if "viddelay" in kwargs:
             self.config.vid.delay = kwargs["viddelay"]
+        if "vidquality" in kwargs:
+            self.config.vid.quality = kwargs["vidquality"]
 
         if len(kwargs) > 0:
 
@@ -142,18 +145,18 @@ class Recorder:
         self.cam.exposure_compensation = self.config.cam.compensation
 
         if self.config.rec.type == "img":
-            self.cam.framerate = self.config.img.fps
             self.cam.resolution = literal_eval(self.config.img.dims)
+            self.cam.framerate = self.config.img.fps
         if self.config.rec.type == "vid":
-            self.cam.framerate = self.config.vid.fps
             self.cam.resolution = literal_eval(self.config.vid.dims)
+            self.cam.framerate = self.config.vid.fps
 
-        sleep(1)
+        sleep(2)
 
+        self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = literal_eval(self.config.cus.gains)
-        self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.brightness = self.config.cam.brightness
         self.cam.contrast = self.config.cam.contrast
         self.cam.saturation = self.config.cam.saturation
@@ -211,14 +214,14 @@ class Recorder:
         if self.config.rec.type == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
-            self.cam.capture(self.filename)
+            self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
             lineprint("Captured "+self.filename)
 
         if self.config.rec.type == "imgseq":
 
             timepoint = datetime.now()
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
-                                    quality = self.config.cam.quality)):
+                                    quality = self.config.img.quality)):
                 if i < self.config.img.nr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
                     delay = max(0, self.config.img.wait - timepassed)
@@ -233,7 +236,7 @@ class Recorder:
 
             for filename in self.cam.record_sequence(self.filename+strftime("%H%M%S" )+\
                             "_S%02d" % i + self.filetype for i in range(1,9999),
-                            quality = self.config.cam.quality):
+                            quality = self.config.vid.quality):
                 lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 lineprint("Finished")

@@ -162,10 +162,6 @@ It is default that images and videos are recorded on the NAS drive connected to 
         between images so a standard imgwait time should be chosen that is 6+
         times more than the shutterspeed. For example, for a shutterspeed of
         300000 imgwait should be > 1.8s.
-    quality : int, default = 11
-        Specifies the quality that the encoder should attempt to maintain. Valid
-        values are between 1 and 40, where 1 is extremely high quality, and 40
-        is extremely low. Only applicable to video recording.
     imgdims : tuple, default = (3280,2464)
         The resolution of the images to be taken in pixels. The default is the max
         resolution that does not return an error for this mode.
@@ -187,12 +183,20 @@ It is default that images and videos are recorded on the NAS drive connected to 
     imgtime : integer, default = 60
         The time in seconds during which images should be taken. The minimum of a) 
         imgnr and b) nr of images based on imgwait and imgtime will be selected.
+    imgquality : int, default = 50
+        Specifies the quality that the jpeg encoder should attempt to maintain. 
+        Use values between 1 and 100, where higher values are higher quality.
     vidduration : int, default = 10
         Duration of video recording in seconds.
     viddelay : int, default = 0
         Extra recording time in seconds that will be added to vidduration. Its
         use is for filming acclimatisation time that can then easily be cropped
         for tracking.
+    vidquality : int, default = 11
+        Specifies the quality that the h264 encoder should attempt to maintain. 
+        Use values between 10 and 40, where 10 is extremely high quality, and 
+        40 is extremely low.
+
 
     Output
     -------
