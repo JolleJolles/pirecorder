@@ -203,7 +203,7 @@ class Recorder:
             self.filename = self.filename+self.filetype
         else:
             date = strftime("%y%m%d")
-            self.filename = "_".join([self.config.rec.label, date, self.host, "_"])
+            self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
 
 
     def record(self):
