@@ -1,7 +1,8 @@
 # coding: utf-8
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
+#29/08/18 - 1.2.1   Fixed video recording loop to for loop
 #29/08/18 - 1.2.0   Integrated working with custom configuration files
 #29/08/18 - 1.1.3   Fixed quality settings of image and video recording
 #29/08/18 - 1.1.2   Removed quality parameter for single image

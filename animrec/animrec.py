@@ -243,6 +243,7 @@ class Recorder:
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
                 lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
+                self.cam.stop_recording()
                 lineprint("Finished")
                 if raw_input("\nn for new session, e to exit: ") == 'e':
                     break
