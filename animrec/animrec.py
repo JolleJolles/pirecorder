@@ -12,7 +12,7 @@ from ast import literal_eval
 from fractions import Fraction
 
 from animlab.utils import homedir, isscript, lineprint
-from __version__ import __version__
+from .__version__ import __version__
 
 class Tee:
     def write(self, *args, **kwargs):
