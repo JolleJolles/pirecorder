@@ -186,10 +186,10 @@ class Recorder:
 
     def namefile(self):
 
-        """ Provides a filename for the media recorded.
-            Filenames include label, date, rpi name, and time.
-            Images part of image sequence additionally contain
-            a sequence number. e.g. test_180708_pi12_S01_100410
+        """ Provides a filename for the media recorded. Filenames include label,
+            date, rpi name, and time. Images part of image sequence
+            additionally contain a sequence number. e.g.
+            test_180708_pi12_S01_100410
         """
 
         if self.config.rec.type == "imgseq":
@@ -200,7 +200,7 @@ class Recorder:
             self.filename = self.filename+self.filetype
         else:
             date = strftime("%y%m%d")
-            self.filename = "_".join([self.config.rec.label, date, self.host])
+            self.filename = "_".join([self.config.rec.label, date, self.host, "_"])
 
 
     def record(self):
@@ -211,7 +211,7 @@ class Recorder:
         if self.config.rec.type == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
-            self.cam.capture(self.filename, quality = self.config.cam.quality)
+            self.cam.capture(self.filename)
             lineprint("Captured "+self.filename)
 
         if self.config.rec.type == "imgseq":
@@ -232,7 +232,8 @@ class Recorder:
         if self.config.rec.type == "vid":
 
             for filename in self.cam.record_sequence(self.filename+strftime("%H%M%S" )+\
-                            "_S%02d" % i + self.filetype for i in range(1,9999)):
+                            "_S%02d" % i + self.filetype for i in range(1,9999),
+                            quality = self.config.cam.quality):
                 lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 lineprint("Finished")

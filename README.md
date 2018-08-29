@@ -28,12 +28,12 @@ The main functionality of *AnimRec* is the `Recorder` class in the `animrec` mod
 
 AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file [animrec.conf] is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
 
-<center>![conf file](https://www.dropbox.com/s/6pwdwz6c7vh8o9w/animrec-conffile-screenshot.jpg?dl=1)</center>
+<center><img src="https://www.dropbox.com/s/6pwdwz6c7vh8o9w/animrec-conffile-screenshot.jpg?dl=1" width="20%"></center>
 
 AnimRec is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The setup/animrec.conf file is directly editable (see screenshot above) or alternatively settings can be stored when running the `animrec.set_config()` function.
 
 ### Recording modes
-AnimRec has three recording modes (with the addition of the imgtask function, [explained below](#task)): `img`, `imgseq`, and `vid`. Files are automatically stored in the directory set in the custom configuration (`recdir`), by default this is the a NAS drive, and automatically named according to the provided label, the computer name, the date and time, and the session number or image sequence nr (see examples below).
+AnimRec has three recording modes (with the addition of the imgtask function, [explained below](#task): `img`, `imgseq`, and `vid`. Files are automatically stored in the directory set in the custom configuration (`recdir`), by default this is the a NAS drive, and automatically named according to the provided label, the computer name, the date and time, and the session number or image sequence nr (see examples below).
 
 1. `img` mode: This mode simply records a single image with the custom settings and then quits. Example of filename: "pilot\_180312\_PI13\_101300.jpg".
 2. `imgseq` mode: This mode is to create a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`). The minimum of imgnr and the calculated number of images based on `imgwait` and `imgtime` will be selected. For example, if one wishes to specifically record 100 images 10.0s after one another, one would use the settings:`imgwait=10` `imgnr=100` and `imgtime=9999`, or if one wishes to record images every 0.5s for 10 hours irrespective of their total number one would use: `imgwait=0.5` `imgnr=999999` `imgtime=36000`. Example of filename: "pilot\_180312\_PI13\_img00231_101300.jpg".
@@ -97,7 +97,18 @@ Now all you need to enter in terminal to start Animrec is ```rec```, and AnimRec
               
 ### Jupyter
 A nice alternative is to make use of [jupyter notebook](http://jupyter.org/install.html). This is an open-source web application that allows you to create python scripts (among many other coding languages) that contain live code, equations, and visualizations that can be executed on a cell-by-cell basis. Jupyter is a great way to sequentually run parts of your code and problem solve it.
-To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```. 
+To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```.
+
+
+### Record in low light
+
+To record in low light conditions the `shutterspeed` parameter should be set (in microseconds). Many animals move at a speed that such that at a shutter speed above 50000 motion blur becomes clearly visible. In some cases such motion blur is not a big problem as tracking might still be possible. However, it is important to note that the FPS will be automatically adapted to accomodate the shutter speed. For example, a shutter speed of 200000 is equivalent to 1/5th of a second and so a maximum fps of 5 is possible and will be set automatically.
+
+
+#### Storage location
+
+It is default that images and videos are recorded on the NAS drive connected to the network. If you want to store in a different folder instead just add the foldername for the parameter `recdir`. If the folder does not exist yet it will automatically create one (make sure not to have spaces in the foldername). If `recdir` is left empty it will store videos in the home directory.
+
 
 <a name="settings"></a>Settings
 --------
@@ -153,8 +164,8 @@ To install, type in: ```python -m pip install jupyter```. To start jupyter, type
         300000 imgwait should be > 1.8s.
     quality : int, default = 11
         Specifies the quality that the encoder should attempt to maintain. Valid
-        values are between 10 and 40, where 10 is extremely high quality, and 40
-        is extremely low.
+        values are between 1 and 40, where 1 is extremely high quality, and 40
+        is extremely low. Only applicable to video recording.
     imgdims : tuple, default = (3280,2464)
         The resolution of the images to be taken in pixels. The default is the max
         resolution that does not return an error for this mode.
