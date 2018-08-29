@@ -221,7 +221,7 @@ class Recorder:
 
             timepoint = datetime.now()
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
-                                    quality = self.config.img.quality)):
+                                    format="jpeg", quality = self.config.img.quality)):
                 if i < self.config.img.nr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
                     delay = max(0, self.config.img.wait - timepassed)
