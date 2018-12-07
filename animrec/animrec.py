@@ -194,9 +194,8 @@ class Recorder:
     def namefile(self):
 
         """ Provides a filename for the media recorded. Filenames include label,
-            date, rpi name, and time. Images part of image sequence
-            additionally contain a sequence number. e.g.
-            test_180708_pi12_S01_100410
+            date, rpi name, and time. Images part of image sequence additionally
+            contain a sequence number. e.g. test_180708_pi12_S01_100410
         """
 
         if self.config.rec.type == "imgseq":

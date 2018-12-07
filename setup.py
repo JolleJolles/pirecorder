@@ -1,5 +1,5 @@
-#! /usr/bin/env python
-#
+from __future__ import print_function
+
 # Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
 
 from setuptools import setup
@@ -12,9 +12,9 @@ def check_dependencies():
     try:
         import picamera
     except ImportError:
-        print "Package picamera is required to run animrec as this package was",
-        print "designed for the RaspberryPi. To install manually: pip install",
-        print "picamera"
+        print("Package picamera is required to run animrec as this package",end="")
+        print("was designed for the RaspberryPi. To install manually: pip",end="")
+        print("install picamera")
     try:
         import socket
     except ImportError:
@@ -30,8 +30,8 @@ def check_dependencies():
     try:
         import animlab
     except ImportError:
-        print "Package animlab is required. To install development version:"
-        print "pip install git+https://github.com/joljols/animlab.git"
+        print("Package animlab is required. To install development version:")
+        print("pip install git+https://github.com/JolleJolles/animlab.git")
 
     return install_requires
 

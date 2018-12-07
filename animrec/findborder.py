@@ -1,8 +1,4 @@
-
 # coding: utf-8
-
-# In[ ]:
-
 
 import picamera
 import numpy as np
@@ -14,16 +10,16 @@ width = 416
 height = 320
 
 def rescale(points, width, height, realwidth = 1640, realheight = 1232):
-    
+
     xrz = (float(realwidth)/width)
     yrz = (float(realheight)/height)
     points = [(int(p[0]*xrz), int(p[1]*yrz)) for p in points]
-    
+
     return points
 
 
 def take_img(width, height):
-    
+
     camera = picamera.PiCamera()
     camera.resolution = (width, height)
     sleep(1)
@@ -36,7 +32,7 @@ def take_img(width, height):
 
 def drawmask(event, x, y, flags, param):
     global image, image_clone2, points
-    
+
     image = image_clone2.copy()
 
     if event == cv2.EVENT_MOUSEMOVE and len(points)>0:
@@ -49,7 +45,6 @@ def drawmask(event, x, y, flags, param):
         image_clone2 = image.copy()
 
 
-        
 image = take_img(width, height)
 image_clone = image.copy()
 image_clone2 = image.copy()
@@ -59,13 +54,12 @@ points = []
 cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
 cv2.setMouseCallback('Image', drawmask)
 
-
-# drawing mode
+# Drawing mode
 while True:
     cv2.imshow('Image', image)
     k = cv2.waitKey(1) & 0xFF
 
-    # clear the frame
+    # Clear the frame
     if k == ord('e'):
         points = []
         image_clone2 = image_clone
@@ -77,16 +71,15 @@ while True:
 
         with open("setup/cusborder.yml", 'w') as f:
             yaml.safe_dump(str(points), f, default_flow_style=False)
-    
+
         print "Edge info written to file.."
         break
 
-    # simply close the window
+    # Simply close the window
     if k == 27:
         print "User escaped.."
         break
-        
-# close video and windows
+
+# Close video and windows
 cv2.destroyAllWindows()
 cv2.waitKey(1)
-

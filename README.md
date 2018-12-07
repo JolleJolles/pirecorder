@@ -1,7 +1,7 @@
 # AnimRec
 A python module for automated image and video recording on the RaspberryPi.
 
-![logo](https://www.dropbox.com/s/f6e22bkfo4o9ko4/AnimRec-logo.jpg?dl=1)
+![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
 
 <a name="install"></a> Installation
 ------------
@@ -17,18 +17,18 @@ pip install --update git+https://github.com/jolleslab/animrec.git
 
 Dependencies
 ------------
-AnimRec depends on [Python 2.7](http://www.python.org) and the [picamera](http://picamera.readthedocs.io/) package and makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the RaspberryPi, but is adaptable to broader possible instances.
+AnimRec depends on [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package by [JolleJolles](https://github.com/JolleJolles). AnimRec is created specifically for automated recording with the RaspberryPi, but its functionality is easily adaptable to a broader range of possible instances.
 
 Overview
 ------------
-*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for scientists in mind. *AnimRec* is (still) currently a private package on [GitHub](https://github.com/jolleslab/AnimRec) that can be easily installed from github with the right credentials ([see above](#install)).
+*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind. *AnimRec* is currently (still) a private package on [GitHub](https://github.com/jolleslab/AnimRec), but which can be easily installed from github with the right credentials ([see above](#install)).
 
 ### Recorder class
-The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the users' home directory to store all relevant setup files. In additional AnimRec automatically creates a log file [animrec.log] file that stores all output of the terminal while using the module.
+The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the user's home directory to store all relevant setup files. In additional AnimRec automatically creates a log file *animrec.log* file that stores all terminal output when using the *AnimRec* package.
 
-AnimRec has a lot of custom settings to facilitate controlled and automated recording. When AnimRec is initiated for the first time a specific configuration file [animrec.conf] is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, specific 3) video and 4) image recording settings, and 5) custom settings that are specific to the rpi. For a detailed overview and description of these settings ([see below](#settings)). 
+AnimRec has many custom settings to facilitate controlled and automated recording, relying heavily on the [picamera](http://picamera.readthedocs.io/) package by Dave Jones. When AnimRec is initiated for the first time, a specific configuration file *animrec.conf* is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, 3) specific video and 4) specific image recording settings, and 5) custom settings linked to the specific rpi. For a detailed overview and description of these settings ([see below](#settings)). 
 
-<center><img src="https://www.dropbox.com/s/6pwdwz6c7vh8o9w/animrec-conffile-screenshot.jpg?dl=1" width="20%"></center>
+<center><img src="https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg" width="20%"></center>
 
 AnimRec is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The setup/animrec.conf file is directly editable (see screenshot above) or alternatively settings can be stored when running the `animrec.set_config()` function.
 
@@ -210,4 +210,6 @@ It is default that images and videos are recorded on the NAS drive connected to 
     Returns
     -------
     self : class
-        Recorder class instance        
+        Recorder class instance  
+  
+  </div>      

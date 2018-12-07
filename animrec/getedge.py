@@ -1,8 +1,4 @@
-
 # coding: utf-8
-
-# In[ ]:
-
 
 import picamera
 import numpy as np
@@ -11,7 +7,7 @@ import cv2
 import yaml
 
 def take_img(res = (640, 616)):
-    
+
     res = (int(res[0]),int(res[1]))
     camera = picamera.PiCamera()
     camera.resolution = res
@@ -25,7 +21,7 @@ def take_img(res = (640, 616)):
 
 def drawmask(event, x, y, flags, param):
     global image, image_clone2, points
-    
+
     image = image_clone2.copy()
 
     if event == cv2.EVENT_MOUSEMOVE and len(points)>0:
@@ -37,8 +33,6 @@ def drawmask(event, x, y, flags, param):
         cv2.circle(image, (x,y), 4, (0,0,255), -1)
         image_clone2 = image.copy()
 
-
-        
 image = take_img()
 image_clone = image.copy()
 image_clone2 = image.copy()
@@ -62,14 +56,14 @@ while True:
     # Store the data
     if k == ord('s') and len(points)>0:
         #filename = filename+"_mask.jpg"
-        print "Edge info written to file.."
+        print("Edge info written to file..")
         break
 
     # simply close the window
     if k == 27:
-        print "User escaped.."
+        print("User escaped..")
         break
-        
+
 # close video and windows
 cv2.destroyAllWindows()
 cv2.waitKey(1)
@@ -81,4 +75,3 @@ points = [i*2 for i in points]
 data = {"edgecoords" : str((points))}
 with open("setup.yml", 'w') as f:
     yaml.safe_dump(data, f, default_flow_style=False)
-
