@@ -1,27 +1,29 @@
 # AnimRec
-A python module for automated image and video recording on the RaspberryPi.
+A python module for automated image and video recording on the Raspberry Pi with the Scientist in mind. 
 
 ![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
 
 <a name="install"></a> Installation
 ------------
-To install, open a terminal window and enter:
+To install AnimRec, open a terminal window and enter:
 ```bash
 pip install git+https://github.com/jolleslab/animrec.git
 ```
 
-When AnimRec is already installed, make sure to update to the latest version:
+When AnimRec is already installed, update to the latest version:
 ```bash
 pip install --update git+https://github.com/jolleslab/animrec.git
 ```
 
+Now to run animrec, simply open python and run ```import animrec```.
+
 Dependencies
 ------------
-AnimRec depends on [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package by [JolleJolles](https://github.com/JolleJolles). AnimRec is created specifically for automated recording with the RaspberryPi, but its functionality is easily adaptable to a broader range of possible instances.
+AnimRec is written in [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances. 
 
 Overview
 ------------
-*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind. *AnimRec* is currently (still) a private package on [GitHub](https://github.com/jolleslab/AnimRec), but which can be easily installed from github with the right credentials ([see above](#install)).
+*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind. *AnimRec* is currently (still) a private package on [GitHub](https://github.com/jolleslab/AnimRec), but can be easily installed from github with the right credentials ([see above](#install)).
 
 ### Recorder class
 The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the user's home directory to store all relevant setup files. In additional AnimRec automatically creates a log file *animrec.log* file that stores all terminal output when using the *AnimRec* package.
