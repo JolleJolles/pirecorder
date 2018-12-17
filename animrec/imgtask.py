@@ -1,15 +1,4 @@
-
-# coding: utf-8
-
-# In[ ]:
-
 # !/usr/bin/python
-
-#######################################
-# Script for planning recording task  #
-# Author: J. W. Jolles                #
-# Last updated: 4 Dec 2017            #
-#######################################
 
 # import packages
 from time import strftime
@@ -39,22 +28,22 @@ def plan(imgwait=5.0,
     Parameters
     ----------
     imgwait : float, default = 5.0
-        The delay between subsequent images in seconds. When a 
-        delay is provided that is less than shutterspeed + 
-        processingtime, "delay" will be automatically set to 0 
+        The delay between subsequent images in seconds. When a
+        delay is provided that is less than shutterspeed +
+        processingtime, "delay" will be automatically set to 0
         and images thus taken one after the other.
     imgnr : integer, default = 100
-        The number of images that will be taken. When this number 
-        is reached, the script will automatically terminate. The 
+        The number of images that will be taken. When this number
+        is reached, the script will automatically terminate. The
         minimum of imgnr and nr of images based on imgwait and
         imgtime will be selected.
     imgtime : integer, default = 600
         The time in seconds during which images should be taken.
-        The minimum of imgnr and nr of images based on imgwait 
+        The minimum of imgnr and nr of images based on imgwait
         and imgtime will be selected.
     taskname : str, default = "molly"
         The name for the timing task. This parameter only really
-        needs to be set when wanting to run multiple different 
+        needs to be set when wanting to run multiple different
         tasks.
     taskcode : string, default = "0 7 * * *"
         The taskcode representing the schedule for the image script
@@ -70,7 +59,7 @@ def plan(imgwait=5.0,
         +------------------------- min (0 - 59)
         Each of the parts supports wildcards (*), ranges (2-5),
         and lists (2,5,6,11). For example, if you want to run the
-        img recording script at 22:00 on every day of the week 
+        img recording script at 22:00 on every day of the week
         from Monday through Friday: 0 7 (2,5) * *
     taskset : str, default = "True"
         If the timing task should be enabled ("True") or disabled
@@ -78,20 +67,20 @@ def plan(imgwait=5.0,
     taskshow : str, default = "False"
         If the different timed tasks should be shown ("True") or
         not ("False")
-        
+
     Output
     -------
     A scheduled task to run automated SESSIONS during which a
     series of controlled JPEG images are recorded for a certain
-    duration and delay. Images are automatically named based on 
-    the rpi number, date, and time, following a standard naming 
+    duration and delay. Images are automatically named based on
+    the rpi number, date, and time, following a standard naming
     convention, e.g. pi11_172511_im00010_153012.jpg
 
     """
-        
+
     # create access to the system crontab of pi
     cron = crontab.CronTab(user='pi')
-    
+
     # set-up storing of logfiles
     logfolder = "/home/pi/SERVER/imglogs/"
     if not os.path.exists(logfolder):
@@ -103,7 +92,7 @@ def plan(imgwait=5.0,
     fcode = " record:imgwait="+str(imgwait)+",imgnr="+str(imgnr)+",imgtime="+str(imgtime)
     write = " >> /home/pi/SERVER/imglogs/`date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
     taskcommand = exe+scriptloc+fcode+write
-    
+
     # create job functions
     def enablejob(job):
         if taskset == "True":
@@ -165,4 +154,3 @@ def plan(imgwait=5.0,
                 print jobname+" next job: "+str(next)
             else:
                 print jobname+" disabled"
-

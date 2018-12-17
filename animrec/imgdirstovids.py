@@ -1,11 +1,4 @@
-
-# coding: utf-8
-
-# In[ ]:
-
-
-# author JW Jolles
-# Last updated: 25 July 2018
+# !/usr/bin/python
 
 import os
 import subprocess
@@ -15,11 +8,11 @@ from time import time
 from socket import gethostname
 
 
-def iswin():    
+def iswin():
     return True if os.name == 'nt' else False
 
-        
-def homedir():    
+
+def homedir():
 
     return os.path.expanduser("~")+"/"
 
@@ -27,11 +20,11 @@ def homedir():
 def isjup():
 
     '''checks if script is run interactivelly'''
-    
+
     import __main__ as main
-    
+
     return not hasattr(main, '__file__')
-    
+
 
 def listfiles(filedir = ".", filetype = (".jpg"), dirs = False):
 
@@ -43,38 +36,38 @@ def listfiles(filedir = ".", filetype = (".jpg"), dirs = False):
         outlist = [each for each in os.listdir(filedir) if each.endswith(filetype)]
         outlist = [i for i in outlist if not i.startswith('.')]
     outlist = sorted(outlist)
-    
+
     return outlist
 
 
 def createdir(dirname):
-    
+
     '''creates a subdirectory'''
-    
-    try: 
+
+    try:
         os.makedirs(dirname)
     except OSError:
         if not os.path.isdir(dirname):
             raise
-                
+
 
 def dirconvert(maindir, viddir = "videos"):
-    
+
     '''convert images in sub-directories'''
-    
+
     print datetime.now().strftime('%H:%M:%S'), "- Image to video conversion started!\n     ============================================="
-    
+
     host = gethostname()
-    
+
     maindir = "/home/pi/" + maindir
     pidir = maindir + "/" + host
     pividdir = maindir + "/" + viddir + "/" + host
 
     createdir(viddir)
     createdir(pividdir)
-    
+
     counter = 0
-                  
+
     print datetime.now().strftime('%H:%M:%S'), "- Processing folders for " + host + ":"
     os.chdir(pidir)
 
@@ -83,13 +76,13 @@ def dirconvert(maindir, viddir = "videos"):
     for subdir in subdirs:
         datedir = pidir + "/" + subdir
         os.chdir(datedir)
-        
+
         counter += 1
         t1 = time()
         print subdir,"-",
 
         vidname = pividdir + "/" + host + "_" + subdir + ".mp4"
-        
+
         if iswin():
             output = subprocess.check_output("(for %i in (*.jpg) do @echo file '%i')|sort /o imglist.txt", shell=True)
             if not imglistonly:
@@ -111,7 +104,7 @@ def dirconvert(maindir, viddir = "videos"):
     print datetime.now().strftime('%H:%M:%S'), "- Done converting all " + str(counter) + " folders.."
 
 
-# Load the user settings 
+# Load the user settings
 #-----------------------
 if isjup():
     filedir = raw_input("Main directory that holds sub-directories with images to convert: ")
@@ -132,4 +125,3 @@ else:
 # Start convert script
 #-----------------------
 dirconvert(filedir)
-
