@@ -1,19 +1,27 @@
-# !/usr/bin/python
+#! /usr/bin/env python
+#
+# Controlled media recording library for the Rasperry-Pi
+# Copyright (c) 2015 - 2018 Jolle Jolles <j.w.jolles@gmail.com>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at:
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-# import packages
 from time import strftime
 import crontab
 import datetime
 import os
 
-# define plan function
-def plan(imgwait=5.0,
-         imgnr=100,
-         imgtime=600,
-         taskname="molly",
-         taskcode="0 7 * * *",
-         taskset="True",
-         taskshow="False"):
+def plan(imgwait = 5.0, imgnr = 100, imgtime = 600, taskname = "molly",
+         taskcode = "0 7 * * *", taskset = "True", taskshow = "False"):
 
     """
     Run automated image recording with the rpi camera
@@ -74,8 +82,7 @@ def plan(imgwait=5.0,
     series of controlled JPEG images are recorded for a certain
     duration and delay. Images are automatically named based on
     the rpi number, date, and time, following a standard naming
-    convention, e.g. pi11_172511_im00010_153012.jpg
-
+    convention, e.g. pi11_172511_im00010_153012.jpg.
     """
 
     # create access to the system crontab of pi
@@ -93,21 +100,22 @@ def plan(imgwait=5.0,
     write = " >> /home/pi/SERVER/imglogs/`date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
     taskcommand = exe+scriptloc+fcode+write
 
-    # create job functions
     def enablejob(job):
         if taskset == "True":
             job.enable()
         elif taskset == "False":
             job.enable(False)
         else:
-            print "Please provide 'True' or 'False' for parameter enable"
+            print("Please provide 'True' or 'False' for parameter enable")
+
 
     def createjob():
         job = cron.new(command=taskcommand,comment=taskname)
         job.setall(taskcode)
         enablejob(job)
         cron.write()
-        print "\n"+taskname+ " recording job created succesfully"
+        print("\n"+taskname+ " recording job created succesfully")
+
 
     def modifyjob():
         if taskset == "True":
@@ -116,41 +124,36 @@ def plan(imgwait=5.0,
             job.setall(taskcode)
         enablejob(job)
         cron.write()
-        print "\n"+taskname+" recording job modified successfully"
+        print("\n"+taskname+" recording job modified successfully")
 
-    # check if already jobs exist; if not create job
+
     if len(cron) == 0:
         createjob()
-
-    # there are jobs so check if specific job exists
     else:
         for i, job in enumerate(cron):
 
-            # a job with specific name exists, so modify
+            # A job with specific name exists, so modify
             if job.comment == taskname:
                 modifyjob()
                 break
 
-            # the specific job does not exist so create it
+            # The specific job does not exist so create it
             if len(cron) == (i+1):
                 createjob()
 
-    # print crontab schedule
     if taskshow == "True":
-        print "\nCurrent task schedule:"
+        print("\nCurrent task schedule:")
 
-        # get length of maximum crontab name
         maxlen = 8
         for job in cron:
             maxlen = len(job) if (len(job)>maxlen and len(job)<30) else maxlen
 
-        # now show last and next job
         for job in cron:
             sch = job.schedule(date_from=datetime.datetime.now())
             next = sch.get_next()
             jobname = job.comment
             jobname = jobname+" "*(maxlen-len(jobname))
             if job.is_enabled():
-                print jobname+" next job: "+str(next)
+                print(jobname+" next job: "+str(next))
             else:
-                print jobname+" disabled"
+                print(jobname+" disabled")
