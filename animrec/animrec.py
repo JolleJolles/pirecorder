@@ -1,4 +1,7 @@
-# coding: utf-8
+#! /usr/bin/env python
+#
+# Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
+
 from builtins import input
 
 import picamera

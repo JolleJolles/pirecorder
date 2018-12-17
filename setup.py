@@ -23,6 +23,10 @@ def check_dependencies():
 #    except ImportError:
 #        install_requires.append('picamera')
     try:
+        import pathos
+    except ImportError:
+        install_requires.append('pathos')
+    try:
         import socket
     except ImportError:
         install_requires.append('socket')

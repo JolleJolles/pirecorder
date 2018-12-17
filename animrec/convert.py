@@ -1,18 +1,19 @@
 #! /usr/bin/env python
+#
+# Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
 
 from __future__ import print_function
 
 import os
 import cv2
+import sys
 import glob
 import argparse
 import subprocess
 
 from datetime import datetime
-from multiprocessing import Pool
+from pathos.multiprocessing import ProcessPool
 from six.moves import input
-
-import sys
 
 import animlab.utils as alu
 import animlab.imutils as alimu
@@ -24,15 +25,17 @@ class Converter:
 
     """ Initializes a converter instance """
 
-    def __init__(self, dir_in="", dir_out="", vidtype=".h264", conv_type="standard",
+    def __init__(self, dir_in="", vidtype=".h264", conv_type="standard",
                   remove=False, pools=6, resizeval=1, displayframenr = 100):
 
         '''
-            Converter class to conver a directory of videos to mp4 with potential
-            to write frame number on each frames
+            Converter class to conver a directory of videos to mp4 with
+            potential to write frame number on each frames
 
             Parameters
             -----------
+            dir_in : str, default =""
+                Directory containing the videos
             vidtype : str, default=""
                 The filetype of the video to convert
             convtype : ["standard","withframe"], default = "standard"
@@ -48,14 +51,13 @@ class Converter:
                 Interval at which frame nr should be displayed during conversion
         '''
 
-        alu.lineprint("Convert function started!", sameline = True, reset = True, label = "AnimRec")
+        alu.lineprint("Convert function started!", label = "AnimRec")
 
         maindir = os.getcwd()
         dir_out = dir_in if dir_out == "" else dir_out
         assert os.path.exists(dir_in), "dir_in directory does not exist, try again"
         assert os.path.exists(dir_out), "dir_out directory does not exist, try again"
         self.dir_in = dir_in
-        self.dir_out = dir_out
 
         self.vidtype = vidtype
         self.conv_type = conv_type
@@ -68,6 +70,7 @@ class Converter:
         self.done = False
 
         self.convert()
+
 
     def conv_ffmpeg(self):
 
@@ -91,24 +94,24 @@ class Converter:
             self.done = "True"
 
         else:
-            pool = Pool(processes = self.pools)
+            pool = ProcessPool(self.pools)
             try:
-                print(pool.map(self.conv_cvfile, self.conv_files))
+                pool.map(self.conv_cvfile, self.conv_files)
                 pool.close()
                 self.done = True
-                alu.lineprint("Converting stopped\n", label = "AnimRec")
+                alu.lineprint("Converting done!", label = "AnimRec")
             except KeyboardInterrupt:
-                alu.lineprint("Got ^C, terminating pool converting\n", label = "AnimRec")
+                alu.lineprint("Got ^C, terminating pool converting", label = "AnimRec")
                 pool.terminate()
             except Exception as e:
-                alu.lineprint("got exception: %r, terminating pool converting" % (e,)+"\n", label = "AnimRec")
+                alu.lineprint("got exception: %r, terminating pool converting" % (e,), label = "AnimRec")
                 pool.terminate()
 
 
     def conv_cvfile(self, filein):
 
         try:
-            alu.lineprint("Start converting "+filein+"\n", label = "AnimRec")
+            alu.lineprint("Start converting "+filein, label = "AnimRec")
 
             vid = cv2.VideoCapture(filein)
             fps,width,height,_ = alimu.get_vid_params(vid)
@@ -119,10 +122,10 @@ class Converter:
                 if flag:
                     frame = alimu.imresize(frame, self.resizeval)
                     frame_nr = int(vid.get(cv2.CAP_PROP_POS_FRAMES))
-                    if frame_nr % self.displayframenr == 0:
-                        print(str(frame_nr), end=" ")
+                    if self.pools == 1:
+                        if frame_nr % self.displayframenr == 0:
+                            print(str(frame_nr), end=" ")
 
-                    # Print the framenumber on the video frame
                     cv2.putText(frame,str(frame_nr),(10,35),cv2.FONT_HERSHEY_SIMPLEX,0.9,(0,0,0),2)
                     vidout.write(frame)
 
