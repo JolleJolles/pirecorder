@@ -343,6 +343,7 @@ class Recorder:
                 else:
                     lineprint("Captured "+img)
                     break
+            self.cam.stop_preview()
 
         if self.config.rec.type == "vid":
 
