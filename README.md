@@ -1,5 +1,5 @@
 # AnimRec
-A python module for automated image and video recording on the Raspberry Pi with the Scientist in mind. 
+A python module for automated image and video recording on the Raspberry Pi with the Behavioural Scientist in mind. 
 
 ![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
 
@@ -51,7 +51,7 @@ In addition to the main recording module, AnimRec contains a couple of other mod
 1. `getedge()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
 2. `getgains()`: an automatic function that tries to determine the optimal white balance for the current camera position and lighting conditions. This function stores a tuple of rg and bg values that can be further adjusted by the user.
 3. <a name="task"></a>`imgtask()`: an add-on module for the `Recorder` class that enables the scheduling of automated image recording tasks, such as to record a sequence of images from 7am > 7pm at 1 image/min every day of the week. 
-4. `Converter()`: a module to convert videos to `.mp4` format with the option to resize them and print the frame number on the top left corner. Uses multiprocessing so multiple videos can be converted simultaniously.
+4. `Converter()`: a module to convert videos to `.mp4` format with the option to resize them and print the frame number on the top left corner. Uses multiprocessing so multiple videos can be converted simultaniously. See the [template notebook](https://github.com/jolleslab/AnimRec/blob/master/notebooks/run-convert.ipynb) for a demo how to use the converter module.
 
 
 Workflow
@@ -67,7 +67,7 @@ The workflow for which *AnimRec* was designed is as follows:
 7. Now the rpi and AnimRec configuration are fully set up, simply use AnimRec with the required custom configuration file (for some examples, [see below](#examples)).
 
 
-<a name="examples"></a>Using AnimRec
+<a name="examples"></a>Running AnimRec
 --------
 #### Python script
 The most straight forward way to use *AnimRec* is to write a simple python script (e.g. `rpirec.py`) and to run that from the Terminal:
@@ -103,17 +103,24 @@ Now all you need to enter in terminal to start Animrec is ```rec```, and AnimRec
               
 ### Jupyter
 A nice alternative is to make use of [Jupyter](http://jupyter.org/install.html). This is an open-source web application that allows you to create python scripts (among many other coding languages) that contain live code, equations, and visualizations that can be executed on a cell-by-cell basis. Jupyter is a great way to sequentually run parts of your code and problem solve it.
-To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```. A tutorial notebook can be found in the [notebooks](notebooks) folder.
+
+To install Jupyter type in: 
+
+```python -m pip install jupyter```
+
+Then to simply start jupyter type ```jupyter notebook``` in Terminal. An alternative way is to use nteract, a free software package for Mac. You can find it [here](nteract.io). A tutorial notebook for working with AnimRec can be found in the [notebooks](https://github.com/jolleslab/AnimRec/tree/master/notebooks) folder.
 
 
+Additional options
+--------
 ### Record in low light
 
 To record in low light conditions the `shutterspeed` parameter should be set (in microseconds). Many animals move at a speed that such that at a shutter speed above 50000 motion blur becomes clearly visible. In some cases such motion blur is not a big problem as tracking might still be possible. However, it is important to note that the FPS will be automatically adapted to accomodate the shutter speed. For example, a shutter speed of 200000 is equivalent to 1/5th of a second and so a maximum fps of 5 is possible and will be set automatically.
 
 
-#### Storage location
+### Storage location
 
-It is default that images and videos are recorded on the NAS drive connected to the network. If you want to store in a different folder instead just add the foldername for the parameter `recdir`. If the folder does not exist yet it will automatically create one (make sure not to have spaces in the foldername). If `recdir` is left empty it will store videos in the home directory.
+It is default that images and videos are stored in a folder `recordings` in the home directory of the RPi. If you want to store in a different folder instead just add the foldername for the parameter `recdir`. If the folder does not exist yet it will automatically create one (make sure not to have spaces in the foldername). If `recdir` is left empty it will store videos in the home directory. It is also possible to store recordings on a NAS drive connected to the network. Simply add "NAS" to the `recdir` parameter. *AnimRec* will automatically check if the folder is linked to a mounted drive and if not store in the home directory.
 
 
 <a name="settings"></a>Settings
