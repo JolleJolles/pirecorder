@@ -43,26 +43,26 @@ class Converter:
                   remove=False, pools=6, resizeval=1, displayframenr = 100):
 
         '''
-            Converter class to conver a directory of videos to mp4 with
-            potential to write frame number on each frames
+        Converter class to convert a directory of videos to mp4 with
+        potential to write frame number on each frames
 
-            Parameters
-            -----------
-            dir_in : str, default =""
-                Directory containing the videos
-            vidtype : str, default=""
-                The filetype of the video to convert
-            convtype : ["standard","withframe"], default = "standard"
-                Type of conversion, either very fast conversion using ffmpeg or
-                using opencv to add frame number to each frame
-            remove :  boolean, default=False
-                If the original videos should be removed or not
-            pools : int, default=6
-                Number of cores to use for conversion
-            resizeval : float, default=1,
-                Float value to which video should be resized
-            displayframenr : int, default="100"
-                Interval at which frame nr should be displayed during conversion
+        Parameters
+        -----------
+        dir_in : str, default =""
+            Directory containing the videos
+        vidtype : str, default=""
+            The filetype of the video to convert
+        convtype : ["standard","withframe"], default = "standard"
+            Type of conversion, either very fast conversion using ffmpeg or
+            using opencv to add frame number to each frame
+        remove :  boolean, default=False
+            If the original videos should be removed or not
+        pools : int, default=6
+            Number of cores to use for conversion
+        resizeval : float, default=1,
+            Float value to which video should be resized
+        displayframenr : int, default="100"
+            Interval at which frame nr should be displayed during conversion
         '''
 
         alu.lineprint("Convert function started!", label = "AnimRec")
