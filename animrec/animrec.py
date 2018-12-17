@@ -29,7 +29,7 @@ from ast import literal_eval
 from fractions import Fraction
 
 from animlab.utils import homedir, isscript, lineprint, Logger
-from .__init__ import __version__
+from animrec.__init__ import __version__
 
 class Recorder:
 
