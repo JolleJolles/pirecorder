@@ -135,6 +135,7 @@ class Recorder:
         self.setupdir = self.home + "setup"
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
+            lineprint("Setup folder created (/home/pi/setup)")
         sys.stdout = Tee(open(self.setupdir+"/animrec.log", "a"), sys.stdout)
 
         lineprint("==========================================", False)
@@ -174,6 +175,7 @@ class Recorder:
         self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
 
         os.chdir(self.recdir)
+        print("\n")
 
 
     def set_config(self, **kwargs):
