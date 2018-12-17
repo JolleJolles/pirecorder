@@ -15,5 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .animrec import Recorder
-from .setgains import setgains
+__version__ = "1.0.0"
+
+## 17/12/18 - version 1.0.0:
+# - AnimRec public on Github

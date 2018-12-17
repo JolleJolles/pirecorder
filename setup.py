@@ -17,7 +17,7 @@
 
 from __future__ import print_function
 from setuptools import setup
-from animrec.__init__ import __version__
+from animrec.__version__ import __version__
 
 
 DESCRIPTION = 'AnimRec: Controlled media recording library for the Rasperry-Pi'

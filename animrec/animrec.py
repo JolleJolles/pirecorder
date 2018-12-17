@@ -29,6 +29,8 @@ from ast import literal_eval
 from fractions import Fraction
 
 from animlab.utils import homedir, isscript, lineprint, Logger
+from .__version__ import __version__
+
 
 class Recorder:
 
@@ -148,7 +150,7 @@ class Recorder:
         sys.stdout = Logger(self.setupdir+"/animrec.log")
 
         lineprint("==========================================", False)
-        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+.__version__+" started"), False)
+        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
         lineprint("==========================================", False)
 
         self.configfile = self.setupdir + "/"+configfile
