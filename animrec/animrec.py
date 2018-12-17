@@ -15,13 +15,17 @@ from fractions import Fraction
 from animlab.utils import homedir, isscript, lineprint
 from .__version__ import __version__
 
-class Tee:
-    def write(self, *args, **kwargs):
-        self.out1.write(*args, **kwargs)
-        self.out2.write(*args, **kwargs)
-    def __init__(self, out1, out2):
-        self.out1 = out1
-        self.out2 = out2
+class Logger(object):
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, "a")
+    def __getattr__(self, attr):
+        return getattr(self.terminal, attr)
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+    def flush(self):
+        pass
 
 class Recorder:
 
@@ -138,7 +142,7 @@ class Recorder:
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
             lineprint("Setup folder created (/home/pi/setup)")
-        sys.stdout = Tee(open(self.setupdir+"/animrec.log", "a"), sys.stdout)
+        sys.stdout = Logger(self.setupdir+"/animrec.log")
 
         lineprint("==========================================", False)
         lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
