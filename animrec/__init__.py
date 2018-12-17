@@ -16,6 +16,7 @@
 # limitations under the License.
 
 from .animrec import Recorder
+from .setgains import setgains
 
 __version__ = "1.0.0"
 
