@@ -14,7 +14,7 @@ with picamera.PiCamera() as camera:
 
     # Set custom brightness
     camera.brightness = 45
-    brightfile = "setup/cusbright.yml"
+    brightfile = "/home/pi/setup/cusbright.yml"
     if os.path.exists(brightfile):
         with open(brightfile) as f:
             camera.brightness += yaml.load(f)

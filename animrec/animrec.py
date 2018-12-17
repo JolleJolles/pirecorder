@@ -133,14 +133,14 @@ class Recorder:
         self.host = gethostname()
         self.home = homedir()
         self.setupdir = self.home + "setup"
+        if not os.path.exists(self.setupdir):
+            os.makedirs(self.setupdir)
         sys.stdout = Tee(open(self.setupdir+"/animrec.log", "a"), sys.stdout)
 
         lineprint("==========================================", False)
         lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
         lineprint("==========================================", False)
 
-        if not os.path.exists(self.setupdir):
-            os.makedirs(self.setupdir)
         self.configfile = self.setupdir + "/"+configfile
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
