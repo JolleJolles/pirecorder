@@ -328,6 +328,7 @@ class Recorder:
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
             lineprint("Captured "+self.filename)
+            self.cam.stop_preview()
 
         if self.config.rec.type == "imgseq":
 
