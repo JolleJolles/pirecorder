@@ -24,7 +24,109 @@ class Tee:
 
 class Recorder:
 
-    """ Recorder class for setting up the rpi to record images or video """
+    """
+    Recorder class for setting up the rpi for controlled video or image recording.
+
+    Parameters
+    ----------
+    recdir : str, default = "NAS"
+        The directory where media will be stored. Default is "NAS", which is the
+        automatically mounted NAS drive. If different, a folder with name
+        corresponding to location will be created inside the home directory.
+        If no name is provided (""), the files are stored in the home directory.
+    setupdir : str, default = "setup"
+        The directory where setup files are stored relative to home directory. Best
+        to keep this except for very rare instances.
+    Label : str, default = "test"
+        Label for associating with the recording and stored in the filenames.
+    rectype : ["img", "imgseq", "vid"], default = "img"
+        Recording type, either a single image, a sequence of images, or a video.
+
+    Config settings
+    ---------------
+    rotation : int, default = 0
+        Custom rotation specific to the RPi, should be either 0 or 180.
+    brighttune : int, default = 0
+        A rpi specific brightness compensation factor to standardize light levels
+        across multiple rpi's, an integer between -10 and 10.
+    gains : tuple, default = (1.0, 2.5)
+        Custom gains specific to the RPi to have a 'normal' colorspace.
+
+    brightness : int, default = 45
+        The brightness level of the camera, an integer value between 0 and 100.
+    contrast : int, default = 20
+        The image contrast, an integer value between 0 and 100.
+    saturation : int, default -100
+        The color saturation level of the image, an integer value between -100
+        and 100.
+    iso : int, default = 200
+        The camera ISO value, an integer value in sequence [200,400,800,1600].
+        Higher values are more light sensitive but have higher gain.
+    sharpness : int, default = 50
+        The sharpness of the camera, an integer value between -100 and 100.
+    compensation : int, default = 0
+        Camera lighting compensation. Ranges between 0 and 20. Compensation
+        artificially adds extra light to the image.
+    shutterspeed : int, detault = 10000
+        Shutter speed of the camera in microseconds, i.e. the default of 10000
+        is equivalent to 1/100th of a second. A longer shutterspeed will result
+        in a brighter image but more motion blur. Important: the framerate of
+        the camera will be adjusted based on the shutterspeed. At shutter-
+        speeds above ~ 0.2s this results in increasingly longer waiting times
+        between images so a standard imgwait time should be chosen that is 6+
+        times more than the shutterspeed. For example, for a shutterspeed of
+        300000 imgwait should be > 1.8s.
+    imgdims : tuple, default = (3280,2464)
+        The resolution of the images to be taken in pixels. The default is the max
+        resolution that does not return an error for this mode.
+    viddims : tuple, default = (1640,1232)
+        The resolution of the videos to be taken in pixels. The default is the max
+        resolution that does not return an error for this mode.
+    imgfps : int, default = 1
+        The framerate for recording images. Will be set automatically based on
+        the imgwait setting so should not be set by user.
+    vidfps : int, default = 24
+        The framerate for recording video.
+    imgwait : float, default = 1.0
+    	The delay between subsequent images in seconds. When a delay is provided
+      	that is less than ~0.5s (shutterspeed + processingtime) it will be
+      	automatically set to 0 and images thus taken immideately one after the other.
+    imgnr : int, default = 60
+        The number of images that should be taken. When this number is reached, the
+        script will automatically terminate.
+    imgtime : integer, default = 60
+        The time in seconds during which images should be taken. The minimum of a)
+        imgnr and b) nr of images based on imgwait and imgtime will be selected.
+    imgquality : int, default = 50
+        Specifies the quality that the jpeg encoder should attempt to maintain.
+        Use values between 1 and 100, where higher values are higher quality.
+    vidduration : int, default = 10
+        Duration of video recording in seconds.
+    viddelay : int, default = 0
+        Extra recording time in seconds that will be added to vidduration. Its
+        use is for filming acclimatisation time that can then easily be cropped
+        for tracking.
+    vidquality : int, default = 11
+        Specifies the quality that the h264 encoder should attempt to maintain.
+        Use values between 10 and 40, where 10 is extremely high quality, and
+        40 is extremely low.
+
+
+    Output
+    -------
+    Either one or multiple .h264 or .jpg files depending on the filetype and
+    single input. All files are automatically named according to the label,
+    the host name, date, time and potentially session number or count nr, e.g.
+    - single image: 'pilot_180312_PI13_101300.jpg
+    - multiple images: 'pilot_180312_PI13_img00231_101300.jpg
+    - video: 'pilot_180312_PI13_S01_101300.h264
+
+    Returns
+    -------
+    self : class
+        Recorder class instance
+
+    """
 
     def __init__(self, configfile = "animrec.conf"):
 
@@ -46,7 +148,7 @@ class Recorder:
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
-            self.set_config(recdir="NAS", label="test", rectype="vid",
+            self.set_config(recdir="recordings", label="test", rectype="vid",
                             brightness=45, contrast=10, saturation=-100, iso=200,
                             sharpness=0, compensation=0, shutterspeed=8000,
                             imgquality=50, vidquality = 11, gains=(1.0, 2.5),

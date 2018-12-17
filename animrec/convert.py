@@ -14,7 +14,6 @@ from six.moves import input
 
 import sys
 
-sys.path.append('/Users/jollejolles/dropbox/Science/5 Coding/AnimLab/')
 import animlab.utils as alu
 import animlab.imutils as alimu
 
@@ -49,12 +48,10 @@ class Converter:
                 Interval at which frame nr should be displayed during conversion
         '''
 
-        alu.lineprint("Convert function started!\n", label = "AnimRec")
+        alu.lineprint("Convert function started!", sameline = True, reset = True, label = "AnimRec")
 
         maindir = os.getcwd()
-        dir_in = dir_in if maindir in dir_in else maindir+"/"+dir_in
         dir_out = dir_in if dir_out == "" else dir_out
-        dir_out = dir_out if maindir in dir_out else maindir+"/"+dir_out
         assert os.path.exists(dir_in), "dir_in directory does not exist, try again"
         assert os.path.exists(dir_out), "dir_out directory does not exist, try again"
         self.dir_in = dir_in
@@ -70,27 +67,18 @@ class Converter:
         self.conv_files = alu.listfiles(self.dir_in, self.vidtype, keepdir = True)
         self.done = False
 
-        if len(self.conv_files) > 0:
-            if conv_type == "standard":
-                self.conv_ffmpeg()
-            if conv_type == "withframe":
-                self.conv_cv()
-
-            if self.done and self.remove:
-                for filein in self.conv_files:
-                    os.remove(filein)
-                alu.lineprint("Removed all original files", label = "AnimRec")
-
-        else:
-            alu.lineprint("no files found...", label = "AnimRec")
-
+        self.convert()
 
     def conv_ffmpeg(self):
 
         for filein in self.conv_files:
-            bashCommand = "ffmpeg -i '"+filein+"' -vcodec copy '"+filein[:-5] +".mp4'"
+            if self.resizeval != 1:
+                command = "' -vf 'scale=iw*"+str(self.resizeval)+":ih*"+str(self.resizeval)+"' '"
+            else:
+                command = "' -vcodec copy '"
+            bashCommand = "ffmpeg -i '" + filein + command + filein[:-5] + ".mp4' -y"
             output = subprocess.check_output(['bash','-c', bashCommand])
-            alu.lineprint("Finished converting "+filein+"\n", label = "AnimRec")
+            alu.lineprint("Finished converting "+filein, label = "AnimRec")
 
         self.done = True
 
@@ -108,13 +96,14 @@ class Converter:
                 print(pool.map(self.conv_cvfile, self.conv_files))
                 pool.close()
                 self.done = True
-                lineprint("Converting stopped\n", label = "AnimRec")
+                alu.lineprint("Converting stopped\n", label = "AnimRec")
             except KeyboardInterrupt:
-                lineprint("Got ^C, terminating pool converting\n", label = "AnimRec")
+                alu.lineprint("Got ^C, terminating pool converting\n", label = "AnimRec")
                 pool.terminate()
             except Exception as e:
-                lineprint("got exception: %r, terminating pool converting" % (e,)+"\n", label = "AnimRec")
+                alu.lineprint("got exception: %r, terminating pool converting" % (e,)+"\n", label = "AnimRec")
                 pool.terminate()
+
 
     def conv_cvfile(self, filein):
 
@@ -123,23 +112,40 @@ class Converter:
 
             vid = cv2.VideoCapture(filein)
             fps,width,height,_ = alimu.get_vid_params(vid)
-            vidout = alimu.videowriter(filein, width, height, fps, resizeval)
+            vidout = alimu.videowriter(filein, width, height, fps, self.resizeval)
 
             while True:
-                flag, frame = cap.read()
+                flag, frame = vid.read()
                 if flag:
-                    frame = imresize(frame, resizeval)
-                    frame_nr = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-                    if frame_nr % displayframenr == 0:
-                        print(str(frame_nr),end=" ")
+                    frame = alimu.imresize(frame, self.resizeval)
+                    frame_nr = int(vid.get(cv2.CAP_PROP_POS_FRAMES))
+                    if frame_nr % self.displayframenr == 0:
+                        print(str(frame_nr), end=" ")
 
                     # Print the framenumber on the video frame
                     cv2.putText(frame,str(frame_nr),(10,35),cv2.FONT_HERSHEY_SIMPLEX,0.9,(0,0,0),2)
                     vidout.write(frame)
 
                 if not flag:
-                    print(datetime.now().strftime('%H:%M:%S')+" - Finished converting "+conv_filein)
+                    alu.lineprint("Finished converting "+filein, label = "AnimRec")
                     break
 
         except KeyboardInterrupt:
             raise KeyboardInterruptError()
+
+
+    def convert(self):
+
+        if len(self.conv_files) > 0:
+            if self.conv_type == "standard":
+                self.conv_ffmpeg()
+            if self.conv_type == "withframe":
+                self.conv_cv()
+
+            if self.done and self.remove:
+                for filein in self.conv_files:
+                    os.remove(filein)
+                alu.lineprint("Removed all original files", label = "AnimRec")
+
+        else:
+            alu.lineprint("no files found...", label = "AnimRec")

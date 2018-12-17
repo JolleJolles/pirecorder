@@ -1,7 +1,6 @@
-from __future__ import print_function
-
 # Copyright (C) 2015-2018 Jolle Jolles <j.w.jolles@gmail.com>
 
+from __future__ import print_function
 from setuptools import setup
 from animrec.__version__ import __version__
 

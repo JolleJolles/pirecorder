@@ -19,46 +19,50 @@ Now to run animrec, simply open python and run ```import animrec```.
 
 Dependencies
 ------------
-AnimRec is written in [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances. 
+*AnimRec* is written in [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances. 
+
+Part of *AnimRec* are a number of helper modules ([see below](#othmod)) to facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). As it is not trivial to install OpenCV, I have written a guide which can be found [here](https://github.com/JolleJolles/animlab/blob/master/INSTALLGUIDE.md). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
+
 
 Overview
 ------------
 *AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind. *AnimRec* is currently (still) a private package on [GitHub](https://github.com/jolleslab/AnimRec), but can be easily installed from github with the right credentials ([see above](#install)).
 
 ### Recorder class
-The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a [setup] directory in the user's home directory to store all relevant setup files. In additional AnimRec automatically creates a log file *animrec.log* file that stores all terminal output when using the *AnimRec* package.
+The main functionality of *AnimRec* is the `Recorder` class in the `animrec` module. This class initiates a Recorder instance that sets up the pi to record either a single image, a sequence of images, or a loop of videos. AnimRec creates a `setup` directory in the user's home directory to store all relevant setup files. In addition, *AnimRec* automatically creates a log file *animrec.log* file that stores all terminal output when using the *AnimRec* package.
 
-AnimRec has many custom settings to facilitate controlled and automated recording, relying heavily on the [picamera](http://picamera.readthedocs.io/) package by Dave Jones. When AnimRec is initiated for the first time, a specific configuration file *animrec.conf* is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, 3) specific video and 4) specific image recording settings, and 5) custom settings linked to the specific rpi. For a detailed overview and description of these settings ([see below](#settings)). 
+AnimRec has many custom settings to facilitate controlled and automated recording, relying heavily on the [picamera](http://picamera.readthedocs.io/) package by Dave Jones. When *AnimRec* is initiated for the first time, a specific configuration file *animrec.conf* is created and stored in the setup folder. The settings that can be stored are divided into 1) general user recording parameters, 2) camera settings, 3) specific video and 4) specific image recording settings, and 5) custom settings linked to the specific rpi. For a detailed overview and description of these settings ([see below](#settings)). 
 
 <center><img src="https://github.com/jolleslab/AnimRec/blob/master/images/animrec-conffile-screenshot.jpg" width="20%"></center>
 
-AnimRec is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The setup/animrec.conf file is directly editable (see screenshot above) or alternatively settings can be stored when running the `animrec.set_config()` function.
+*AnimRec* is set up in such a way that it is very easy to set and save custom settings that are then automatically used without further user imput. The `setup/animrec.conf` file is directly editable (see screenshot above) or alternatively, settings can be stored when running the `animrec.set_config()` function.
 
 ### Recording modes
-AnimRec has three recording modes (with the addition of the imgtask function, [explained below](#task): `img`, `imgseq`, and `vid`. Files are automatically stored in the directory set in the custom configuration (`recdir`), by default this is the a NAS drive, and automatically named according to the provided label, the computer name, the date and time, and the session number or image sequence nr (see examples below).
+AnimRec has three recording modes (with the addition of the imgtask function, [explained below](#task): `img`, `imgseq`, and `vid`. Files are automatically stored in the directory set in the custom configuration (`recdir`). By default this is a directory called `recordings`, and automatically named according to the provided label, the computer name, the date and time, and the session number or image sequence nr (see examples below). It is also possible to set the directory to a network storage drive, simply set `recdir` to "NAS".
 
-1. `img` mode: This mode simply records a single image with the custom settings and then quits. Example of filename: "pilot\_180312\_PI13\_101300.jpg".
+1. `img` mode: This mode records a single image with the custom settings and then quits. Example of filename: "pilot\_180312\_PI13\_101300.jpg".
 2. `imgseq` mode: This mode is to create a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`). The minimum of imgnr and the calculated number of images based on `imgwait` and `imgtime` will be selected. For example, if one wishes to specifically record 100 images 10.0s after one another, one would use the settings:`imgwait=10` `imgnr=100` and `imgtime=9999`, or if one wishes to record images every 0.5s for 10 hours irrespective of their total number one would use: `imgwait=0.5` `imgnr=999999` `imgtime=36000`. Example of filename: "pilot\_180312\_PI13\_img00231_101300.jpg".
-3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each reording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps`, the framerate of the video, `vidduration`: the duration of the video, and `viddelay`: Extra recording time in seconds that will be added to vidduration, used for filming acclimatisation time that is automatically ignored in potential subsequent tracking. Example of filename: "pilot\_180312\_PI13\_S01\_101300.h264".
+3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each reording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps:` the framerate of the video; `vidduration`: the duration of the video; and `viddelay`: extra recording time in seconds that will be added to vidduration, for example to film acclimatisation time for observations but that will be automatically ignored in later tracking of the video. Example of filename: "pilot\_180312\_PI13\_S01\_101300.h264".
         
                 
-### Other modules
+### <a name="othmod"></a>Other modules
 In addition to the main recording module, AnimRec contains a couple of other modules to aid in setting-up the rpi to have the best standardized recording parameters: 
 
 1. `getedge()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
 2. `getgains()`: an automatic function that tries to determine the optimal white balance for the current camera position and lighting conditions. This function stores a tuple of rg and bg values that can be further adjusted by the user.
 3. <a name="task"></a>`imgtask()`: an add-on module for the `Recorder` class that enables the scheduling of automated image recording tasks, such as to record a sequence of images from 7am > 7pm at 1 image/min every day of the week. 
+4. `Converter()`: a module to convert videos to `.mp4` format with the option to resize them and print the frame number on the top left corner. Uses multiprocessing so multiple videos can be converted simultaniously.
 
 
 Workflow
 --------
-The workflow for which AnimRec was designed is as follows:
+The workflow for which *AnimRec* was designed is as follows:
 
 1. Install the latest version of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) and make sure it is fully up to date with python installed: `sudo apt-get update && sudo apt-get upgrade`.
 2. Set up the rpi with an (IR) camera and position it in such a way that it records the zone of interest (using the `raspistill -t 0 -k` command).
-3. Install AnimRec [see above](#install)
+3. Install AnimRec by following the steps [above](#install).
 4. Run the `getedge()` function to get the right region of interest to be used for recording.
-5. Run the `getgains()` function to get the right, standardized white balance.
+5. Run the `getgains()` function to set the right, standardized white balance.
 6. Run `AnimRec` for the first time to determine the right brightness settings for the camera. Camera brightness depends on the following parameters: `brightness`,`iso`,`contrast`, and `compensation`. Easiest is to record a single image (use `rectype=img`) and adjust these parameters until satisfied, which are then automatically stored.
 7. Now the rpi and AnimRec configuration are fully set up, simply use AnimRec with the required custom configuration file (for some examples, [see below](#examples)).
 
@@ -66,7 +70,7 @@ The workflow for which AnimRec was designed is as follows:
 <a name="examples"></a>Using AnimRec
 --------
 #### Python script
-The most straight forward way is to use write a simple python script (e.g. `rpirec.py`) to run AnimRec, containing the following code:
+The most straight forward way to use *AnimRec* is to write a simple python script (e.g. `rpirec.py`) and to run that from the Terminal:
 
 ```python
 import animrec
@@ -81,25 +85,25 @@ AR.set_config(label = "test", rectype = "vid", saturation = -100)
 while True:
 	AR.record()
 ```
-To now run this script, you simply type in terminal: ```python rpirec.py```
+To run the script: ```python rpirec.py```
 
 **Note**: Make sure that the provided parameters conform to the datatype and are within the possible range, see [settings](#settings) below, as otherwise the script will result in an error.
 
 ### Alias
-To make running AnimRec even easier we can create an alias for our recording script with a custom command. For this we need to open the `.bashrc` file in our root directory:
+To make running *AnimRec* even easier, we can create an alias for our recording script with a custom command. For this we need to open the `.bashrc` file in our root directory:
 
 ```sudo nano ~/.bashrc```
 
 and add the following to the bottom of the file:
 
-```alias rec='sudo rpirec.py```
+```alias rec=sudo rpirec.py'```
 
 Now all you need to enter in terminal to start Animrec is ```rec```, and AnimRec automatically starts with your custom settings.
 
               
 ### Jupyter
-A nice alternative is to make use of [jupyter notebook](http://jupyter.org/install.html). This is an open-source web application that allows you to create python scripts (among many other coding languages) that contain live code, equations, and visualizations that can be executed on a cell-by-cell basis. Jupyter is a great way to sequentually run parts of your code and problem solve it.
-To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```.
+A nice alternative is to make use of [Jupyter](http://jupyter.org/install.html). This is an open-source web application that allows you to create python scripts (among many other coding languages) that contain live code, equations, and visualizations that can be executed on a cell-by-cell basis. Jupyter is a great way to sequentually run parts of your code and problem solve it.
+To install, type in: ```python -m pip install jupyter```. To start jupyter, type in: ```jupyter notebook```. A tutorial notebook can be found in the [notebooks](notebooks) folder.
 
 
 ### Record in low light
@@ -212,6 +216,4 @@ It is default that images and videos are recorded on the NAS drive connected to 
     Returns
     -------
     self : class
-        Recorder class instance  
-  
-  </div>      
+        Recorder class instance     
