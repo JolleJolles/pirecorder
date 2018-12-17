@@ -17,3 +17,4 @@
 
 from .animrec import Recorder
 from .setgains import setgains
+from .__version__ import __version__
