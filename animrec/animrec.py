@@ -148,7 +148,7 @@ class Recorder:
         sys.stdout = Logger(self.setupdir+"/animrec.log")
 
         lineprint("==========================================", False)
-        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+animrec.__version__+" started"), False)
+        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+.__version__+" started"), False)
         lineprint("==========================================", False)
 
         self.configfile = self.setupdir + "/"+configfile
