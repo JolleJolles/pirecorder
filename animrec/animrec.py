@@ -1,4 +1,5 @@
 # coding: utf-8
+from builtins import input
 
 import picamera
 from time import sleep, strftime
@@ -29,11 +30,12 @@ class Recorder:
 
     Parameters
     ----------
-    recdir : str, default = "NAS"
-        The directory where media will be stored. Default is "NAS", which is the
-        automatically mounted NAS drive. If different, a folder with name
-        corresponding to location will be created inside the home directory.
-        If no name is provided (""), the files are stored in the home directory.
+    recdir : str, default = "recordings"
+        The directory where media will be stored. Default is "recordings". If
+        different, a folder with name corresponding to location will be created
+        inside the home directory. If no name is provided (""), the files are
+        stored in the home directory. If "NAS" is provided it will additionally
+        check if the folder links to a mounted drive.
     setupdir : str, default = "setup"
         The directory where setup files are stored relative to home directory. Best
         to keep this except for very rare instances.
@@ -175,7 +177,6 @@ class Recorder:
         self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
 
         os.chdir(self.recdir)
-        print("\n")
 
 
     def set_config(self, **kwargs):
@@ -348,5 +349,5 @@ class Recorder:
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
                 lineprint("Finished")
-                if raw_input("\nn for new session, e to exit: ") == 'e':
+                if input("\nn for new session, e to exit: ") == 'e':
                     break

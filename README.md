@@ -128,11 +128,12 @@ It is default that images and videos are stored in a folder `recordings` in the 
 
     Parameters
     ----------
-    recdir : str, default = "NAS"
-        The directory where media will be stored. Default is "NAS", which is the
-        automatically mounted NAS drive. If different, a folder with name
-        corresponding to location will be created inside the home directory.
-        If no name is provided (""), the files are stored in the home directory.
+    recdir : str, default = "recordings"
+        The directory where media will be stored. Default is "recordings". If 
+        different, a folder with name corresponding to location will be created 
+        inside the home directory. If no name is provided (""), the files are 
+        stored in the home directory. If "NAS" is provided it will additionally
+        check if the folder links to a mounted drive.
     setupdir : str, default = "setup"
         The directory where setup files are stored relative to home directory. Best
         to keep this except for very rare instances. 
