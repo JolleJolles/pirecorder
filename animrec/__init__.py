@@ -15,6 +15,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .animrec import Recorder
-from .setgains import setgains
 from .__version__ import __version__
+from .animrec import Recorder

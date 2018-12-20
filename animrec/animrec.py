@@ -18,15 +18,20 @@
 from builtins import input
 
 import picamera
+import picamera.array
+import numpy as np
 from time import sleep, strftime
 from datetime import datetime
 import os
 import sys
 
+from animlab import homedir
+
 from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
+import yaml
 
 from animlab.utils import homedir, isscript, lineprint, Logger
 from .__version__ import __version__
@@ -141,19 +146,23 @@ class Recorder:
 
     def __init__(self, configfile = "animrec.conf"):
 
+        lineprint("==========================================", False)
+        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
+        lineprint("==========================================", False)
+
         self.host = gethostname()
         self.home = homedir()
         self.setupdir = self.home + "setup"
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
-            lineprint("Setup folder created (/home/pi/setup)")
+            lineprint("Setup folder created (" + setupdir + ")")
+
         sys.stdout = Logger(self.setupdir+"/animrec.log")
 
-        lineprint("==========================================", False)
-        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
-        lineprint("==========================================", False)
-
+        self.brightfile = self.setupdir + "/cusbright.yml"
+        self.roifile = self.setupdir + "/cusroi.yml"
         self.configfile = self.setupdir + "/"+configfile
+
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
             lineprint("New config file created")
@@ -244,7 +253,14 @@ class Recorder:
         if "vidquality" in kwargs:
             self.config.vid.quality = kwargs["vidquality"]
 
-        if len(kwargs) > 0:
+        if os.path.exists(self.brightfile):
+            with open(self.brightfile) as f:
+                brighttune = yaml.load(f)
+                if brighttune != self.config.cus.brighttune:
+                    self.config.cus.brighttune = brighttune
+                    brightchange = True
+
+        if len(kwargs) > 0 or brightchange:
 
             self.imgparams()
             self.shuttertofps()
@@ -258,7 +274,6 @@ class Recorder:
     def setup_cam(self):
 
         self.cam = picamera.PiCamera()
-
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
@@ -275,13 +290,130 @@ class Recorder:
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = literal_eval(self.config.cus.gains)
-        self.cam.brightness = self.config.cam.brightness
+        brightness = self.config.cam.brightness + self.config.cus.brighttune
+        self.cam.brightness = brightness
         self.cam.contrast = self.config.cam.contrast
         self.cam.saturation = self.config.cam.saturation
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
         lineprint("Camera started..")
+
+
+    def set_roi(self):
+
+        ''' Set the roi to be used for recording with the Raspberry-Pi camera'''
+
+        self.rectangle = False
+        self.setup_cam()
+        self.take_img()
+        self.draw_frame = self.frame.copy()
+
+        cv2.namedWindow('window', cv2.WINDOW_NORMAL)
+        cv2.setMouseCallback('window', self.drawrect)
+
+        print("| Select ROI..", end=' ')
+
+        while True:
+            cv2.imshow('window', self.draw_frame)
+            cv2.moveWindow('window', 50,0)
+            k = cv2.waitKey(1) & 0xFF
+
+            if k == ord('e') and hasattr(self, "refPt"):
+                del self.refPt
+
+            if k == ord('s'):
+                if hasattr(self, "refPt"):
+                    if len(self.refPt) == 1:
+                        pt = [self.refPt[0],self.refPt[0]]
+                    pt1 = (min(pt[0][0], pt[1][0]), min(pt[0][1], pt[1][1]))
+                    pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
+
+                    # store the data
+                    data = {"roi" : str(((pt1,pt2)))}
+                    with open(self.roifile, 'w') as f:
+                        yaml.safe_dump(data, f, default_flow_style=False)
+                    print("ROI " + roi + " stored..", end=" ")
+                    break
+
+                else:
+                    print("Nothing to save..")
+
+            if k == 27:
+                print("User escaped..")
+                break
+
+        cv2.destroyWindow('window')
+        cv2.waitKey(1)
+
+
+    def take_img(self):
+
+        self.frame = np.empty((res[1] * res[0] * 3,), dtype=np.uint8)
+        cam.capture(self.frame, 'bgr')
+        self.frame = self.frame.reshape((res[1], res[0], 3))
+
+
+    def drawrect(self, event, x, y, flags, param):
+        self.draw_frame = self.frame.copy()
+        if event == cv2.EVENT_LBUTTONDOWN:
+            self.rectangle = True
+            self.refPt = [(x,y)]
+
+        elif event == cv2.EVENT_LBUTTONUP:
+            self.rectangle = False
+            self.refPt.append((x, y))
+            cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
+
+        elif event == cv2.EVENT_MOUSEMOVE:
+            if self.rectangle:
+                cv2.rectangle(self.draw_frame,self.refPt[0],(x,y),(0,0,255),2)
+            else:
+                if hasattr(self, 'refPt'):
+                    cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
+
+        cv2.line(self.draw_frame,(x-5,y),(x+5,y),cols("whi"),1)
+        cv2.line(self.draw_frame,(x,y-5),(x,y+5),cols("whi"),1)
+
+
+    def set_gains(self, attempts = 100):
+
+        ''' Automatically find gains for Raspberry-Pi camera'''
+
+        # This function was written based on code provided by Dave Jones
+        # on a question on stackoverflow.
+
+        self.setup_cam()
+
+        with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
+
+            for i in range(attempts):
+
+                # Capture a tiny resized image in RGB format, and extract the
+                # average R, G, and B values
+                self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+                r, g, b = (np.mean(output.array[..., i]) for i in range(3))
+                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b))
+
+                # Adjust R and B relative to G, but only if they're significantly
+                # different (delta +/- 2)
+                if abs(r - g) > 2:
+                    if r > g:
+                        rg -= 0.05
+                    else:
+                        rg += 0.05
+                if abs(b - g) > 1:
+                    if b > g:
+                        bg -= 0.05
+                    else:
+                        bg += 0.05
+
+                self.cam.awb_gains = (rg, bg)
+                output.seek(0)
+                output.truncate()
+
+        self.set_config(gains=self.cam.awb_gains)
+        print("Gains: " + gains + "stored..!")
 
 
     def imgparams(self, mintime = 0.45):
