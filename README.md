@@ -66,7 +66,7 @@ The workflow for which *AnimRec* was designed is as follows:
 4. Run the `Recorder` class for the first time to determine the right lighting settings for the camera. Camera light levels depend on the following parameters: `brightness`,`iso`,`contrast`, and `compensation`. Easiest is to record a single image (use `rectype=img`) and adjust these parameters until satisfied, which are then automatically stored.
 5. Run the `set_roi` function to get the right region of interest to be used for recording, linked to the resolution set with the Recorder class.
 6. Run the `set_gains` function to automatically set the right, standardized white balance.
-7. Now the rpi and AnimRec configuration are fully set up! simply run the `record` function to start your recording. For some examples of running above code, [see below](#examples), the [scripts folder](https://github.com/jolleslab/AnimRec/tree/master/scripts), and the [notebooks folder](https://github.com/jolleslab/AnimRec/tree/master/notebooks) in the repository.
+7. Now the rpi and AnimRec configuration are fully set up! Simply run the `record` function to start your recording. For some examples of running above code, [see below](#examples), the [scripts folder](https://github.com/jolleslab/AnimRec/tree/master/scripts), and the [notebooks folder](https://github.com/jolleslab/AnimRec/tree/master/notebooks) in the repository.
 
 
 <a name="examples"></a>Running AnimRec
