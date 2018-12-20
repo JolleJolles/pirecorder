@@ -21,7 +21,7 @@ Dependencies
 ------------
 *AnimRec* is written in [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances.
 
-Part of *AnimRec* are a number of helper modules ([see below](#othmod)) to facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). As it is not trivial to install OpenCV, I have written a guide which can be found [here](https://github.com/JolleJolles/animlab/blob/master/INSTALLGUIDE.md). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
+Part of *AnimRec* are a number of helper modules ([see below](#othmod)) to facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). It is not trivial to install OpenCV, but there is a great guide for installing opencv 4.0 on the [pyimagesearch website](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) and you can find a guide for installing opencv on mac [here](https://git.io/fpyvq). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
 
 
 Overview
@@ -50,7 +50,7 @@ AnimRec has three recording modes (with the addition of the imgtask function, [e
 ### <a name="othmod"></a>Other modules
 In addition to the main recording module, AnimRec contains a couple of other modules to aid in setting-up the rpi to have the best standardized recording parameters:
 
-1. `getedge()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
+1. `setroi()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
 2. `setgains()`: an automatic function that tries to determine the optimal white balance for the current camera position and lighting conditions. This function stores a tuple of rg and bg values in a .yml file in the setup directory (that can be updated by the user if needed), which will be automatically loaded by the main *AnimRec* Recorder class. To run, simple enter `animrec.setgains()`.
 3. <a name="task"></a>`imgtask()`: an add-on module for the `Recorder` class that enables the scheduling of automated image recording tasks, such as to record a sequence of images from 7am > 7pm at 1 image/min every day of the week.
 4. `Converter()`: a module to convert videos to `.mp4` format with the option to resize them and print the frame number on the top left corner. Uses multiprocessing so multiple videos can be converted simultaniously. See the [template notebook](https://github.com/jolleslab/AnimRec/blob/master/notebooks/run-convert.ipynb) for a demo how to use the converter module.
@@ -63,7 +63,7 @@ The workflow for which *AnimRec* was designed is as follows:
 1. Install the latest version of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) and make sure it is fully up to date with python installed: `sudo apt-get update && sudo apt-get upgrade`.
 2. Set up the rpi with an (IR) camera and position it in such a way that it records the zone of interest (using the `raspistill -t 0 -k` command).
 3. Install AnimRec by following the steps [above](#install).
-4. Run the `getedge()` function to get the right region of interest to be used for recording.
+4. Run the `setroi()` function to get the right region of interest to be used for recording.
 5. Run the `setgains()` function to set the right, standardized white balance.
 6. Run `AnimRec` for the first time to determine the right brightness settings for the camera. Camera brightness depends on the following parameters: `brightness`,`iso`,`contrast`, and `compensation`. Easiest is to record a single image (use `rectype=img`) and adjust these parameters until satisfied, which are then automatically stored.
 7. Now the rpi and AnimRec configuration are fully set up, simply use AnimRec with the required custom configuration file (for some examples, [see below](#examples)).
