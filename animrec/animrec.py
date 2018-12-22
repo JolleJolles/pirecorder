@@ -349,6 +349,7 @@ class Recorder:
                 alu.lineprint("User escaped..")
                 break
 
+        self.cam.close()
         cv2.destroyWindow('window')
         cv2.waitKey(1)
 
@@ -382,8 +383,11 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow.
 
-        self.setup_cam()
+        self.setup_cam(raw=True)
         rg, bg = self.cam.awb_gains
+
+        self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
+        self.cam.capture(self.rawCapture, format="bgr")
 
         with PiRGBArray(self.cam, size=(128, 72)) as output:
 
