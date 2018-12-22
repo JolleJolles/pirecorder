@@ -400,7 +400,7 @@ class Recorder:
                 # average R, G, and B values
                 self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
-                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b))
+                print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
                 # Adjust R and B relative to G, but only if they're significantly
                 # different (delta +/- 2)
@@ -415,15 +415,15 @@ class Recorder:
                     else:
                         bg += 0.05
                 if rg < 0 or bg < 0 or rg > 8 or bg > 8:
-                    print('Cannot find optimal value, exiting..')
+                    print("Cannot find optimal value, exiting..")
                     break
 
                 output.seek(0)
                 output.truncate()
 
-        gains = (round(rg,2),round(bg,2))
-        self.set_config(gains=gains, internal="")
-        alu.lineprint("Gains: " + str(gains) + " stored..")
+        self.cam.awb_gains = (rg, bg)
+        self.set_config(gains=self.cam.awb_gains, internal="")
+        alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
 
