@@ -390,6 +390,7 @@ class Recorder:
         #self.setup_cam(simple=True)
         rg, bg = literal_eval(self.config.cus.gains)
 
+        camera = picamera.PiCamera()
         camera.resolution = (1280, 720)
         camera.awb_mode = 'off'
         camera.awb_gains = (rg, bg)
@@ -423,10 +424,10 @@ class Recorder:
                 output.seek(0)
                 output.truncate()
 
-        self.cam.awb_gains = (rg, bg)
-        self.set_config(gains=self.cam.awb_gains, internal="")
+        camera.awb_gains = (rg, bg)
+        self.set_config(gains=camera.awb_gains, internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
-        self.cam.close()
+        camera.close()
 
 
     def imgparams(self, mintime = 0.45):
