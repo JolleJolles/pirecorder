@@ -387,21 +387,16 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
-        #self.setup_cam(simple=True)
-        rg, bg = literal_eval(self.config.cus.gains)
+        self.setup_cam(simple=True)
+        rg, bg = self.cam.awb_gains
 
-        camera = picamera.PiCamera()
-        camera.resolution = (1280, 720)
-        camera.awb_mode = 'off'
-        camera.awb_gains = (rg, bg)
-
-        with PiRGBArray(camera, size=(128, 72)) as output:
+        with PiRGBArray(self.cam, size=(128, 72)) as output:
 
             for i in range(attempts):
 
                 # Capture a tiny resized image in RGB format, and extract the
                 # average R, G, and B values
-                camera.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+                self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
@@ -421,13 +416,13 @@ class Recorder:
                     print("Cannot find optimal value, exiting..")
                     break
 
-                camera.awb_gains = (rg, bg)
+                self.cam.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=camera.awb_gains, internal="")
+        self.set_config(gains=self.cam.awb_gains, internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
-        camera.close()
+        self.cam.close()
 
 
     def imgparams(self, mintime = 0.45):
