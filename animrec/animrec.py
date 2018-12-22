@@ -176,7 +176,8 @@ class Recorder:
                             imgdims=(3280, 2464), viddims=(1640, 1232), imgfps=1,
                             vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
                             imgquality=50, vidduration=10, viddelay=10,
-                            vidquality = 11)
+                            vidquality = 11,internal="")
+            alu.lineprint("Config settings stored")
         else:
             alu.lineprint("Config settings loaded. Recording "+\
                            self.config.rec.type+" @ "+self.config.rec.dir)
@@ -266,11 +267,10 @@ class Recorder:
 
             self.imgparams()
             self.shuttertofps()
-
-            if os.path.isfile(self.configfile):
-                alu.lineprint("Config settings stored and loaded..")
-
             self.config.save()
+
+            if "internal" not in kwargs:
+                alu.lineprint("Config settings stored and loaded..")
 
 
     def setup_cam(self, raw = False):
@@ -319,7 +319,7 @@ class Recorder:
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
         cv2.setMouseCallback('window', self.drawrect)
 
-        alu.lineprint("Select ROI..")
+        alu.lineprint("Select roi..")
 
         while True:
             cv2.imshow('window', self.draw_frame)
@@ -338,8 +338,8 @@ class Recorder:
                     pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
                     roi = ((pt1,pt2))
 
-                    self.set_config(roi=roi)
-                    alu.lineprint("coordinates " + str(roi) + " ..")
+                    self.set_config(roi=roi,internal="")
+                    alu.lineprint("roi coordinates " + str(roi) + " stored..")
                     break
 
                 else:
@@ -393,7 +393,7 @@ class Recorder:
                 # average R, G, and B values
                 self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
-                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b), end= " ")
+                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b))
 
                 # Adjust R and B relative to G, but only if they're significantly
                 # different (delta +/- 2)
@@ -408,11 +408,12 @@ class Recorder:
                     else:
                         bg += 0.05
 
+                gains = (rg,bg)
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=(rg,bg))
-        alu.lineprint("Gains: " + gains + "stored..!")
+        self.set_config(gains=gains,internal="")
+        alu.lineprint("Gains: " + str(gains) + "stored..")
 
 
     def imgparams(self, mintime = 0.45):
