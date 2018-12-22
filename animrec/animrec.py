@@ -408,12 +408,13 @@ class Recorder:
                     else:
                         bg += 0.05
 
-                gains = (rg,bg)
+                gains = (round(rg,2),round(bg,2))
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=gains,internal="")
-        alu.lineprint("Gains: " + str(gains) + "stored..")
+        self.set_config(gains=gains, internal="")
+        alu.lineprint("Gains: " + str(gains) + " stored..")
+        self.cam.close()
 
 
     def imgparams(self, mintime = 0.45):
