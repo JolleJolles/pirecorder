@@ -24,6 +24,7 @@ from time import sleep, strftime
 from datetime import datetime
 import os
 import sys
+import cv2
 
 from animlab import homedir
 
