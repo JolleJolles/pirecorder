@@ -16,6 +16,8 @@
 # limitations under the License.
 
 from builtins import input
+from .__version__ import __version__
+import animlab.utils as alu
 
 import picamera
 from  picamera.array import PiRGBArray
@@ -26,16 +28,11 @@ import os
 import sys
 import cv2
 
-from animlab import homedir
-
 from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 import yaml
-
-from animlab.utils import homedir, isscript, lineprint, Logger
-from .__version__ import __version__
 
 
 class Recorder:
@@ -147,18 +144,18 @@ class Recorder:
 
     def __init__(self, configfile = "animrec.conf"):
 
-        lineprint("==========================================", False)
-        lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
-        lineprint("==========================================", False)
+        alu.lineprint("==========================================", False)
+        alu.lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
+        alu.lineprint("==========================================", False)
 
         self.host = gethostname()
-        self.home = homedir()
+        self.home = alu.homedir()
         self.setupdir = self.home + "setup"
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
-            lineprint("Setup folder created (" + setupdir + ")")
+            alu.lineprint("Setup folder created (" + setupdir + ")")
 
-        sys.stdout = Logger(self.setupdir+"/animrec.log")
+        sys.stdout = alu.Logger(self.setupdir+"/animrec.log")
 
         self.brightfile = self.setupdir + "/cusbright.yml"
         self.roifile = self.setupdir + "/cusroi.yml"
@@ -166,7 +163,7 @@ class Recorder:
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            lineprint("New config file created")
+            alu.lineprint("New config file created")
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
@@ -179,7 +176,7 @@ class Recorder:
                             viddims=(1640, 1232), vidfps=24, vidduration=10,
                             viddelay=10)
         else:
-            lineprint("Config settings loaded. Recording "+\
+            alu.lineprint("Config settings loaded. Recording "+\
                            self.config.rec.type+" @ "+self.config.rec.dir)
 
         self.imgparams()
@@ -188,7 +185,7 @@ class Recorder:
         if self.config.rec.dir == "NAS":
             if not os.path.ismount(self.config.rec.dir):
                 self.recdir = self.home
-                lineprint("Recdir not mounted, storing in home directory..")
+                alu.lineprint("Recdir not mounted, storing in home directory..")
         self.recdir = self.home + self.config.rec.dir
         if not os.path.exists(self.recdir):
             os.makedirs(self.recdir)
@@ -267,7 +264,7 @@ class Recorder:
             self.shuttertofps()
 
             if os.path.isfile(self.configfile):
-                lineprint("Config settings stored and loaded..")
+                alu.lineprint("Config settings stored and loaded..")
 
             self.config.save()
 
@@ -301,7 +298,7 @@ class Recorder:
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
-        lineprint("Camera started..")
+        alu.lineprint("Camera started..")
 
 
     def set_roi(self):
@@ -371,8 +368,8 @@ class Recorder:
                 if hasattr(self, 'refPt'):
                     cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
 
-        cv2.line(self.draw_frame,(x-5,y),(x+5,y),cols("whi"),1)
-        cv2.line(self.draw_frame,(x,y-5),(x,y+5),cols("whi"),1)
+        cv2.line(self.draw_frame,(x-5,y),(x+5,y),alu.namedcols("white"),1)
+        cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
 
 
     def set_gains(self, attempts = 100):
@@ -463,7 +460,7 @@ class Recorder:
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
-            lineprint("Captured "+self.filename)
+            alu.lineprint("Captured "+self.filename)
             self.cam.close()
 
         if self.config.rec.type == "imgseq":
@@ -474,11 +471,11 @@ class Recorder:
                 if i < self.config.img.nr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
                     delay = max(0, self.config.img.wait - timepassed)
-                    lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                    alu.lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timepoint = datetime.now()
                 else:
-                    lineprint("Captured "+img)
+                    alu.lineprint("Captured "+img)
                     break
             self.cam.close()
 
@@ -487,9 +484,9 @@ class Recorder:
             for session in ["_S%02d" % i for i in range(1,999)]:
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
-                lineprint("Recording "+filename)
+                alu.lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
-                lineprint("Finished")
+                alu.lineprint("Finished")
                 if input("\nn for new session, e to exit: ") == 'e':
                     break
