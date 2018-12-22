@@ -288,7 +288,7 @@ class Recorder:
             self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
 
         sleep(0.1)
-
+/.
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
@@ -311,7 +311,7 @@ class Recorder:
         self.setup_cam(raw = True)
         res = (int(self.cam.resolution[0]/4),int(self.cam.resolution[0]/4))
         self.cam.capture(self.rawCapture, format="bgr")
-        self.frame = rawCapture.array
+        self.frame = self.rawCapture.array
         self.draw_frame = self.frame.copy()
 
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
