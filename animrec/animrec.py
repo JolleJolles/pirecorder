@@ -288,7 +288,7 @@ class Recorder:
             self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
 
         sleep(0.1)
-/.
+
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
