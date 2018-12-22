@@ -401,7 +401,7 @@ class Recorder:
 
                 # Capture a tiny resized image in RGB format, and extract the
                 # average R, G, and B values
-                self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+                camera.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
@@ -421,10 +421,10 @@ class Recorder:
                     print("Cannot find optimal value, exiting..")
                     break
 
+                camera.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
 
-        camera.awb_gains = (rg, bg)
         self.set_config(gains=camera.awb_gains, internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         camera.close()
