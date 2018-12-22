@@ -296,7 +296,7 @@ class Recorder:
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
-        self.cam.awb_gains = literal_eval(self.config.cus.gains)
+        self.cam.awb_gains = checkfrac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
@@ -382,7 +382,7 @@ class Recorder:
     def checkfrac(input_string):
         from fractions import Fraction
         parsed_input = [item for item in ''.join((char if char in '0123456789./' else '-') for char in input_string).split('-') if item]
-        return [Fraction(i).limit_denominator(10) for i in parsed_input]
+        return (Fraction(i).limit_denominator(10) for i in parsed_input)
 
     def set_gains(self, attempts = 100):
 
