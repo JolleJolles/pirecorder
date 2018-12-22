@@ -18,7 +18,7 @@
 from builtins import input
 
 import picamera
-import picamera.array
+from  picamera.array import PiRGBArray
 import numpy as np
 from time import sleep, strftime
 from datetime import datetime
@@ -271,7 +271,7 @@ class Recorder:
             self.config.save()
 
 
-    def setup_cam(self):
+    def setup_cam(self, raw = False):
 
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
@@ -284,7 +284,10 @@ class Recorder:
             self.cam.resolution = literal_eval(self.config.vid.dims)
             self.cam.framerate = self.config.vid.fps
 
-        sleep(2)
+        if raw:
+            self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
+
+        sleep(0.1)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
@@ -305,8 +308,10 @@ class Recorder:
         ''' Set the roi to be used for recording with the Raspberry-Pi camera'''
 
         self.rectangle = False
-        self.setup_cam()
-        self.take_img()
+        self.setup_cam(raw = True)
+        res = (int(self.cam.resolution[0]/4),int(self.cam.resolution[0]/4))
+        self.cam.capture(self.rawCapture, format="bgr")
+        self.frame = rawCapture.array
         self.draw_frame = self.frame.copy()
 
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
@@ -347,14 +352,6 @@ class Recorder:
         cv2.waitKey(1)
 
 
-    def take_img(self):
-
-        res = self.cam.resolution
-        self.frame = np.empty((res[1] * res[0] * 3,), dtype=np.uint8)
-        self.cam.capture(self.frame, 'bgr')
-        self.frame = self.frame.reshape((res[1], res[0], 3))
-
-
     def drawrect(self, event, x, y, flags, param):
         self.draw_frame = self.frame.copy()
         if event == cv2.EVENT_LBUTTONDOWN:
@@ -386,7 +383,7 @@ class Recorder:
 
         self.setup_cam()
 
-        with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
+        with PiRGBArray(self.cam, size=(128, 72)) as output:
 
             for i in range(attempts):
 
