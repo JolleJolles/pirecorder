@@ -15,9 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import print_function
 from builtins import input
-from .__version__ import __version__
-import animlab.utils as alu
 
 import picamera
 from  picamera.array import PiRGBArray
@@ -27,12 +26,14 @@ from datetime import datetime
 import os
 import sys
 import cv2
-
 from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 import yaml
+
+from .__version__ import __version__
+import animlab.utils as alu
 
 
 class Recorder:
@@ -315,7 +316,7 @@ class Recorder:
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
         cv2.setMouseCallback('window', self.drawrect)
 
-        print("| Select ROI..", end=' ')
+        alu.lineprint("Select ROI..")
 
         while True:
             cv2.imshow('window', self.draw_frame)
@@ -327,23 +328,24 @@ class Recorder:
 
             if k == ord('s'):
                 if hasattr(self, "refPt"):
+                    pt = self.refPt
                     if len(self.refPt) == 1:
                         pt = [self.refPt[0],self.refPt[0]]
                     pt1 = (min(pt[0][0], pt[1][0]), min(pt[0][1], pt[1][1]))
                     pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
+                    roi = str(((pt1,pt2)))
 
-                    # store the data
-                    data = {"roi" : str(((pt1,pt2)))}
+                    data = {"roi" : roi}
                     with open(self.roifile, 'w') as f:
                         yaml.safe_dump(data, f, default_flow_style=False)
-                    print("ROI " + roi + " stored..", end=" ")
+                    alu.lineprint("coordinates " + roi + " stored..")
                     break
 
                 else:
-                    print("Nothing to save..")
+                    alu.lineprint("Nothing to save..")
 
             if k == 27:
-                print("User escaped..")
+                alu.lineprint("User escaped..")
                 break
 
         cv2.destroyWindow('window')
@@ -389,7 +391,7 @@ class Recorder:
                 # average R, G, and B values
                 self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
-                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b))
+                print('R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)' % (rg, bg, r, g, b), end= " ")
 
                 # Adjust R and B relative to G, but only if they're significantly
                 # different (delta +/- 2)
@@ -409,7 +411,7 @@ class Recorder:
                 output.truncate()
 
         self.set_config(gains=self.cam.awb_gains)
-        print("Gains: " + gains + "stored..!")
+        alu.lineprint("Gains: " + gains + "stored..!")
 
 
     def imgparams(self, mintime = 0.45):
