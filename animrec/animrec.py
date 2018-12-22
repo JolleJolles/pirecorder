@@ -49,10 +49,7 @@ class Recorder:
         inside the home directory. If no name is provided (""), the files are
         stored in the home directory. If "NAS" is provided it will additionally
         check if the folder links to a mounted drive.
-    setupdir : str, default = "setup"
-        The directory where setup files are stored relative to home directory. Best
-        to keep this except for very rare instances.
-    Label : str, default = "test"
+    label : str, default = "test"
         Label for associating with the recording and stored in the filenames.
     rectype : ["img", "imgseq", "vid"], default = "img"
         Recording type, either a single image, a sequence of images, or a video.
@@ -64,6 +61,10 @@ class Recorder:
     brighttune : int, default = 0
         A rpi specific brightness compensation factor to standardize light levels
         across multiple rpi's, an integer between -10 and 10.
+    roi : tuple, default = None
+        Region of interest to be used for recording. Consists of coordinates of
+        topleft and bottom right coordinate of a rectangular area encompassing
+        the region of interest. Can be set with the set_roi() function.
     gains : tuple, default = (1.0, 2.5)
         Custom gains specific to the RPi to have a 'normal' colorspace.
 
@@ -169,13 +170,13 @@ class Recorder:
                 if section not in list(self.config):
                     self.config.add_section(section)
             self.set_config(recdir="recordings", label="test", rectype="vid",
+                            rotation=0, brighttune=0, roi=None, gains=(1.0, 2.5),
                             brightness=45, contrast=10, saturation=-100, iso=200,
                             sharpness=0, compensation=0, shutterspeed=8000,
-                            imgquality=50, vidquality = 11, gains=(1.0, 2.5),
-                            rotation=0, brighttune=0, imgdims=(3280, 2464),
-                            imgfps=1, imgwait=5.0, imgnr=100, imgtime=600,
-                            viddims=(1640, 1232), vidfps=24, vidduration=10,
-                            viddelay=10)
+                            imgdims=(3280, 2464), viddims=(1640, 1232), imgfps=1,
+                            vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
+                            imgquality=50, vidduration=10, viddelay=10,
+                            vidquality = 11)
         else:
             alu.lineprint("Config settings loaded. Recording "+\
                            self.config.rec.type+" @ "+self.config.rec.dir)
@@ -205,6 +206,15 @@ class Recorder:
         if "rectype" in kwargs:
             self.config.rec.type = kwargs["rectype"]
 
+        if "rotation" in kwargs:
+            self.config.cus.rotation = kwargs["rotation"]
+        if "brighttune" in kwargs:
+            self.config.cus.brighttune = kwargs["brighttune"]
+        if "roi" in kwargs:
+            self.config.cus.roi = kwargs["roi"]
+        if "gains" in kwargs:
+            self.config.cus.gains = kwargs["gains"]
+
         if "brightness" in kwargs:
             self.config.cam.brightness = kwargs["brightness"]
         if "contrast" in kwargs:
@@ -219,24 +229,15 @@ class Recorder:
             self.config.cam.compensation = kwargs["compensation"]
         if "shutterspeed" in kwargs:
             self.config.cam.shutterspeed = kwargs["shutterspeed"]
-        if "imgfps" in kwargs:
-            self.config.img.fps = kwargs["imgfps"]
-        if "vidfps" in kwargs:
-            self.config.vid.fps = kwargs["vidfps"]
-
-        if "rotation" in kwargs:
-            self.config.cus.rotation = kwargs["rotation"]
-        if "brighttune" in kwargs:
-            self.config.cus.brighttune = kwargs["brighttune"]
-        if "gains" in kwargs:
-            self.config.cus.gains = kwargs["gains"]
 
         if "imgdims" in kwargs:
             self.config.img.dims = kwargs["imgdims"]
         if "viddims" in kwargs:
             self.config.vid.dims = kwargs["viddims"]
-        if "imgquality" in kwargs:
-            self.config.img.quality = kwargs["imgquality"]
+        if "imgfps" in kwargs:
+            self.config.img.fps = kwargs["imgfps"]
+        if "vidfps" in kwargs:
+            self.config.vid.fps = kwargs["vidfps"]
 
         if "imgwait" in kwargs:
             self.config.img.wait = kwargs["imgwait"]
@@ -244,6 +245,8 @@ class Recorder:
             self.config.img.nr = kwargs["imgnr"]
         if "imgtime" in kwargs:
             self.config.img.time = kwargs["imgtime"]
+        if "imgquality" in kwargs:
+            self.config.img.quality = kwargs["imgquality"]
 
         if "vidduration" in kwargs:
             self.config.vid.duration = kwargs["vidduration"]
@@ -333,12 +336,10 @@ class Recorder:
                         pt = [self.refPt[0],self.refPt[0]]
                     pt1 = (min(pt[0][0], pt[1][0]), min(pt[0][1], pt[1][1]))
                     pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
-                    roi = str(((pt1,pt2)))
+                    roi = ((pt1,pt2))
 
-                    data = {"roi" : roi}
-                    with open(self.roifile, 'w') as f:
-                        yaml.safe_dump(data, f, default_flow_style=False)
-                    alu.lineprint("coordinates " + roi + " stored..")
+                    self.set_config(roi=roi)
+                    alu.lineprint("coordinates " + str(roi) + " ..")
                     break
 
                 else:
@@ -382,6 +383,7 @@ class Recorder:
         # on a question on stackoverflow.
 
         self.setup_cam()
+        rg, bg = self.cam.awb_gains
 
         with PiRGBArray(self.cam, size=(128, 72)) as output:
 
@@ -406,11 +408,10 @@ class Recorder:
                     else:
                         bg += 0.05
 
-                self.cam.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=self.cam.awb_gains)
+        self.set_config(gains=(rg,bg))
         alu.lineprint("Gains: " + gains + "stored..!")
 
 
