@@ -383,7 +383,7 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
-        #self.setup_cam(raw=True)
+        self.setup_cam(raw=True)
         rg, bg = self.cam.awb_gains
 
         with PiRGBArray(self.cam, size=(128, 72)) as output:
