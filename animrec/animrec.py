@@ -388,7 +388,7 @@ class Recorder:
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
         #self.setup_cam(simple=True)
-        rg, bg = self.config.cus.gains
+        rg, bg = literal_eval(self.config.cus.gains)
 
         camera.resolution = (1280, 720)
         camera.awb_mode = 'off'
