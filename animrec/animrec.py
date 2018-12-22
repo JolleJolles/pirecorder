@@ -296,7 +296,7 @@ class Recorder:
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
-        self.cam.awb_gains = checkfrac(self.config.cus.gains)
+        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
@@ -379,10 +379,6 @@ class Recorder:
         cv2.line(self.draw_frame,(x-5,y),(x+5,y),alu.namedcols("white"),1)
         cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
 
-    def checkfrac(input_string):
-        from fractions import Fraction
-        parsed_input = [item for item in ''.join((char if char in '0123456789./' else '-') for char in input_string).split('-') if item]
-        return (Fraction(i).limit_denominator(10) for i in parsed_input)
 
     def set_gains(self, attempts = 100):
 
@@ -424,7 +420,7 @@ class Recorder:
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=checkfrac(self.cam.awb_gains), internal="")
+        self.set_config(gains=alu.check_frac(self.cam.awb_gains), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
