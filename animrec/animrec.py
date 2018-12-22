@@ -351,7 +351,7 @@ class Recorder:
 
         res = self.cam.resolution
         self.frame = np.empty((res[1] * res[0] * 3,), dtype=np.uint8)
-        cam.capture(self.frame, 'bgr')
+        self.cam.capture(self.frame, 'bgr')
         self.frame = self.frame.reshape((res[1], res[0], 3))
 
 
