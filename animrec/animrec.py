@@ -411,11 +411,14 @@ class Recorder:
                         bg -= 0.05
                     else:
                         bg += 0.05
+                if rg < 0 or bg < 0 or rg > 8 or bg > 8:
+                    print('Cannot find optimal value, exiting..')
+                    break
 
-                gains = (round(rg,2),round(bg,2))
                 output.seek(0)
                 output.truncate()
 
+        gains = (round(rg,2),round(bg,2))
         self.set_config(gains=gains, internal="")
         alu.lineprint("Gains: " + str(gains) + " stored..")
         self.cam.close()
