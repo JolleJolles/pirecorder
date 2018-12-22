@@ -300,9 +300,7 @@ class Recorder:
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
-        if simple:
-            self.cam.saturation = 50
-        else:
+        if not simple:
             self.cam.contrast = self.config.cam.contrast
             self.cam.saturation = self.config.cam.saturation
             self.cam.iso = self.config.cam.iso
@@ -389,10 +387,14 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
-        self.setup_cam(simple=True)
+        #self.setup_cam(simple=True)
         rg, bg = self.cam.awb_gains
 
-        with PiRGBArray(self.cam, size=(128, 72)) as output:
+        camera.resolution = (1280, 720)
+        camera.awb_mode = 'off'
+        camera.awb_gains = (rg, bg)
+
+        with PiRGBArray(camera, size=(128, 72)) as output:
 
             for i in range(attempts):
 
