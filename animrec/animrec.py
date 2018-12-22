@@ -273,21 +273,23 @@ class Recorder:
                 alu.lineprint("Config settings stored and loaded..")
 
 
-    def setup_cam(self, raw = False):
+    def setup_cam(self, simple = False):
 
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if self.config.rec.type == "img":
-            self.cam.resolution = literal_eval(self.config.img.dims)
-            self.cam.framerate = self.config.img.fps
-        if self.config.rec.type == "vid":
-            self.cam.resolution = literal_eval(self.config.vid.dims)
-            self.cam.framerate = self.config.vid.fps
-
-        if raw:
+        if simple:
+            self.cam.resolution = (1280, 720)
+        else:
+            if self.config.rec.type == "img":
+                self.cam.resolution = literal_eval(self.config.img.dims)
+                self.cam.framerate = self.config.img.fps
+            if self.config.rec.type == "vid":
+                self.cam.resolution = literal_eval(self.config.vid.dims)
+                self.cam.framerate = self.config.vid.fps
             self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
+
 
         sleep(0.1)
 
@@ -297,10 +299,14 @@ class Recorder:
         self.cam.awb_gains = literal_eval(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
-        self.cam.contrast = self.config.cam.contrast
-        self.cam.saturation = self.config.cam.saturation
-        self.cam.iso = self.config.cam.iso
-        self.cam.sharpness = self.config.cam.sharpness
+
+        if simple:
+            self.cam.saturation = 50
+        else:
+            self.cam.contrast = self.config.cam.contrast
+            self.cam.saturation = self.config.cam.saturation
+            self.cam.iso = self.config.cam.iso
+            self.cam.sharpness = self.config.cam.sharpness
 
         alu.lineprint("Camera started..")
 
@@ -310,7 +316,7 @@ class Recorder:
         ''' Set the roi to be used for recording with the Raspberry-Pi camera'''
 
         self.rectangle = False
-        self.setup_cam(raw = True)
+        self.setup_cam()
         res = (int(self.cam.resolution[0]/4),int(self.cam.resolution[0]/4))
         self.cam.capture(self.rawCapture, format="bgr")
         self.frame = self.rawCapture.array
@@ -383,7 +389,7 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
-        self.setup_cam(raw=True)
+        self.setup_cam(simple=True)
         rg, bg = self.cam.awb_gains
 
         with PiRGBArray(self.cam, size=(128, 72)) as output:
