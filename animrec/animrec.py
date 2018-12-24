@@ -420,7 +420,7 @@ class Recorder:
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains=self.cam.awb_gains, internal="")
+        self.set_config(gains="(R:%5.2f, B:%5.2f)", internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
