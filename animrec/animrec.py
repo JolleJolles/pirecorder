@@ -380,7 +380,7 @@ class Recorder:
         cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
 
 
-    def set_gains(self, attempts = 100):
+    def set_gains(self, attempts = 100, step = 0.05):
 
         ''' Automatically find gains for Raspberry-Pi camera'''
 
@@ -404,23 +404,20 @@ class Recorder:
                 # different (delta +/- 2)
                 if abs(r - g) > 2:
                     if r > g:
-                        rg -= 0.05
+                        rg -= step
                     else:
-                        rg += 0.05
+                        rg += step
                 if abs(b - g) > 1:
                     if b > g:
-                        bg -= 0.05
+                        bg -= step
                     else:
-                        bg += 0.05
-                if rg < 0 or bg < 0 or rg > 8 or bg > 8:
-                    print("Cannot find optimal value, exiting..")
-                    break
+                        bg += step
 
                 self.cam.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
 
-        self.set_config(gains="(R:%5.2f, B:%5.2f)", internal="")
+        self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
