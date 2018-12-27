@@ -321,7 +321,6 @@ class Recorder:
         elif self.jobsclear == "all":
             self.cron.remove_all()
             alu.lineprint("All scheduled jobs removed..")
-            if self.jobsshow
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
