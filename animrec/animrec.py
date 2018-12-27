@@ -25,6 +25,8 @@ import yaml
 import crontab
 import getpass
 import picamera
+import picamera.array
+
 import numpy as np
 from time import sleep, strftime
 from datetime import datetime
@@ -318,18 +320,19 @@ class Recorder:
             pass
         elif self.jobsclear == "all":
             self.cron.remove_all()
-            alu.lineprint("All scheduled jobs removed..", False, True)
+            alu.lineprint("All scheduled jobs removed..")
+            if self.jobsshow
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                alu.lineprint(self.jobname+" job removed..", False, True)
+                alu.lineprint(self.jobname+" job removed..")
             else:
                 if(self.jobname == None):
-                    alu.lineprint("No jobname provided..", False, True)
+                    alu.lineprint("No jobname provided..")
                 else:
-                    alu.lineprint("No fitting job found to remove..", False, True)
+                    alu.lineprint("No fitting job found to remove..")
         else:
-            alu.lineprint("No correct clear command provided..", False, True)
+            alu.lineprint("No correct clear command provided..")
         self.cron.write()
 
 
@@ -338,7 +341,7 @@ class Recorder:
         """ Prints a table of all scheduled jobs """
 
         if len(self.cron)>0:
-            alu.lineprint("Current job schedule:", False, True)
+            alu.lineprint("Current job schedule:")
             for job in self.cron:
                 lenjob = max(8, len(job.comment))
                 lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
@@ -352,7 +355,7 @@ class Recorder:
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
                 print(jobname + plan + next)
         else:
-            alu.lineprint("Currently no jobs scheduled..", False, True)
+            alu.lineprint("Currently no jobs scheduled..")
 
 
     def _set_job(self):
@@ -368,7 +371,7 @@ class Recorder:
 
         #self.job.frequency_per_day()
         self.cron.write()
-        alu.lineprint(self.jobname+" job succesfully set..", False, True)
+        alu.lineprint(self.jobname+" job succesfully set..")
         self._enable_job()
 
 
@@ -378,10 +381,10 @@ class Recorder:
 
         if self.jobenable:
             self.job.enable(True)
-            alu.lineprint(self.jobname+" job enabled..", False, True)
+            alu.lineprint(self.jobname+" job enabled..")
         else:
             self.job.enable(False)
-            alu.lineprint(self.jobname+" job disabled..", False, True)
+            alu.lineprint(self.jobname+" job disabled..")
         self.cron.write()
 
 
@@ -651,8 +654,10 @@ class Recorder:
         self.jobsshow = showjobs
         self.jobsclear = clear
 
-        self.task = "python " + self.home + "test.py" + " >> " + self.logfolder
-        self.task = self.task + "/`date +\%y\%m\%d`_$HOSTNAME_"+str(self.jobname)+".log 2>&1"
+        taskc1 = "python -c 'import animrec; AR=animrec.Recorder(); AR.record()'"
+        taskc2 = " >> " + self.logfolder + "/"
+        taskc3 = "`date + \%y\%m\%d_$HOSTNAME`_" + self.jobname + ".log 2>&1"
+        self.task = taskc1 + taskc2 + taskc3
 
         self.jobfits = self._check_job()
         if self.jobsclear is not None:
@@ -660,7 +665,7 @@ class Recorder:
         else:
             if self.jobtimeplan is None:
                 if len(self.jobfits)==0:
-                    alu.lineprint("No time plan provided or fitting job found..", False, True)
+                    alu.lineprint("No time plan provided or fitting job found..")
                 else:
                     self.job = self.jobfits[0]
                     self._enable_job()
