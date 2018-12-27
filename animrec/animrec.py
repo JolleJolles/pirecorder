@@ -153,9 +153,9 @@ class Recorder:
         self.host = gethostname()
         self.home = alu.homedir()
         self.setupdir = self.home + "setup"
+        self.logfolder = self.setupdir+"/logs"
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
-            self.logfolder = self.setupdir+"/logs"
             os.makedirs(self.logfolder)
             alu.lineprint("Setup folder created (" + setupdir + ")")
 
