@@ -128,7 +128,6 @@ class Recorder:
         Use values between 10 and 40, where 10 is extremely high quality, and
         40 is extremely low.
 
-
     Output
     -------
     Either one or multiple .h264 or .jpg files depending on the filetype and
@@ -201,16 +200,55 @@ class Recorder:
         os.chdir(self.recdir)
 
 
+    def _setup_cam(self, simple = False):
+
+        """ Sets-up the raspberry pi camera based on configuration """
+
+        self.cam = picamera.PiCamera()
+        self.cam.rotation = self.config.cus.rotation
+        self.cam.exposure_compensation = self.config.cam.compensation
+
+        if simple:
+            self.cam.resolution = (1280, 720)
+        else:
+            if self.config.rec.type == "img":
+                self.cam.resolution = literal_eval(self.config.img.dims)
+                self.cam.framerate = self.config.img.fps
+            if self.config.rec.type == "vid":
+                self.cam.resolution = literal_eval(self.config.vid.dims)
+                self.cam.framerate = self.config.vid.fps
+            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
+
+        sleep(0.1)
+
+        self.cam.shutter_speed = self.config.cam.shutterspeed
+        self.cam.exposure_mode = 'off'
+        self.cam.awb_mode = 'off'
+        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
+        brightness = self.config.cam.brightness + self.config.cus.brighttune
+        self.cam.brightness = brightness
+
+        if not simple:
+            self.cam.contrast = self.config.cam.contrast
+            self.cam.saturation = self.config.cam.saturation
+            self.cam.iso = self.config.cam.iso
+            self.cam.sharpness = self.config.cam.sharpness
+
+        alu.lineprint("Camera started..")
+
+
     def _imgparams(self, mintime = 0.45):
 
-        """ Calculates minimum possible imgwait and imgnr based on imgtime.
-            The minimum time between subsequent images is by default set to
-            0.45s, the time it takes to take an image with max resolution.
+        """
+        Calculates minimum possible imgwait and imgnr based on imgtime. The
+        minimum time between subsequent images is by default set to 0.45s, the
+        time it takes to take an image with max resolution.
         """
 
         self.config.img.wait = max(mintime, self.config.img.wait)
         totimg = int(self.config.img.time / self.config.img.wait)
         self.config.img.nr = min(self.config.img.nr, totimg)
+
 
     def _shuttertofps(self, minfps = 1, maxfps = 40):
 
@@ -220,11 +258,13 @@ class Recorder:
         fps = max(fps, minfps)
         self.config.img.fps = min(fps, maxfps)
 
+
     def _namefile(self):
 
-        """ Provides a filename for the media recorded. Filenames include label,
-            date, rpi name, and time. Images part of image sequence additionally
-            contain a sequence number. e.g. test_180708_pi12_S01_100410
+        """
+        Provides a filename for the media recorded. Filenames include label,
+        date, rpi name, and time. Images part of image sequence additionally
+        contain a sequence number. e.g. test_180708_pi12_S01_100410
         """
 
         if self.config.rec.type == "imgseq":
@@ -237,7 +277,11 @@ class Recorder:
             date = strftime("%y%m%d")
             self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
 
+
     def _drawrect(self, event, x, y, flags, param):
+
+        """ Draws a rectangle on an opencv window """
+
         self.draw_frame = self.frame.copy()
         if event == cv2.EVENT_LBUTTONDOWN:
             self.rectangle = True
@@ -255,13 +299,21 @@ class Recorder:
                 if hasattr(self, 'refPt'):
                     cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
 
-        cv2.line(self.draw_frame,(x-5,y),(x+5,y),alu.namedcols("white"),1)
-        cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
+        cv2.line(self.draw_frame, (x-5,y), (x+5,y), alu.namedcols("white"), 1)
+        cv2.line(self.draw_frame, (x,y-5), (x,y+5), alu.namedcols("white"), 1)
+
 
     def _check_job(self):
+
+        """ Returns scheduled jobs with a certain name """
+
         return [job for job in self.cron if job.comment == self.jobname]
 
+
     def _clear_jobs(self):
+
+        """ Clears a specific or all jobs currently scheduled """
+
         if self.jobsclear == None:
             pass
         elif self.jobsclear == "all":
@@ -280,7 +332,11 @@ class Recorder:
             print("No correct clear command provided..")
         self.cron.write()
 
+
     def _show_jobs(self):
+
+        """ Prints a table of all scheduled jobs """
+
         if len(self.cron)>0:
             print("Current job schedule:")
             for job in self.cron:
@@ -300,7 +356,11 @@ class Recorder:
         else:
             print("Currently no jobs scheduled..")
 
+
     def _set_job(self):
+
+        """ Creates/modifies a specific job """
+
         if len(self.jobfits)>0:
             self.job = self.jobfits[0]
             self.job.command = self.task
@@ -313,7 +373,11 @@ class Recorder:
         print(self.jobname+" job succesfully set")
         self._enable_job()
 
+
     def _enable_job(self):
+
+        """ Enables/disables a specific job """
+
         if self.jobenable:
             self.job.enable(True)
             print(self.jobname+" job enabled..")
@@ -322,7 +386,10 @@ class Recorder:
             print(self.jobname+" job disabled..")
         self.cron.write()
 
-        def set_config(self, **kwargs):
+
+    def set_config(self, **kwargs):
+
+        """ Dynamically sets the configuration file """
 
         if "recdir" in kwargs:
             self.config.rec.dir = kwargs["recdir"]
@@ -396,44 +463,10 @@ class Recorder:
             if "internal" not in kwargs:
                 alu.lineprint("Config settings stored and loaded..")
 
-    def _setup_cam(self, simple = False):
-
-        self.cam = picamera.PiCamera()
-        self.cam.rotation = self.config.cus.rotation
-        self.cam.exposure_compensation = self.config.cam.compensation
-
-        if simple:
-            self.cam.resolution = (1280, 720)
-        else:
-            if self.config.rec.type == "img":
-                self.cam.resolution = literal_eval(self.config.img.dims)
-                self.cam.framerate = self.config.img.fps
-            if self.config.rec.type == "vid":
-                self.cam.resolution = literal_eval(self.config.vid.dims)
-                self.cam.framerate = self.config.vid.fps
-            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
-
-
-        sleep(0.1)
-
-        self.cam.shutter_speed = self.config.cam.shutterspeed
-        self.cam.exposure_mode = 'off'
-        self.cam.awb_mode = 'off'
-        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
-        brightness = self.config.cam.brightness + self.config.cus.brighttune
-        self.cam.brightness = brightness
-
-        if not simple:
-            self.cam.contrast = self.config.cam.contrast
-            self.cam.saturation = self.config.cam.saturation
-            self.cam.iso = self.config.cam.iso
-            self.cam.sharpness = self.config.cam.sharpness
-
-        alu.lineprint("Camera started..")
 
     def set_roi(self):
 
-        ''' Set the roi to be used for recording with the Raspberry-Pi camera'''
+        """ Sets the roi for recording with the Raspberry Pi camera"""
 
         self.rectangle = False
         self._setup_cam()
@@ -479,12 +512,13 @@ class Recorder:
         cv2.destroyWindow('window')
         cv2.waitKey(1)
 
+
     def set_gains(self, attempts = 100, step = 0.05):
 
-        ''' Automatically find gains for Raspberry-Pi camera'''
+        """ Automatically finds the best gains for the raspberry pi camera"""
 
-        # This function was written based on code provided by Dave Jones
-        # on a question on stackoverflow: https://bit.ly/2V49f48
+        # This function was written based on code provided by Dave Jones in a
+        # reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 
         self._setup_cam(simple=True)
         rg, bg = self.cam.awb_gains
@@ -520,9 +554,10 @@ class Recorder:
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
+
     def record(self):
 
-        """ Runs a Recorder instance """
+        """ Runs the Recorder instance """
 
         self._setup_cam()
         self._namefile()
@@ -567,7 +602,7 @@ class Recorder:
                  showjobs = True, clear = None):
 
         """
-        Schedule future recordings configured with a Recorder instance.
+        Schedules future recordings configured with a Recorder instance
 
         Parameters
         ----------
@@ -598,29 +633,29 @@ class Recorder:
             should be removed from the scheduler.
         """
 
-            alu.lineprint("Running scheduler..")
-            self.cron = crontab.CronTab(user = getpass.getuser())
+        alu.lineprint("Running scheduler..")
+        self.cron = crontab.CronTab(user = getpass.getuser())
 
-            self.jobname = jobname
-            self.jobtimeplan = timeplan
-            self.jobenable = enable
-            self.jobsshow = showjobs
-            self.jobsclear = clear
+        self.jobname = jobname
+        self.jobtimeplan = timeplan
+        self.jobenable = enable
+        self.jobsshow = showjobs
+        self.jobsclear = clear
 
-            self.task = "python "+self.home+"test.py"+" >> "+self.logfolder
-            self.task = self.task+"/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
+        self.task = "python " + self.home + "test.py" + " >> " + self.logfolder
+        self.task = self.task + "/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
 
-            self.jobfits = self._check_job()
-            if self.jobsclear is not None:
-                self._clear_jobs()
-            else:
-                if self.jobtimeplan is None:
-                    if len(self.jobfits)==0:
-                        print("No time plan provided or fitting job found..")
-                    else:
-                        self.job = self.jobfits[0]
-                        self._enable_job()
+        self.jobfits = self._check_job()
+        if self.jobsclear is not None:
+            self._clear_jobs()
+        else:
+            if self.jobtimeplan is None:
+                if len(self.jobfits)==0:
+                    print("No time plan provided or fitting job found..")
                 else:
-                    self._set_job()
-            if self.jobsshow:
-                self._show_jobs()
+                    self.job = self.jobfits[0]
+                    self._enable_job()
+            else:
+                self._set_job()
+        if self.jobsshow:
+            self._show_jobs()
