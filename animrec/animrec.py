@@ -318,18 +318,18 @@ class Recorder:
             pass
         elif self.jobsclear == "all":
             self.cron.remove_all()
-            print("All scheduled jobs removed..")
+            alu.lineprint("All scheduled jobs removed..", False, True)
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                print(self.jobname+" job removed..")
+                alu.lineprint(self.jobname+" job removed..", False, True)
             else:
                 if(self.jobname == None):
-                    print("No jobname provided..")
+                    alu.lineprint("No jobname provided..", False, True)
                 else:
-                    print("No fitting job found to remove..")
+                    alu.lineprint("No fitting job found to remove..", False, True)
         else:
-            print("No correct clear command provided..")
+            alu.lineprint("No correct clear command provided..", False, True)
         self.cron.write()
 
 
@@ -349,12 +349,10 @@ class Recorder:
                 jobname = job.comment+" "*(lenjob-len(job.comment))
                 plan = str(job)[:str(job).find("py")-1]
                 plan = plan + " "*(lenplan-(len(plan)-2))
-                if job.is_enabled():
-                    print(jobname + plan + str(sch.get_next()))
-                else:
-                    print(jobname+" disabled")
+                next = str(sch.get_next()) if job.is_enabled() else " disabled"
+                print(jobname + plan + next)
         else:
-            print("Currently no jobs scheduled..")
+            alu.lineprint("Currently no jobs scheduled..", False, True)
 
 
     def _set_job(self):
@@ -370,7 +368,7 @@ class Recorder:
 
         #self.job.frequency_per_day()
         self.cron.write()
-        print(self.jobname+" job succesfully set")
+        alu.lineprint(self.jobname+" job succesfully set", False, True)
         self._enable_job()
 
 
@@ -380,10 +378,10 @@ class Recorder:
 
         if self.jobenable:
             self.job.enable(True)
-            print(self.jobname+" job enabled..")
+            alu.lineprint(self.jobname+" job enabled..", False, True)
         else:
             self.job.enable(False)
-            print(self.jobname+" job disabled..")
+            alu.lineprint(self.jobname+" job disabled..", False, True)
         self.cron.write()
 
 
@@ -462,6 +460,17 @@ class Recorder:
 
             if "internal" not in kwargs:
                 alu.lineprint("Config settings stored and loaded..")
+
+
+    def show_config(self):
+
+        """ Shows the currently set configuration settings"""
+
+        for section in self.config:
+            print(section)
+            for key,value in self.config.items(section):
+                print(key,"=",value)
+            print("")
 
 
     def set_roi(self):
@@ -643,7 +652,7 @@ class Recorder:
         self.jobsclear = clear
 
         self.task = "python " + self.home + "test.py" + " >> " + self.logfolder
-        self.task = self.task + "/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
+        self.task = self.task + "/'date +\%y\%m\%d'_$HOSTNAME_"+str(self.jobname)+".log 2>&1"
 
         self.jobfits = self._check_job()
         if self.jobsclear is not None:
@@ -651,7 +660,7 @@ class Recorder:
         else:
             if self.jobtimeplan is None:
                 if len(self.jobfits)==0:
-                    print("No time plan provided or fitting job found..")
+                    alu.lineprint("No time plan provided or fitting job found..", False, True)
                 else:
                     self.job = self.jobfits[0]
                     self._enable_job()
