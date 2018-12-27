@@ -338,7 +338,7 @@ class Recorder:
         """ Prints a table of all scheduled jobs """
 
         if len(self.cron)>0:
-            print("Current job schedule:")
+            alu.lineprint("Current job schedule:", False, True)
             for job in self.cron:
                 lenjob = max(8, len(job.comment))
                 lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
@@ -368,7 +368,7 @@ class Recorder:
 
         #self.job.frequency_per_day()
         self.cron.write()
-        alu.lineprint(self.jobname+" job succesfully set", False, True)
+        alu.lineprint(self.jobname+" job succesfully set..", False, True)
         self._enable_job()
 
 
@@ -652,7 +652,7 @@ class Recorder:
         self.jobsclear = clear
 
         self.task = "python " + self.home + "test.py" + " >> " + self.logfolder
-        self.task = self.task + "/'date +\%y\%m\%d'_$HOSTNAME_"+str(self.jobname)+".log 2>&1"
+        self.task = self.task + "/`date +\%y\%m\%d`_$HOSTNAME_"+str(self.jobname)+".log 2>&1"
 
         self.jobfits = self._check_job()
         if self.jobsclear is not None:
