@@ -540,6 +540,8 @@ class Schedule(Recorder):
     def __init__(self, jobname = None, timeplan = None, enable = True,
                  showjobs = True, clear = None):
 
+        Recorder.__init__(self)
+
         alu.lineprint("Running scheduler..")
         self.cron = crontab.CronTab(user = getpass.getuser())
         print(self.home)
