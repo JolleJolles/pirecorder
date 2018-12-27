@@ -18,19 +18,20 @@
 from __future__ import print_function
 from builtins import input
 
-import picamera
-from  picamera.array import PiRGBArray
-import numpy as np
-from time import sleep, strftime
-from datetime import datetime
 import os
 import sys
 import cv2
+import yaml
+import getpass
+import picamera
+import numpy as np
+from crontab import CronTab
+from time import sleep, strftime
+from datetime import datetime
 from localconfig import LocalConfig
 from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
-import yaml
 
 from .__version__ import __version__
 import animlab.utils as alu
@@ -288,7 +289,7 @@ class Recorder:
             if self.config.rec.type == "vid":
                 self.cam.resolution = literal_eval(self.config.vid.dims)
                 self.cam.framerate = self.config.vid.fps
-            self.rawCapture = PiRGBArray(self.cam, size = self.cam.resolution)
+            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
 
         sleep(0.1)
@@ -390,7 +391,7 @@ class Recorder:
         self.setup_cam(simple=True)
         rg, bg = self.cam.awb_gains
 
-        with PiRGBArray(self.cam, size=(128, 72)) as output:
+        with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
 
             for i in range(attempts):
 
@@ -500,3 +501,141 @@ class Recorder:
                 alu.lineprint("Finished")
                 if input("\nn for new session, e to exit: ") == 'e':
                     break
+
+
+    class schedule:
+
+        """
+        Schedule future recordings configured with a Recorder instance.
+
+        Parameters
+        ----------
+        jobname : str, default = None
+            The name for the scheduled recorder task to create, modify or remove.
+        timeplan : string, default = None
+            The code string representing the time planning for the recorder to run
+            with current configuration set. Build on CRON, the time plan should
+            consist of the following parts:
+            * * * * *
+            - - - - -
+            | | | | |
+            | | | | +----- day of week (0 - 7) (Sunday = 0 or 7)
+            | | | +---------- month (1 - 12)
+            | | +--------------- day of month (1 - 31)
+            | +-------------------- hour (0 - 23)
+            +------------------------- min (0 - 59)
+            Each of the parts supports wildcards (*), ranges (2-5), and lists
+            (2,5,6,11). For example, if you want to schedule a recording at 22:00,
+            every workday of the week, enter the code '0 22 * * 1-5' If uncertain,
+            crontab.guru is a great website for checking your CRON code.
+        enable : bool, default = True
+            If the scheduled job should be enabled or not.
+        showjobs : bool, default = False
+            If the differently timed tasks should be shown or not.
+        clear : [None, "job", "all"], default = None
+            If a specific job ('job'), all jobs ('all') or no jobs (None)
+            should be removed from the scheduler.
+        """
+
+        def __init__(self, jobname = None, timeplan = None, enable = True,
+                     showjobs = True, clear = None):
+
+            alu.lineprint("Running scheduler..")
+            self.cron = crontab.CronTab(user = getpass.getuser())
+            self.home = alu.homedir()
+            self.setupdir = self.home+"setup"
+
+            self.logfolder = self.setupdir+"/reclogs"
+            if not os.path.exists(self.logfolder):
+                os.makedirs(self.logfolder)
+
+            self.jobname = jobname
+            self.jobtimeplan = timeplan
+            self.jobenable = enable
+            self.jobsshow = showjobs
+            self.jobsclear = clear
+
+            self.task = "python "+self.home+"test.py"+" >> "+self.logfolder
+            self.task = self.task+"/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
+
+            self.jobfits = self.check_job()
+            self.planner()
+
+        def planner(self):
+            if self.jobsclear is not None:
+                self.clear_jobs()
+            else:
+                if self.jobtimeplan is None:
+                    if len(self.jobfits)==0:
+                        print("No time plan provided or fitting job found..")
+                    else:
+                        self.job = self.jobfits[0]
+                        self.enable_job()
+                else:
+                    self.set_job()
+            if self.jobsshow:
+                self.show_jobs()
+
+        def check_job(self):
+            return [job for job in self.cron if job.comment == self.jobname]
+
+        def clear_jobs(self):
+            if self.jobsclear == None:
+                pass
+            elif self.jobsclear == "all":
+                self.cron.remove_all()
+                print("All scheduled jobs removed..")
+            elif self.jobsclear == "job":
+                if len(self.jobfits)>0:
+                    self.cron.remove(self.jobfits[0])
+                    print(self.jobname+" job removed..")
+                else:
+                    if(self.jobname == None):
+                        print("No jobname provided..")
+                    else:
+                        print("No fitting job found to remove..")
+            else:
+                print("No correct clear command provided..")
+            self.cron.write()
+
+        def show_jobs(self):
+            if len(self.cron)>0:
+                print("Current job schedule:")
+                for job in self.cron:
+                    lenjob = max(8, len(job.comment))
+                    lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
+                print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
+                print("="*40)
+                for job in self.cron:
+                    sch = job.schedule(date_from = datetime.now())
+                    jobname = job.comment+" "*(lenjob-len(job.comment))
+                    plan = str(job)[:str(job).find("py")-1]
+                    plan = plan + " "*(lenplan-(len(plan)-2))
+                    if job.is_enabled():
+                        print(jobname + plan + str(sch.get_next()))
+                    else:
+                        print(jobname+" disabled")
+            else:
+                print("Currently no jobs scheduled..")
+
+        def set_job(self):
+            if len(self.jobfits)>0:
+                self.job = self.jobfits[0]
+                self.job.command = self.task
+            else:
+                self.job = self.cron.new(command = self.task, comment = self.jobname)
+            self.job.setall(self.jobtimeplan)
+
+            #self.job.frequency_per_day()
+            self.cron.write()
+            print(self.jobname+" job succesfully set")
+            self.enable_job()
+
+        def enable_job(self):
+            if self.jobenable:
+                self.job.enable(True)
+                print(self.jobname+" job enabled..")
+            else:
+                self.job.enable(False)
+                print(self.jobname+" job disabled..")
+            self.cron.write()
