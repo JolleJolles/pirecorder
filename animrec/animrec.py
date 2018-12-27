@@ -655,7 +655,7 @@ class Recorder:
 
         taskc1 = "python -c 'import animrec; AR=animrec.Recorder(); AR.record()'"
         taskc2 = " >> " + self.logfolder + "/"
-        taskc3 = "`date + \%y\%m\%d_$HOSTNAME`_" + self.jobname + ".log 2>&1"
+        taskc3 = "`date + \%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
         self.task = taskc1 + taskc2 + taskc3
 
         self.jobfits = self._check_job()
