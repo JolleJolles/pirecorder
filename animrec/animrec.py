@@ -22,10 +22,10 @@ import os
 import sys
 import cv2
 import yaml
+import crontab
 import getpass
 import picamera
 import numpy as np
-from crontab import CronTab
 from time import sleep, strftime
 from datetime import datetime
 from localconfig import LocalConfig
@@ -180,8 +180,8 @@ class Recorder:
                             vidquality = 11,internal="")
             alu.lineprint("Config settings stored")
         else:
-            alu.lineprint("Config settings loaded. Recording "+\
-                           self.config.rec.type+" @ "+self.config.rec.dir)
+            alu.lineprint("Config settings loaded. Rec type: "+\
+                           self.config.rec.type+"; location: "+self.config.rec.dir)
 
         self.imgparams()
         self.shuttertofps()
