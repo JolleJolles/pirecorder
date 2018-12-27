@@ -503,7 +503,7 @@ class Recorder:
                     break
 
 
-    class schedule:
+    class Schedule:
 
         """
         Schedule future recordings configured with a Recorder instance.
@@ -542,6 +542,8 @@ class Recorder:
 
             alu.lineprint("Running scheduler..")
             self.cron = crontab.CronTab(user = getpass.getuser())
+            print(self.home)
+            print(self.setupdir)
             self.home = alu.homedir()
             self.setupdir = self.home+"setup"
 
