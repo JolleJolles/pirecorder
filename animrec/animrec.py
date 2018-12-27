@@ -503,7 +503,7 @@ class Recorder:
                     break
 
 
-    class Schedule:
+    class Schedule(Recorder):
 
         """
         Schedule future recordings configured with a Recorder instance.
