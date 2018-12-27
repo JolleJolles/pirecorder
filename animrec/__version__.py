@@ -18,4 +18,4 @@
 __version__ = "1.0.0"
 
 ## 17/12/18 - version 1.0.0:
-# - AnimRec public on Github
+# - AnimRec publicly available on Github!
