@@ -156,9 +156,11 @@ class Recorder:
         self.setupdir = self.home + "setup"
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
+            self.logfolder = self.setupdir+"/logs"
+            os.makedirs(self.logfolder)
             alu.lineprint("Setup folder created (" + setupdir + ")")
 
-        sys.stdout = alu.Logger(self.setupdir+"/animrec.log")
+        sys.stdout = alu.Logger(self.logfolder+"/animrec.log")
 
         self.brightfile = self.setupdir + "/cusbright.yml"
         self.roifile = self.setupdir + "/cusroi.yml"
@@ -183,8 +185,8 @@ class Recorder:
             alu.lineprint("Config settings loaded. Type: "+self.config.rec.type+\
                           "; location: "+self.home+self.config.rec.dir)
 
-        self.imgparams()
-        self.shuttertofps()
+        self._imgparams()
+        self._shuttertofps()
 
         if self.config.rec.dir == "NAS":
             if not os.path.ismount(self.config.rec.dir):
@@ -199,7 +201,128 @@ class Recorder:
         os.chdir(self.recdir)
 
 
-    def set_config(self, **kwargs):
+    def _imgparams(self, mintime = 0.45):
+
+        """ Calculates minimum possible imgwait and imgnr based on imgtime.
+            The minimum time between subsequent images is by default set to
+            0.45s, the time it takes to take an image with max resolution.
+        """
+
+        self.config.img.wait = max(mintime, self.config.img.wait)
+        totimg = int(self.config.img.time / self.config.img.wait)
+        self.config.img.nr = min(self.config.img.nr, totimg)
+
+    def _shuttertofps(self, minfps = 1, maxfps = 40):
+
+        """ Computes image fps based on shutterspeed within provided range """
+
+        fps = int(1./(self.config.cam.shutterspeed/1000000.))
+        fps = max(fps, minfps)
+        self.config.img.fps = min(fps, maxfps)
+
+    def _namefile(self):
+
+        """ Provides a filename for the media recorded. Filenames include label,
+            date, rpi name, and time. Images part of image sequence additionally
+            contain a sequence number. e.g. test_180708_pi12_S01_100410
+        """
+
+        if self.config.rec.type == "imgseq":
+            date = "{timestamp:%y%m%d}"
+            counter = "im{counter:05d}" if self.config.img.nr>999 else "im{counter:03d}"
+            time = "{timestamp:%H%M%S}"
+            self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
+            self.filename = self.filename+self.filetype
+        else:
+            date = strftime("%y%m%d")
+            self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
+
+    def _drawrect(self, event, x, y, flags, param):
+        self.draw_frame = self.frame.copy()
+        if event == cv2.EVENT_LBUTTONDOWN:
+            self.rectangle = True
+            self.refPt = [(x,y)]
+
+        elif event == cv2.EVENT_LBUTTONUP:
+            self.rectangle = False
+            self.refPt.append((x, y))
+            cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
+
+        elif event == cv2.EVENT_MOUSEMOVE:
+            if self.rectangle:
+                cv2.rectangle(self.draw_frame,self.refPt[0],(x,y),(0,0,255),2)
+            else:
+                if hasattr(self, 'refPt'):
+                    cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
+
+        cv2.line(self.draw_frame,(x-5,y),(x+5,y),alu.namedcols("white"),1)
+        cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
+
+    def _check_job(self):
+        return [job for job in self.cron if job.comment == self.jobname]
+
+    def _clear_jobs(self):
+        if self.jobsclear == None:
+            pass
+        elif self.jobsclear == "all":
+            self.cron.remove_all()
+            print("All scheduled jobs removed..")
+        elif self.jobsclear == "job":
+            if len(self.jobfits)>0:
+                self.cron.remove(self.jobfits[0])
+                print(self.jobname+" job removed..")
+            else:
+                if(self.jobname == None):
+                    print("No jobname provided..")
+                else:
+                    print("No fitting job found to remove..")
+        else:
+            print("No correct clear command provided..")
+        self.cron.write()
+
+    def _show_jobs(self):
+        if len(self.cron)>0:
+            print("Current job schedule:")
+            for job in self.cron:
+                lenjob = max(8, len(job.comment))
+                lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
+            print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
+            print("="*40)
+            for job in self.cron:
+                sch = job.schedule(date_from = datetime.now())
+                jobname = job.comment+" "*(lenjob-len(job.comment))
+                plan = str(job)[:str(job).find("py")-1]
+                plan = plan + " "*(lenplan-(len(plan)-2))
+                if job.is_enabled():
+                    print(jobname + plan + str(sch.get_next()))
+                else:
+                    print(jobname+" disabled")
+        else:
+            print("Currently no jobs scheduled..")
+
+    def _set_job(self):
+        if len(self.jobfits)>0:
+            self.job = self.jobfits[0]
+            self.job.command = self.task
+        else:
+            self.job = self.cron.new(command = self.task, comment = self.jobname)
+        self.job.setall(self.jobtimeplan)
+
+        #self.job.frequency_per_day()
+        self.cron.write()
+        print(self.jobname+" job succesfully set")
+        self._enable_job()
+
+    def _enable_job(self):
+        if self.jobenable:
+            self.job.enable(True)
+            print(self.jobname+" job enabled..")
+        else:
+            self.job.enable(False)
+            print(self.jobname+" job disabled..")
+        self.cron.write()
+
+        def set_config(self, **kwargs):
 
         if "recdir" in kwargs:
             self.config.rec.dir = kwargs["recdir"]
@@ -266,15 +389,14 @@ class Recorder:
 
         if len(kwargs) > 0 or brightchange:
 
-            self.imgparams()
-            self.shuttertofps()
+            self._imgparams()
+            self._shuttertofps()
             self.config.save()
 
             if "internal" not in kwargs:
                 alu.lineprint("Config settings stored and loaded..")
 
-
-    def setup_cam(self, simple = False):
+    def _setup_cam(self, simple = False):
 
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
@@ -309,20 +431,19 @@ class Recorder:
 
         alu.lineprint("Camera started..")
 
-
     def set_roi(self):
 
         ''' Set the roi to be used for recording with the Raspberry-Pi camera'''
 
         self.rectangle = False
-        self.setup_cam()
+        self._setup_cam()
         res = (int(self.cam.resolution[0]/4),int(self.cam.resolution[0]/4))
         self.cam.capture(self.rawCapture, format="bgr")
         self.frame = self.rawCapture.array
         self.draw_frame = self.frame.copy()
 
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
-        cv2.setMouseCallback('window', self.drawrect)
+        cv2.setMouseCallback('window', self._drawrect)
 
         alu.lineprint("Select roi..")
 
@@ -358,29 +479,6 @@ class Recorder:
         cv2.destroyWindow('window')
         cv2.waitKey(1)
 
-
-    def drawrect(self, event, x, y, flags, param):
-        self.draw_frame = self.frame.copy()
-        if event == cv2.EVENT_LBUTTONDOWN:
-            self.rectangle = True
-            self.refPt = [(x,y)]
-
-        elif event == cv2.EVENT_LBUTTONUP:
-            self.rectangle = False
-            self.refPt.append((x, y))
-            cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
-
-        elif event == cv2.EVENT_MOUSEMOVE:
-            if self.rectangle:
-                cv2.rectangle(self.draw_frame,self.refPt[0],(x,y),(0,0,255),2)
-            else:
-                if hasattr(self, 'refPt'):
-                    cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
-
-        cv2.line(self.draw_frame,(x-5,y),(x+5,y),alu.namedcols("white"),1)
-        cv2.line(self.draw_frame,(x,y-5),(x,y+5),alu.namedcols("white"),1)
-
-
     def set_gains(self, attempts = 100, step = 0.05):
 
         ''' Automatically find gains for Raspberry-Pi camera'''
@@ -388,7 +486,7 @@ class Recorder:
         # This function was written based on code provided by Dave Jones
         # on a question on stackoverflow: https://bit.ly/2V49f48
 
-        self.setup_cam(simple=True)
+        self._setup_cam(simple=True)
         rg, bg = self.cam.awb_gains
 
         with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
@@ -422,50 +520,12 @@ class Recorder:
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
         self.cam.close()
 
-
-    def imgparams(self, mintime = 0.45):
-
-        """ Calculates minimum possible imgwait and imgnr based on imgtime.
-            The minimum time between subsequent images is by default set to
-            0.45s, the time it takes to take an image with max resolution.
-        """
-
-        self.config.img.wait = max(mintime, self.config.img.wait)
-        totimg = int(self.config.img.time / self.config.img.wait)
-        self.config.img.nr = min(self.config.img.nr, totimg)
-
-
-    def shuttertofps(self, minfps = 1, maxfps = 40):
-
-        """ Computes image fps based on shutterspeed within provided range """
-
-        fps = int(1./(self.config.cam.shutterspeed/1000000.))
-        fps = max(fps, minfps)
-        self.config.img.fps = min(fps, maxfps)
-
-
-    def namefile(self):
-
-        """ Provides a filename for the media recorded. Filenames include label,
-            date, rpi name, and time. Images part of image sequence additionally
-            contain a sequence number. e.g. test_180708_pi12_S01_100410
-        """
-
-        if self.config.rec.type == "imgseq":
-            date = "{timestamp:%y%m%d}"
-            counter = "im{counter:05d}" if self.config.img.nr>999 else "im{counter:03d}"
-            time = "{timestamp:%H%M%S}"
-            self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
-            self.filename = self.filename+self.filetype
-        else:
-            date = strftime("%y%m%d")
-            self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
-
-
     def record(self):
 
-        self.setup_cam()
-        self.namefile()
+        """ Runs a Recorder instance """
+
+        self._setup_cam()
+        self._namefile()
 
         if self.config.rec.type == "img":
 
@@ -503,143 +563,64 @@ class Recorder:
                     break
 
 
-class Schedule(Recorder):
-
-    """
-    Schedule future recordings configured with a Recorder instance.
-
-    Parameters
-    ----------
-    jobname : str, default = None
-        The name for the scheduled recorder task to create, modify or remove.
-    timeplan : string, default = None
-        The code string representing the time planning for the recorder to run
-        with current configuration set. Build on CRON, the time plan should
-        consist of the following parts:
-        * * * * *
-        - - - - -
-        | | | | |
-        | | | | +----- day of week (0 - 7) (Sunday = 0 or 7)
-        | | | +---------- month (1 - 12)
-        | | +--------------- day of month (1 - 31)
-        | +-------------------- hour (0 - 23)
-        +------------------------- min (0 - 59)
-        Each of the parts supports wildcards (*), ranges (2-5), and lists
-        (2,5,6,11). For example, if you want to schedule a recording at 22:00,
-        every workday of the week, enter the code '0 22 * * 1-5' If uncertain,
-        crontab.guru is a great website for checking your CRON code.
-    enable : bool, default = True
-        If the scheduled job should be enabled or not.
-    showjobs : bool, default = False
-        If the differently timed tasks should be shown or not.
-    clear : [None, "job", "all"], default = None
-        If a specific job ('job'), all jobs ('all') or no jobs (None)
-        should be removed from the scheduler.
-    """
-
-    def __init__(self, jobname = None, timeplan = None, enable = True,
+    def schedule(self, jobname = None, timeplan = None, enable = True,
                  showjobs = True, clear = None):
 
-        Recorder.__init__(self)
+        """
+        Schedule future recordings configured with a Recorder instance.
 
-        alu.lineprint("Running scheduler..")
-        self.cron = crontab.CronTab(user = getpass.getuser())
-        print(self.home)
-        print(self.setupdir)
-        self.home = alu.homedir()
-        self.setupdir = self.home+"setup"
+        Parameters
+        ----------
+        jobname : str, default = None
+            The name for the scheduled recorder task to create, modify or remove.
+        timeplan : string, default = None
+            The code string representing the time planning for the recorder to run
+            with current configuration set. Build on CRON, the time plan should
+            consist of the following parts:
+            * * * * *
+            - - - - -
+            | | | | |
+            | | | | +----- day of week (0 - 7) (Sunday = 0 or 7)
+            | | | +---------- month (1 - 12)
+            | | +--------------- day of month (1 - 31)
+            | +-------------------- hour (0 - 23)
+            +------------------------- min (0 - 59)
+            Each of the parts supports wildcards (*), ranges (2-5), and lists
+            (2,5,6,11). For example, if you want to schedule a recording at 22:00,
+            every workday of the week, enter the code '0 22 * * 1-5' If uncertain,
+            crontab.guru is a great website for checking your CRON code.
+        enable : bool, default = True
+            If the scheduled job should be enabled or not.
+        showjobs : bool, default = False
+            If the differently timed tasks should be shown or not.
+        clear : [None, "job", "all"], default = None
+            If a specific job ('job'), all jobs ('all') or no jobs (None)
+            should be removed from the scheduler.
+        """
 
-        self.logfolder = self.setupdir+"/reclogs"
-        if not os.path.exists(self.logfolder):
-            os.makedirs(self.logfolder)
+            alu.lineprint("Running scheduler..")
+            self.cron = crontab.CronTab(user = getpass.getuser())
 
-        self.jobname = jobname
-        self.jobtimeplan = timeplan
-        self.jobenable = enable
-        self.jobsshow = showjobs
-        self.jobsclear = clear
+            self.jobname = jobname
+            self.jobtimeplan = timeplan
+            self.jobenable = enable
+            self.jobsshow = showjobs
+            self.jobsclear = clear
 
-        self.task = "python "+self.home+"test.py"+" >> "+self.logfolder
-        self.task = self.task+"/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
+            self.task = "python "+self.home+"test.py"+" >> "+self.logfolder
+            self.task = self.task+"/ `date +\%y\%m\%d`_$HOSTNAME.log 2>&1"
 
-        self.jobfits = self.check_job()
-        self.planner()
-
-    def planner(self):
-        if self.jobsclear is not None:
-            self.clear_jobs()
-        else:
-            if self.jobtimeplan is None:
-                if len(self.jobfits)==0:
-                    print("No time plan provided or fitting job found..")
-                else:
-                    self.job = self.jobfits[0]
-                    self.enable_job()
+            self.jobfits = self._check_job()
+            if self.jobsclear is not None:
+                self._clear_jobs()
             else:
-                self.set_job()
-        if self.jobsshow:
-            self.show_jobs()
-
-    def check_job(self):
-        return [job for job in self.cron if job.comment == self.jobname]
-
-    def clear_jobs(self):
-        if self.jobsclear == None:
-            pass
-        elif self.jobsclear == "all":
-            self.cron.remove_all()
-            print("All scheduled jobs removed..")
-        elif self.jobsclear == "job":
-            if len(self.jobfits)>0:
-                self.cron.remove(self.jobfits[0])
-                print(self.jobname+" job removed..")
-            else:
-                if(self.jobname == None):
-                    print("No jobname provided..")
+                if self.jobtimeplan is None:
+                    if len(self.jobfits)==0:
+                        print("No time plan provided or fitting job found..")
+                    else:
+                        self.job = self.jobfits[0]
+                        self._enable_job()
                 else:
-                    print("No fitting job found to remove..")
-        else:
-            print("No correct clear command provided..")
-        self.cron.write()
-
-    def show_jobs(self):
-        if len(self.cron)>0:
-            print("Current job schedule:")
-            for job in self.cron:
-                lenjob = max(8, len(job.comment))
-                lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
-            print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
-            print("="*40)
-            for job in self.cron:
-                sch = job.schedule(date_from = datetime.now())
-                jobname = job.comment+" "*(lenjob-len(job.comment))
-                plan = str(job)[:str(job).find("py")-1]
-                plan = plan + " "*(lenplan-(len(plan)-2))
-                if job.is_enabled():
-                    print(jobname + plan + str(sch.get_next()))
-                else:
-                    print(jobname+" disabled")
-        else:
-            print("Currently no jobs scheduled..")
-
-    def set_job(self):
-        if len(self.jobfits)>0:
-            self.job = self.jobfits[0]
-            self.job.command = self.task
-        else:
-            self.job = self.cron.new(command = self.task, comment = self.jobname)
-        self.job.setall(self.jobtimeplan)
-
-        #self.job.frequency_per_day()
-        self.cron.write()
-        print(self.jobname+" job succesfully set")
-        self.enable_job()
-
-    def enable_job(self):
-        if self.jobenable:
-            self.job.enable(True)
-            print(self.jobname+" job enabled..")
-        else:
-            self.job.enable(False)
-            print(self.jobname+" job disabled..")
-        self.cron.write()
+                    self._set_job()
+            if self.jobsshow:
+                self._show_jobs()
