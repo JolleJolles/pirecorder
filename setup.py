@@ -36,6 +36,10 @@ def check_dependencies():
     except ImportError:
         install_requires.append('pathos')
     try:
+        import crontab
+    except ImportError:
+        install_requires.append('crontab')
+    try:
         import socket
     except ImportError:
         install_requires.append('socket')
