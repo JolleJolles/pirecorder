@@ -482,17 +482,6 @@ class Recorder:
                 alu.lineprint("Config settings stored and loaded..")
 
 
-    def show_config(self):
-
-        """ Shows the currently set configuration settings"""
-
-        for section in self.config:
-            print(section)
-            for key,value in self.config.items(section):
-                print(key,"=",value)
-            print("")
-
-
     def set_roi(self):
 
         """ Sets the roi for recording with the Raspberry Pi camera"""
