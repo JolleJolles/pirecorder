@@ -18,6 +18,8 @@
 from __future__ import print_function
 from builtins import input
 
+from .__version__ import __version__
+
 import os
 import sys
 import cv2

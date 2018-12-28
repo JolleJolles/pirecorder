@@ -17,4 +17,3 @@
 
 from .__version__ import __version__
 from .animrec import *
-from .test import poep
