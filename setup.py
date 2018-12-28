@@ -39,7 +39,15 @@ def check_dependencies():
     try:
         import crontab
     except ImportError:
-        install_requires.append('crontab')
+        install_requires.append('python-crontab')
+    try:
+        import croniter
+    except ImportError:
+        install_requires.append('croniter')
+    try:
+        import cron-descriptor
+    except Importerror:
+        install_requires.append('cron-descriptor')
     try:
         import socket
     except ImportError:

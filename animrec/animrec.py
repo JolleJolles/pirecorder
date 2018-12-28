@@ -19,6 +19,7 @@ from __future__ import print_function
 from builtins import input
 
 from .__version__ import __version__
+import animlab.utils as alu
 
 import os
 import sys
@@ -30,14 +31,13 @@ import picamera
 import picamera.array
 
 import numpy as np
-from time import sleep, strftime
-from datetime import datetime
-from localconfig import LocalConfig
-from socket import gethostname
 from ast import literal_eval
+from datetime import datetime
+from socket import gethostname
 from fractions import Fraction
-
-import animlab.utils as alu
+from time import sleep, strftime
+from localconfig import LocalConfig
+from cron-descriptor import get_description
 
 
 class Recorder:
@@ -150,7 +150,8 @@ class Recorder:
     def __init__(self, configfile = "animrec.conf"):
 
         alu.lineprint("==========================================", False)
-        alu.lineprint(strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started"), False)
+        txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
+        alu.lineprint(txt, False)
         alu.lineprint("==========================================", False)
 
         self.host = gethostname()
@@ -167,6 +168,7 @@ class Recorder:
         self.brightfile = self.setupdir + "/cusbright.yml"
         self.roifile = self.setupdir + "/cusroi.yml"
         self.configfile = self.setupdir + "/"+configfile
+        self.scheduled = False
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
@@ -184,8 +186,9 @@ class Recorder:
                             vidquality = 11,internal="")
             alu.lineprint("Config settings stored")
         else:
-            alu.lineprint("Config settings loaded. Type: "+self.config.rec.type+\
-                          "; location: "+self.home+self.config.rec.dir)
+            alu.lineprint("Config settings loaded.. Recording " +\
+                          self.config.rec.type + "in " + self.home +\
+                          self.config.rec.dir)
 
         self._imgparams()
         self._shuttertofps()
@@ -313,6 +316,21 @@ class Recorder:
         return [job for job in self.cron if job.comment == self.jobname]
 
 
+    def _checktimeplan():
+
+        """ Checks timeplan and prints description"""
+
+        if self.jobtimeplan is None:
+            alu.lineprint("No timeplan provided..")
+        else:
+            valid = crontab.CronSlices.is_valid(self.jobtimeplan)
+            if valid:
+                timedesc = get_description(self.jobtimeplan)
+                print("Your timeplan will run:" + timedesc)
+            else:
+                alu.lineprint("Timeplan is not valid..")
+
+
     def _clear_jobs(self):
 
         """ Clears a specific or all jobs currently scheduled """
@@ -369,7 +387,6 @@ class Recorder:
             self.job = self.cron.new(command = self.task, comment = self.jobname)
         self.job.setall(self.jobtimeplan)
 
-        #self.job.frequency_per_day()
         self.cron.write()
         alu.lineprint(self.jobname+" job succesfully set..")
         self._enable_job()
@@ -539,14 +556,10 @@ class Recorder:
 
             for i in range(attempts):
 
-                # Capture a tiny resized image in RGB format, and extract the
-                # average R, G, and B values
                 self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
-                # Adjust R and B relative to G, but only if they're significantly
-                # different (delta +/- 2)
                 if abs(r - g) > 2:
                     if r > g:
                         rg -= step
@@ -567,7 +580,7 @@ class Recorder:
         self.cam.close()
 
 
-    def record(self):
+    def record(self, scheduled = False):
 
         """ Runs the Recorder instance """
 
@@ -581,7 +594,7 @@ class Recorder:
             alu.lineprint("Captured "+self.filename)
             self.cam.close()
 
-        if self.config.rec.type == "imgseq":
+        elif self.config.rec.type == "imgseq":
 
             timepoint = datetime.now()
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
@@ -597,45 +610,57 @@ class Recorder:
                     break
             self.cam.close()
 
-        if self.config.rec.type == "vid":
+        elif self.config.rec.type == "vid":
 
             for session in ["_S%02d" % i for i in range(1,999)]:
+                session = "" if scheduled else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
                 alu.lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
                 alu.lineprint("Finished")
-                if input("\nn for new session, e to exit: ") == 'e':
+                if scheduled:
                     break
+                else:
+                    if input("\nn for new session, e to exit: ") == 'e':
+                        break
 
 
     def schedule(self, jobname = None, timeplan = None, enable = True,
-                 showjobs = True, clear = None):
+                 showjobs = True, clear = None, test = False):
 
         """
-        Schedules future recordings configured with a Recorder instance
+        Schedules future recordings configured with a Recorder instance.
+
+        !Important: Make sure Recorder configuration timing settings are within
+        the timespan between subsequent scheduled recordings based on the
+        provided timeplan. For example, a vid duration of 20 min and a scheduled
+        recording every 15 min between 13:00-16:00 (*/15 13-16 * * *) will fail.
 
         Parameters
         ----------
         jobname : str, default = None
-            The name for the scheduled recorder task to create, modify or remove.
+            Name for the scheduled recorder task to create, modify or remove.
         timeplan : string, default = None
-            The code string representing the time planning for the recorder to run
+            Code string representing the time planning for the recorder to run
             with current configuration set. Build on CRON, the time plan should
             consist of the following parts:
             * * * * *
             - - - - -
             | | | | |
-            | | | | +----- day of week (0 - 7) (Sunday = 0 or 7)
+            | | | | +----- day of week (0 - 7) (sunday = 0 or 7)
             | | | +---------- month (1 - 12)
             | | +--------------- day of month (1 - 31)
             | +-------------------- hour (0 - 23)
             +------------------------- min (0 - 59)
             Each of the parts supports wildcards (*), ranges (2-5), and lists
-            (2,5,6,11). For example, if you want to schedule a recording at 22:00,
-            every workday of the week, enter the code '0 22 * * 1-5' If uncertain,
-            crontab.guru is a great website for checking your CRON code.
+            (2,5,6,11). For example, if you want to schedule a recording at
+            22:00, every workday of the week, enter the code '0 22 * * 1-5' If
+            uncertain, crontab.guru is a great website for checking your CRON
+            code. Note that the minimum time between subsequent scheduled
+            recordings is 1 minute. Smaller intervals between recordings is
+            possible for images with the imgseq command with the Record method.
         enable : bool, default = True
             If the scheduled job should be enabled or not.
         showjobs : bool, default = False
@@ -643,9 +668,12 @@ class Recorder:
         clear : [None, "job", "all"], default = None
             If a specific job ('job'), all jobs ('all') or no jobs (None)
             should be removed from the scheduler.
+        test : bool; default = False
+            Determine if the timeplan is valid and how often it will run the
+            record command.
         """
 
-        alu.lineprint("Running scheduler..")
+        alu.lineprint("Running scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         self.jobname = jobname
@@ -654,13 +682,16 @@ class Recorder:
         self.jobsshow = showjobs
         self.jobsclear = clear
 
-        taskc1 = "python -c 'import sys;print(sys.version[0:6]);import animrec; print(animrec.__version__); AR=animrec.Recorder(); AR.record()'"
-        taskc2 = " >> " + self.logfolder + "/"
-        taskc3 = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
-        self.task = taskc1 + taskc2 + taskc3
+        pythexec = "/usr/local/bin/python -c "
+        pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
+        logloc = " >> " + self.logfolder + "/"
+        logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
+        self.task = pythexec + pythcomm + logloc + logcom
 
         self.jobfits = self._check_job()
-        if self.jobsclear is not None:
+        if test:
+            self._checktimeplan()
+        elif self.jobsclear is not None:
             self._clear_jobs()
         else:
             if self.jobtimeplan is None:
@@ -670,6 +701,8 @@ class Recorder:
                     self.job = self.jobfits[0]
                     self._enable_job()
             else:
+                alu.lineprint("Make sure recording duration configuration is "+\
+                              "less than interval between scheduled recordings")
                 self._set_job()
         if self.jobsshow:
             self._show_jobs()
