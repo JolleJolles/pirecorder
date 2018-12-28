@@ -15,18 +15,16 @@ When AnimRec is already installed, update to the latest version:
 pip install --update git+https://github.com/jolleslab/animrec.git
 ```
 
-Now to run animrec, simply open python and run ```import animrec```.
-
 Dependencies
 ------------
 *AnimRec* is written in [Python](http://www.python.org) and builds on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances.
 
-An important part of *AnimRec* are a number of helper modules ([see below](#othmod)) that facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). It is not trivial to install OpenCV, but there is a great guide for installing opencv 4.0 on the [pyimagesearch website](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) and you can find a guide for installing opencv on mac [here](https://git.io/fpyvq). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
+An important part of *AnimRec* are a number of helper modules ([see below](#othmethods)) that facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). It is not trivial to install OpenCV, but there is a great guide for installing opencv 4.0 on the [pyimagesearch website](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) and you can find a guide for installing opencv on mac [here](https://git.io/fpyvq). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
 
 
 Overview
 ------------
-*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind that may have (very) limited knowledge of coding. 
+*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind that may have (very) limited knowledge of coding.
 
 **When *AnimRec* is run, automatically a directory called `setup` will be created in the home directory. Do not remove this directory as it will hold all the important setup files for your Raspberry Pi setup.**
 
@@ -47,32 +45,33 @@ AnimRec has three recording modes (with the addition of the imgtask function, [e
 3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each reording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps:` the framerate of the video; `vidduration`: the duration of the video; and `viddelay`: extra recording time in seconds that will be added to vidduration, for example to film acclimatisation time for observations but that will be automatically ignored in later tracking of the video. Example of filename: "pilot\_180312\_PI13\_S01\_101300.h264".
 
 
-### <a name="othmod"></a>Other modules
+### <a name="othmethods></a>Other methods
 In addition to the main recording module, AnimRec contains a couple of other modules to aid in setting-up the rpi to have the best standardized recording parameters:
 
-1. `setroi()`: a dynamic function that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
-2. `setgains()`: an automatic function that tries to determine the optimal white balance for the current camera position and lighting conditions. This function stores a tuple of rg and bg values in a .yml file in the setup directory (that can be updated by the user if needed), which will be automatically loaded by the main *AnimRec* Recorder class. To run, simple enter `animrec.setgains()`.
-3. <a name="task"></a>`imgtask()`: an add-on module for the `Recorder` class that enables the scheduling of automated image recording tasks, such as to record a sequence of images from 7am > 7pm at 1 image/min every day of the week.
-4. `Converter()`: a module to convert videos to `.mp4` format with the option to resize them and print the frame number on the top left corner. Uses multiprocessing so multiple videos can be converted simultaniously. See the [template notebook](https://github.com/jolleslab/AnimRec/blob/master/notebooks/run-convert.ipynb) for a demo how to use the converter module.
+1. `setroi()`: Method that lets the user draw a rectangle on a live stream of the rpi camera to create the region of interest to be used for recording.
+2. `setgains()`: Method that automatically determines the optimal white balance for the current camera position and lighting conditions.
+3. <a name="task"></a>`schedule()`: Method that enables the scheduling of automated image and video recording jobs.
+4. `converter()`: Method that enables converting videos to `.mp4` format with the option to resize them and print a frame number in the top left corner. Uses multiprocessing so multiple videos can be converted simultaneously.
 
 
 Workflow
 --------
-The workflow for which *AnimRec* was designed is as follows:
-
 1. Install the latest version of [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) and make sure it is fully up to date with python installed: `sudo apt-get update && sudo apt-get upgrade`.
 2. Set up the rpi with an (IR) camera and position it in such a way that it records the zone of interest (using the `raspistill -t 0 -k` command).
 3. Install *AnimRec* by following the steps [above](#install).
 4. Run the `Recorder` class for the first time to determine the right lighting settings for the camera. Camera light levels depend on the following parameters: `brightness`,`iso`,`contrast`, and `compensation`. Easiest is to record a single image (use `rectype=img`) and adjust these parameters until satisfied, which are then automatically stored.
 5. Run the `set_roi` function to get the right region of interest to be used for recording, linked to the resolution set with the Recorder class.
 6. Run the `set_gains` function to automatically set the right, standardized white balance.
-7. Now the rpi and AnimRec configuration are fully set up! Simply run the `record` function to start your recording. For some examples of running above code, [see below](#examples), the [scripts folder](https://github.com/jolleslab/AnimRec/tree/master/scripts), and the [notebooks folder](https://github.com/jolleslab/AnimRec/tree/master/notebooks) in the repository.
+7. Now the rpi and AnimRec configuration are fully set up! Simply run the `record` function to start your recording.
+8. Schedule automated recordings with the `schedule` method.
+
+For an example of working with AnimRec the example [below](#examples) or use one of the sample scripts in the [scripts folder](https://github.com/jolleslab/AnimRec/tree/master/scripts) or documented jupyter notebooks in the [notebooks folder](https://github.com/jolleslab/AnimRec/tree/master/notebooks).
 
 
 <a name="examples"></a>Running AnimRec
 --------
 #### Python script
-The most straight forward way to use *AnimRec* is to write a simple python script (e.g. `rpirec.py`) and to run that from the Terminal:
+The most straight forward way to use *AnimRec* is to write a simple python script (e.g. `pirec.py`) and run that from the Terminal:
 
 ```python
 import animrec
@@ -93,7 +92,7 @@ AR.set_gains()
 while True:
 	AR.record()
 ```
-To run the script: ```python rpirec.py```
+To then run the script: ```python rpirec.py```
 
 **Note**: Make sure that the provided parameters conform to the datatype and are within the possible range, see [settings](#settings) below, as otherwise the script will result in an error.
 
