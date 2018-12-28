@@ -1,7 +1,7 @@
 # AnimRec
-A python module for automated image and video recording on the Raspberry Pi with the Behavioural Scientist in mind.
+A python module for controlled image and video recording library for the Rasperry Pi.
 
-![logo](https://github.com/jolleslab/AnimRec/blob/master/images/AnimRec-logo.jpg)
+![logo](https://github.com/jolleslab/AnimRec/blob/master/animrec-logo.jpg)
 
 <a name="install"></a> Installation
 ------------
@@ -19,14 +19,14 @@ Now to run animrec, simply open python and run ```import animrec```.
 
 Dependencies
 ------------
-*AnimRec* is written in [Python](http://www.python.org) and relies heavily on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances.
+*AnimRec* is written in [Python](http://www.python.org) and builds on the [picamera](http://picamera.readthedocs.io/) package. It makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances.
 
-Part of *AnimRec* are a number of helper modules ([see below](#othmod)) to facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). It is not trivial to install OpenCV, but there is a great guide for installing opencv 4.0 on the [pyimagesearch website](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) and you can find a guide for installing opencv on mac [here](https://git.io/fpyvq). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
+An important part of *AnimRec* are a number of helper modules ([see below](#othmod)) that facilitate setting-up the rpi and media converting. Some of these models rely on [OpenCV](http://opencv.org/). It is not trivial to install OpenCV, but there is a great guide for installing opencv 4.0 on the [pyimagesearch website](https://www.pyimagesearch.com/2018/09/26/install-opencv-4-on-your-raspberry-pi/) and you can find a guide for installing opencv on mac [here](https://git.io/fpyvq). Furthermore, the *Converter* module requires [ffmpeg](https://www.ffmpeg.org). Please follow the guides to install ffmpeg on RaspberryPi [here](http://jollejolles.com/installing-ffmpeg-with-h264-support-on-raspberry-pi/) and Mac [here](http://jollejolles.com/install-ffmpeg-on-mac-os-x/).
 
 
 Overview
 ------------
-*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind. *AnimRec* is currently (still) a private package on [GitHub](https://github.com/jolleslab/AnimRec), but can be easily installed from github with the right credentials ([see above](#install)).
+*AnimRec* is a python package designed to help facilitate automated recording using the RPi, specifically with easy, customized, repeated image and video recording for behavioural scientists in mind that may have (very) limited knowledge of coding. 
 
 **When *AnimRec* is run, automatically a directory called `setup` will be created in the home directory. Do not remove this directory as it will hold all the important setup files for your Raspberry Pi setup.**
 
