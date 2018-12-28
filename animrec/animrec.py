@@ -35,7 +35,6 @@ from socket import gethostname
 from ast import literal_eval
 from fractions import Fraction
 
-from __version__ import __version__
 import animlab.utils as alu
 
 

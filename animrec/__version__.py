@@ -15,7 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.0.0"
-
-## 17/12/18 - version 1.0.0:
-# - AnimRec publicly available on Github!
+__version__ = "0.0.1"
