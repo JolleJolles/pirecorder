@@ -654,9 +654,9 @@ class Recorder:
         self.jobsshow = showjobs
         self.jobsclear = clear
 
-        taskc1 = "python -c 'import animrec; AR=animrec.Recorder(); AR.record()'"
+        taskc1 = "python -c 'import sys;print(sys.version[0:6]);import animrec; print(animrec.__version__); AR=animrec.Recorder(); AR.record()'"
         taskc2 = " >> " + self.logfolder + "/"
-        taskc3 = "`date + \%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
+        taskc3 = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
         self.task = taskc1 + taskc2 + taskc3
 
         self.jobfits = self._check_job()
