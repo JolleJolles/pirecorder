@@ -21,12 +21,22 @@ from setuptools import setup
 exec(open('animrec/__version__.py').read())
 
 
-DESCRIPTION = 'AnimRec: Controlled media recording library for the Rasperry-Pi'
+DESCRIPTION = """\
+AnimRec: Controlled image and video recording library for the Rasperry Pi
+"""
 LONG_DESCRIPTION = """\
 AnimRec is a python package designed to help facilitate automated
 recording using the RPi, specifically with easy, customized, repeated
 image and video recording for behavioural scientists in mind.
 """
+
+DISTNAME = 'animrec'
+MAINTAINER = 'Jolle Jolles'
+MAINTAINER_EMAIL = 'j.w.jolles@gmail.com'
+URL = 'http://jollejolles.com'
+DOWNLOAD_URL = 'https://github.com/jolleslab/AnimRec'
+LICENSE = 'Apache Software License 2.0'
+
 
 def check_dependencies():
     install_requires = []
@@ -73,13 +83,28 @@ if __name__ == "__main__":
 
     install_requires = check_dependencies()
 
-    setup(name='animrec',
-          author='Jolle Jolles',
-          author_email='j.w.jolles@gmail.com',
+    setup(name=DISTNAME,
+          author=MAINTAINER,
+          author_email=MAINTAINER_EMAIL,
+          maintainer=MAINTAINER,
+          maintainer_email=MAINTAINER_EMAIL,
           description=DESCRIPTION,
           long_description=LONG_DESCRIPTION,
-          url='http://jollejolles.com',
-          download_url='https://github.com/jolleslab/AnimRec',
+          url=URL,
+          download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,
-          packages=['animrec'])
+          packages=['animrec'],
+          classifiers=[
+                     'Intended Audience :: Science/Research',
+                     'Programming Language :: Python :: 2.7',
+                     'Programming Language :: Python :: 3',
+                     'License :: OSI Approved :: Apache Software License',
+                     'Topic :: Scientific/Engineering :: Visualization',
+                     'Topic :: Scientific/Engineering :: Image Recognition',
+                     'Topic :: Scientific/Engineering :: Information Analysis',
+                     'Topic :: Multimedia :: Video'
+                     'Operating System :: POSIX',
+                     'Operating System :: Unix',
+                     'Operating System :: MacOS'],
+          )
