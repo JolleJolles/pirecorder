@@ -1,5 +1,5 @@
 # AnimRec
-A python module for controlled image and video recording library for the Rasperry Pi.
+A python module for controlled image and video recording for the Rasperry Pi.
 
 ![logo](https://github.com/jolleslab/AnimRec/blob/master/animrec-logo.jpg)
 
