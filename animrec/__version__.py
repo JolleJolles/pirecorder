@@ -16,3 +16,5 @@
 # limitations under the License.
 
 __version__ = "0.0.1"
+
+# For documentation of all changes, see CHANGELOG
