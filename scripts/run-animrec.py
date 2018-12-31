@@ -1,3 +1,4 @@
+# Import the package
 import animrec
 
 # Initiate the recorder instance
@@ -22,5 +23,5 @@ AR.set_roi()
 # Dynamically set the Gains
 AR.set_gains()
 
-# Run recorded
+# Run record function
 AR.record()
