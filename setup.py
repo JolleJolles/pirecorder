@@ -21,7 +21,9 @@ from setuptools import setup
 exec(open('animrec/__version__.py').read())
 
 
-DESCRIPTION = 'AnimRec: Controlled image and video recording with the Rasperry Pi'
+DESCRIPTION = """
+AnimRec: Controlled image and video recording with the Rasperry Pi
+"""
 LONG_DESCRIPTION = """\
 AnimRec is a python package designed to help facilitate automated
 recording using the RPi, specifically with easy, customized, repeated
