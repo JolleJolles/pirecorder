@@ -4,6 +4,5 @@ complete changelog, see https://github.com/jollejolles/animrec/commits/
 Unreleased
     * improvements
 
-
-2018-12-28 - version 0.0.1
-    * initial release, created the package, made publicly available on Github
+2018-12-31 - version 1.0.0
+    * Initial release, created the package, made publicly available on Github
