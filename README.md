@@ -13,6 +13,12 @@ This software is created with the Behavioural Scientist in mind but should be of
 
 If you use AnimRec, please let me know. I would love to hear how you like and it. Also please cite AnimRec using the following DOI:
 
+*Jolles, J. W. (2018) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.0.0. Zenodo. https://doi.org/10.5281/zenodo.2529516*
+
+[![DOI](https://zenodo.org/badge/163422997.svg)](https://zenodo.org/badge/latestdoi/163422997)
+
+
+
 <a name="install"></a> Quick install
 ------------
 To install AnimRec, open a terminal window and enter:
