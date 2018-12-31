@@ -61,16 +61,18 @@ class Recorder:
     Config settings
     ---------------
     rotation : int, default = 0
-        Custom rotation specific to the RPi, should be either 0 or 180.
+        Custom rotation specific to the Raspberry Pi, should be either 0 or 180.
     brighttune : int, default = 0
-        A rpi specific brightness compensation factor to standardize light levels
+        A rpi-specific brightness compensation factor to standardize light levels
         across multiple rpi's, an integer between -10 and 10.
     roi : tuple, default = None
         Region of interest to be used for recording. Consists of coordinates of
         topleft and bottom right coordinate of a rectangular area encompassing
-        the region of interest. Can be set with the set_roi() function.
+        the region of interest. Can be set with the set_roi() method.
     gains : tuple, default = (1.0, 2.5)
-        Custom gains specific to the RPi to have a 'normal' colorspace.
+        Custom gains specific to the Raspberry PI to set the colorspace. The
+        gains for an ideal white balance can be automatically set with the
+        set_gains() method.
 
     brightness : int, default = 45
         The brightness level of the camera, an integer value between 0 and 100.
@@ -97,11 +99,11 @@ class Recorder:
         times more than the shutterspeed. For example, for a shutterspeed of
         300000 imgwait should be > 1.8s.
     imgdims : tuple, default = (3280,2464)
-        The resolution of the images to be taken in pixels. The default is the max
-        resolution that does not return an error for this mode.
+        The resolution of the images to be taken in pixels. The default is the
+        max resolution that does not return an error for this mode.
     viddims : tuple, default = (1640,1232)
-        The resolution of the videos to be taken in pixels. The default is the max
-        resolution that does not return an error for this mode.
+        The resolution of the videos to be taken in pixels. The default is the
+        max resolution that does not return an error for this mode.
     imgfps : int, default = 1
         The framerate for recording images. Will be set automatically based on
         the imgwait setting so should not be set by user.
@@ -110,13 +112,15 @@ class Recorder:
     imgwait : float, default = 1.0
     	The delay between subsequent images in seconds. When a delay is provided
       	that is less than ~0.5s (shutterspeed + processingtime) it will be
-      	automatically set to 0 and images thus taken immideately one after the other.
+      	automatically set to 0 and images thus taken immideately one after the
+        other.
     imgnr : int, default = 60
-        The number of images that should be taken. When this number is reached, the
-        script will automatically terminate.
+        The number of images that should be taken. When this number is reached,
+        the recorder will automatically terminate.
     imgtime : integer, default = 60
-        The time in seconds during which images should be taken. The minimum of a)
-        imgnr and b) nr of images based on imgwait and imgtime will be selected.
+        The time in seconds during which images should be taken. The minimum of
+        a) imgnr and b) nr of images based on imgwait and imgtime will be
+        selected.
     imgquality : int, default = 50
         Specifies the quality that the jpeg encoder should attempt to maintain.
         Use values between 1 and 100, where higher values are higher quality.
@@ -161,13 +165,13 @@ class Recorder:
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
-            alu.lineprint("Setup folder created (" + setupdir + ")")
+            alu.lineprint("Setup folder created ("+setupdir+")")
 
         sys.stdout = alu.Logger(self.logfolder+"/animrec.log")
 
-        self.brightfile = self.setupdir + "/cusbright.yml"
-        self.roifile = self.setupdir + "/cusroi.yml"
-        self.configfile = self.setupdir + "/"+configfile
+        self.brightfile = self.setupdir+"/cusbright.yml"
+        self.roifile = self.setupdir+"/cusroi.yml"
+        self.configfile = self.setupdir+"/"+configfile
         self.scheduled = False
 
         self.config = LocalConfig(self.configfile, compact_form = True)
