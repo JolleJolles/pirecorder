@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Controlled media recording library for the Rasperry-Pi
-# Copyright (c) 2015 - 2018 Jolle Jolles <j.w.jolles@gmail.com>
+# Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
