@@ -37,7 +37,7 @@ from socket import gethostname
 from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
-from cron-descriptor import get_description
+from cron_descriptor import get_description
 
 
 class Recorder:
