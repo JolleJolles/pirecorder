@@ -56,7 +56,7 @@ def check_dependencies():
         install_requires.append('croniter')
     try:
         import cron_descriptor
-    except Importerror:
+    except ImportError:
         install_requires.append('cron-descriptor')
     try:
         import socket
