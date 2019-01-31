@@ -190,7 +190,7 @@ class Recorder:
             alu.lineprint("Config settings stored")
         else:
             alu.lineprint("Config settings loaded.. Recording " +\
-                          self.config.rec.type + "in " + self.home +\
+                          self.config.rec.type + " in " + self.home +\
                           self.config.rec.dir)
 
         self._imgparams()
@@ -616,12 +616,12 @@ class Recorder:
                 else:
                     if input("\nn for new session, e to exit: ") == 'e':
                         break
-                        
+
         self.cam.close()
 
 
-    def schedule(self, jobname = None, timeplan = None, enable = True,
-                 showjobs = True, clear = None, test = False):
+    def schedule(self, pyversion = "", jobname = None, timeplan = None,
+                 enable = True, showjobs = True, clear = None, test = False):
 
         """
         Schedules future recordings configured with a Recorder instance.
@@ -633,6 +633,8 @@ class Recorder:
 
         Parameters
         ----------
+        pyversion : int, default = ""
+            The version of python to use for the scheduler, e.g. 2, 3 or 3.6.
         jobname : str, default = None
             Name for the scheduled recorder task to create, modify or remove.
         timeplan : string, default = None
@@ -675,7 +677,7 @@ class Recorder:
         self.jobsshow = showjobs
         self.jobsclear = clear
 
-        pythexec = "/usr/local/bin/python -c "
+        pythexec = "/usr/local/bin/python" + str(pyversion) + " -c "
         pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
         logloc = " >> " + self.logfolder + "/"
         logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname) + ".log 2>&1"
