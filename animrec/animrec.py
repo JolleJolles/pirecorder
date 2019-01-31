@@ -172,7 +172,6 @@ class Recorder:
         self.brightfile = self.setupdir+"/cusbright.yml"
         self.roifile = self.setupdir+"/cusroi.yml"
         self.configfile = self.setupdir+"/"+configfile
-        self.scheduled = False
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
@@ -573,7 +572,7 @@ class Recorder:
         self.cam.close()
 
 
-    def record(self, scheduled = False):
+    def record(self, singlevid = False):
 
         """ Runs the Recorder instance """
 
@@ -606,14 +605,14 @@ class Recorder:
         elif self.config.rec.type == "vid":
 
             for session in ["_S%02d" % i for i in range(1,999)]:
-                session = "" if scheduled else session
+                session = "" if singlevid else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
                 alu.lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
                 alu.lineprint("Finished")
-                if scheduled:
+                if singlevid:
                     break
                 else:
                     if input("\nn for new session, e to exit: ") == 'e':
