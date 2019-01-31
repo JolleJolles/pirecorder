@@ -49,7 +49,8 @@ def check_dependencies():
         install_requires.append('pathos')
     try:
         import crontab
-    except ImportError:
+        crontab.CronTab(user = "")
+    except:
         install_requires.append('python-crontab')
     try:
         import croniter
