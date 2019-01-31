@@ -69,7 +69,7 @@ def check_dependencies():
     try:
         import localconfig
     except ImportError:
-        install_requires.append('localconfig')
+        install_requires.append('localconfig==0.4.2')
     try:
         import animlab
     except ImportError:
