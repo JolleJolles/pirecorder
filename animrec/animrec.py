@@ -341,9 +341,9 @@ class Recorder:
         if self.jobsclear == None:
             pass
         elif self.jobsclear == "all":
-            jobs = [for job in self.cron if job.comment[:3]=="AR_"]
             for job in jobs:
-                self.cron.remove(job)
+                if job.comment[:3]=="AR_":
+                    self.cron.remove(job)
             alu.lineprint("All scheduled jobs removed..")
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
@@ -370,7 +370,7 @@ class Recorder:
                 lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
-            jobs = [for job in self.cron if job.comment[:3]=="AR_"]
+            jobs = [job for job in self.cron if job.comment[:3]=="AR_"]
             for job in jobs:
                 sch = job.schedule(date_from = datetime.now())
                 jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
