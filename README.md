@@ -31,7 +31,7 @@ Dependencies
 
 - [AnimLab](https://github.com/JolleJolles/animlab)
 
-- [picamera](http://picamera.readthedocs.io/)
+- [picamera](http://picamera.readthedocs.io/)*
 
 - [numpy](http://www.numpy.org/)
 
@@ -39,15 +39,18 @@ Dependencies
 
 - [python-crontab](https://pypi.org/project/python-crontab/)
 
-- [ffmpeg](https://www.ffmpeg.org)
+- [OpenCV](http://opencv.org/)**
 
-- [OpenCV](http://opencv.org/)
+- [ffmpeg](https://www.ffmpeg.org)***
+
 
 *AnimRec* is written in [Python](http://www.python.org). It builds strongly on the [picamera](http://picamera.readthedocs.io/) package and makes use of various utility functions of the associated [AnimLab](https://github.com/joljols/animlab) package. Scheduling makes use of CronTab and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. Converting requires [ffmpeg](https://www.ffmpeg.org) and [OpenCV](http://opencv.org/). AnimRec is created specifically for automated recording with the Raspberry Pi, but its functionality is easily adaptable to a broader range of possible instances.
 
-For installing python with OpenCV on Mac/Ubunto/Raspberry Pi follow the tutorial in the documentation of the linked [AnimLab](https://github.com/JolleJolles/animlab) package [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-opencv.md).
+*The *picamera* package is not automatically installed with *animrec* such that it at least part of its functionality can be used on non-raspberry pi systems.
 
-For installing ffmpeg with h264 support on Raspberry Pi, follow the tutorial [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-ffmpeg-with-h264.md).
+**For installing python with OpenCV on Mac/Ubunto/Raspberry Pi follow the tutorial in the documentation of the linked [AnimLab](https://github.com/JolleJolles/animlab) package [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-opencv.md).
+
+***For installing ffmpeg with h264 support on Raspberry Pi, follow the tutorial [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-ffmpeg-with-h264.md).
 
 
 Overview
