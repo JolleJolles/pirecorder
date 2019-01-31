@@ -341,12 +341,13 @@ class Recorder:
         if self.jobsclear == None:
             pass
         elif self.jobsclear == "all":
-            self.cron.remove_all()
+            for job in self.cron if job.comment[:3]=="AR_"]:
+                self.cron.remove(job)
             alu.lineprint("All scheduled jobs removed..")
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                alu.lineprint(self.jobname+" job removed..")
+                alu.lineprint(self.jobname[3:]+" job removed..")
             else:
                 if(self.jobname == None):
                     alu.lineprint("No jobname provided..")
@@ -364,13 +365,13 @@ class Recorder:
         if len(self.cron)>0:
             alu.lineprint("Current job schedule:")
             for job in self.cron:
-                lenjob = max(8, len(job.comment))
+                lenjob = max(8, len(job.comment[3:]))
                 lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
-            for job in self.cron:
+            for job in self.cron if job.comment[:3]=="AR_"]:
                 sch = job.schedule(date_from = datetime.now())
-                jobname = job.comment+" "*(lenjob-len(job.comment))
+                jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
                 plan = str(job)[:str(job).find("/usr")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-2))
@@ -392,7 +393,7 @@ class Recorder:
         self.job.setall(self.jobtimeplan)
 
         self.cron.write()
-        alu.lineprint(self.jobname+" job succesfully set..")
+        alu.lineprint(self.jobname[3:]+" job succesfully set..")
         self._enable_job()
 
 
@@ -402,10 +403,10 @@ class Recorder:
 
         if self.jobenable:
             self.job.enable(True)
-            alu.lineprint(self.jobname+" job enabled..")
+            alu.lineprint(self.jobname[3:]+" job enabled..")
         else:
             self.job.enable(False)
-            alu.lineprint(self.jobname+" job disabled..")
+            alu.lineprint(self.jobname[3:]+" job disabled..")
         self.cron.write()
 
 
@@ -672,7 +673,7 @@ class Recorder:
         alu.lineprint("Running scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
-        self.jobname = jobname
+        self.jobname = "AR_" + jobname
         self.jobtimeplan = timeplan
         self.jobenable = enable
         self.jobsshow = showjobs
