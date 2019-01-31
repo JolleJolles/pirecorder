@@ -673,19 +673,23 @@ class Recorder:
         alu.lineprint("Running scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
-        self.jobname = "AR_" + jobname if jobname is not None else None
+        if jobname is not None:
+            self.jobname = "AR_" + jobname
+            pythexec = sys.executable + " -c "
+            pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
+            logloc = " >> " + self.logfolder + "/"
+            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
+            self.task = pythexec + pythcomm + logloc + logcom
+        else:
+            self.jobname = None
+
         self.jobtimeplan = timeplan
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
 
-        pythexec = sys.executable + " -c "
-        pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
-        logloc = " >> " + self.logfolder + "/"
-        logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
-        self.task = pythexec + pythcomm + logloc + logcom
-
         self.jobfits = self._check_job()
+
         if test:
             self._checktimeplan()
         elif self.jobsclear is not None:
