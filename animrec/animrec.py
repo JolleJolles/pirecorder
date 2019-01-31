@@ -367,7 +367,7 @@ class Recorder:
             alu.lineprint("Current job schedule:")
             for job in self.cron:
                 lenjob = max(8, len(job.comment[3:]))
-                lenplan = max(8, len(str(job)[:str(job).find("py")-1]))
+                lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
             jobs = [job for job in self.cron if job.comment[:3]=="AR_"]
@@ -699,6 +699,8 @@ class Recorder:
                 else:
                     self.job = self.jobfits[0]
                     self._enable_job()
+            elif self.jobname is None:
+                alu.lineprint("No jobname provided..")
             else:
                 alu.lineprint("Note: Make sure recording duration configuration < "+\
                               "interval between scheduled recordings")
