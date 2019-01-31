@@ -573,7 +573,7 @@ class Recorder:
         self.cam.close()
 
 
-    def record(self, singlevid = False):
+    def record(self, scheduled = False):
 
         """ Runs the Recorder instance """
 
