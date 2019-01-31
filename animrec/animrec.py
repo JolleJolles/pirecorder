@@ -319,7 +319,7 @@ class Recorder:
         return [job for job in self.cron if job.comment == self.jobname]
 
 
-    def _checktimeplan():
+    def _checktimeplan(self):
 
         """ Checks timeplan and prints description"""
 
