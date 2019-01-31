@@ -675,7 +675,7 @@ class Recorder:
         alu.lineprint("Running scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
-        self.jobname = "AR_" + jobname
+        self.jobname = "AR_" + jobname if jobname is not None else None
         self.jobtimeplan = timeplan
         self.jobenable = enable
         self.jobsshow = showjobs
