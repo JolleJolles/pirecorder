@@ -17,6 +17,7 @@
 
 from __future__ import print_function
 from setuptools import setup
+import sys
 
 exec(open('animrec/__version__.py').read())
 
@@ -69,7 +70,10 @@ def check_dependencies():
     try:
         import localconfig
     except ImportError:
-        install_requires.append('localconfig==0.4.2')
+        if sys.version_info[0] == 2:
+            install_requires.append('localconfig==0.4.2')
+        if sys.version_info[0] == 3:
+            install_requires.append('localconfig')
     try:
         import animlab
     except ImportError:
