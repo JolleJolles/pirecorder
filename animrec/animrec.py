@@ -165,7 +165,7 @@ class Recorder:
         if not os.path.exists(self.setupdir):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
-            alu.lineprint("Setup folder created ("+setupdir+")")
+            alu.lineprint("Setup folder created ("+self.setupdir+")")
 
         sys.stdout = alu.Logger(self.logfolder+"/animrec.log")
 
