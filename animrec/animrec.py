@@ -584,7 +584,6 @@ class Recorder:
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
             alu.lineprint("Captured "+self.filename)
-            self.cam.close()
 
         elif self.config.rec.type == "imgseq":
 
@@ -600,7 +599,7 @@ class Recorder:
                 else:
                     alu.lineprint("Captured "+img)
                     break
-            self.cam.close()
+
 
         elif self.config.rec.type == "vid":
 
@@ -617,6 +616,8 @@ class Recorder:
                 else:
                     if input("\nn for new session, e to exit: ") == 'e':
                         break
+                        
+        self.cam.close()
 
 
     def schedule(self, jobname = None, timeplan = None, enable = True,
