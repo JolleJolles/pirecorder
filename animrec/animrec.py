@@ -204,8 +204,6 @@ class Recorder:
         if not os.path.exists(self.recdir):
             os.makedirs(self.recdir)
 
-        self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
-
         os.chdir(self.recdir)
 
 
@@ -275,6 +273,8 @@ class Recorder:
         date, rpi name, and time. Images part of image sequence additionally
         contain a sequence number. e.g. test_180708_pi12_S01_100410
         """
+
+        self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
 
         if self.config.rec.type == "imgseq":
             date = "{timestamp:%y%m%d}"
