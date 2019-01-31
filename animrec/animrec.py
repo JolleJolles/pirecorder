@@ -329,7 +329,7 @@ class Recorder:
             valid = crontab.CronSlices.is_valid(self.jobtimeplan)
             if valid:
                 timedesc = get_description(self.jobtimeplan)
-                print("Your timeplan will run:" + timedesc)
+                print("Your timeplan will run " + timedesc)
             else:
                 alu.lineprint("Timeplan is not valid..")
 
@@ -371,7 +371,8 @@ class Recorder:
             for job in self.cron:
                 sch = job.schedule(date_from = datetime.now())
                 jobname = job.comment+" "*(lenjob-len(job.comment))
-                plan = str(job)[:str(job).find("py")-1]
+                plan = str(job)[:str(job).find("/usr")-1]
+                plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-2))
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
                 print(jobname + plan + next)
@@ -696,8 +697,8 @@ class Recorder:
                     self.job = self.jobfits[0]
                     self._enable_job()
             else:
-                alu.lineprint("Make sure recording duration configuration is "+\
-                              "less than interval between scheduled recordings")
+                alu.lineprint("Note: Make sure recording duration configuration < "+\
+                              "interval between scheduled recordings")
                 self._set_job()
         if self.jobsshow:
             self._show_jobs()
