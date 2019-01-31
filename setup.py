@@ -34,7 +34,7 @@ DISTNAME = 'animrec'
 MAINTAINER = 'Jolle Jolles'
 MAINTAINER_EMAIL = 'j.w.jolles@gmail.com'
 URL = 'http://jollejolles.com'
-DOWNLOAD_URL = 'https://github.com/jolleslab/AnimRec'
+DOWNLOAD_URL = 'https://github.com/jollejolles/animrec'
 LICENSE = 'Apache Software License 2.0'
 
 
