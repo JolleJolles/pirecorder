@@ -9,9 +9,9 @@
 
 Citing
 ------------
-This software is created with the Behavioural Scientist in mind but should be of interested to the broader academic community and the general code-minded public. If you use AnimRec, please let me know. I would love to hear how you like and it. Also please cite AnimRec using the following DOI:
+This software is created with behavioural scientists in mind but should be of interested to the broader academic community and the general code-minded public. If you use *AnimRec*, do let me know, I'd love to hear how you like and use it. Also please cite the sofrware using the following DOI:
 
-*Jolles, J. W. (2018) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.0.0. Zenodo. https://doi.org/10.5281/zenodo.2529516*
+*Jolles, J. W. (2019) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.1.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
 
 [![DOI](https://zenodo.org/badge/163422997.svg)](https://zenodo.org/badge/latestdoi/163422997)
 
