@@ -16,4 +16,4 @@
 # limitations under the License.
 
 from .__version__ import __version__
-from .animrec import *
+from .animrec import Recorder
