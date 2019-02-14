@@ -69,6 +69,10 @@ def check_dependencies():
     except ImportError:
         install_requires.append('pyyaml')
     try:
+        import builtins
+    except ImportError:
+        install_requires.append('builtins')
+    try:
         import localconfig
     except ImportError:
         if sys.version_info[0] == 2:
