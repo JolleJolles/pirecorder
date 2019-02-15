@@ -69,9 +69,9 @@ def check_dependencies():
     except ImportError:
         install_requires.append('pyyaml')
     try:
-        import builtins
+        import future
     except ImportError:
-        install_requires.append('builtins')
+        install_requires.append('future')
     try:
         import localconfig
     except ImportError:
