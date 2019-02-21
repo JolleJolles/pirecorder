@@ -1,11 +1,3 @@
-"""
-AnimRec is a python package build to help facilitate automated recording using
-the RPi, with easy, customized, repeated image and video recording. It is
-specifically designed with the Behavioural Scientist in mind and contains
-documentation and tutorials to be installable and easy to use for people with
-limited knowledge of coding.
-"""
-
 #! /usr/bin/env python
 #
 # Controlled media recording library for the Rasperry-Pi
