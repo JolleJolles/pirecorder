@@ -15,5 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+AnimRec is a python package build to help facilitate automated recording using
+the RPi, with easy, customized, repeated image and video recording. It is
+specifically designed with the Behavioural Scientist in mind and contains
+documentation and tutorials to be installable and easy to use for people with
+limited knowledge of coding.
+"""
+
 from .__version__ import __version__
 from .animrec import *
