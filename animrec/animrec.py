@@ -162,10 +162,12 @@ class Recorder:
         self.home = alu.homedir()
         self.setupdir = self.home + "setup"
         self.logfolder = self.setupdir+"/logs"
-        if not os.path.exists(self.setupdir):
+        if not os.path.exists(self.logfolder):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
             alu.lineprint("Setup folder created ("+self.setupdir+")")
+        if not os.path.exists(self.logfolder):
+            alu.lineprint("Setup folder already exists but was not set up properly..")
 
         sys.stdout = alu.Logger(self.logfolder+"/animrec.log")
 
