@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
+1.1.2: module documentation added
+
 2018-01-31 - version 1.1.0
     * Scheduler now only shows/deletes animrec-related crontab entries
     * Number of improvements to setup file for different versions and dependencies
