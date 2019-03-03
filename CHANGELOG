@@ -1,10 +1,15 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
-1.1.2: module documentation added
+
+2018-03093 - version 1.2.0
+    * Completely rewritten the AnimRec Readme
+    * Added a very detailed guide for setting-up the rpi and installing and
+      working with AnimRec
+    * Fixed a number of wrong commands and links in the guides and notebooks
 
 2018-01-31 - version 1.1.0
-    * Scheduler now only shows/deletes animrec-related crontab entries
+    * Scheduler now only shows/deletes animrec related crontab entries
     * Number of improvements to setup file for different versions and dependencies
     * Large number of smaller fixes to record and schedule functions
     * Improved the documentation regarding dependencies
