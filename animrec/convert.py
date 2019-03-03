@@ -69,10 +69,11 @@ class Converter:
         alu.lineprint("Convert function started!", label = "AnimRec")
 
         maindir = os.getcwd()
-        dir_out = dir_in if dir_out == "" else dir_out
         assert os.path.exists(dir_in), "dir_in does not exist, try again.."
-        assert os.path.exists(dir_out), "dir_out does not exist, try again.."
         self.dir_in = dir_in
+
+        #dir_out = dir_in if dir_out == "" else dir_out
+        #assert os.path.exists(dir_out), "dir_out does not exist, try again.."
 
         self.vidtype = vidtype
         self.conv_type = conv_type
