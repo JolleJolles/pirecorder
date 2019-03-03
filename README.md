@@ -11,7 +11,7 @@
 
 Dependencies
 ------------
-*AnimRec* is written in [Python](http://www.python.org) and is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package and makes use of various utility functions of my [AnimLab](https://github.com/JolleJolles/animlab) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. Converting requires [ffmpeg](https://www.ffmpeg.org) and [OpenCV](http://opencv.org/). For detailed steps to get these dependencies, follow the setting-up guide [here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md). 
+*AnimRec* is written in [Python](http://www.python.org) and is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package and makes use of various utility functions of my [AnimLab](https://github.com/JolleJolles/animlab) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. Converting requires [ffmpeg](https://www.ffmpeg.org) and [OpenCV](http://opencv.org/). For detailed steps to get these dependencies, follow the setting-up guide [here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md).
 
 - [Python 2.7 or 3.x](http://www.python.org)
 
@@ -49,7 +49,7 @@ Open a terminal window and enter:
 pip install git+https://github.com/JolleJolles/animrec.git
 ```
 
-*Note: please keep in mind its dependencies. If you are relatively new to working with Python or raspberry pi, please follow the setting-up guide [here](https://github.com/JolleJolles/animrec/tree/master/notebooks/setting-up.ipynb).*
+*Note: please keep in mind its dependencies. A detailed guide for setting-up your rpi and installing animrec can be found [here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md).*
 
 
 AnimRec overview
@@ -72,7 +72,7 @@ In addition to the main recording module, AnimRec contains a number of other mod
 AnimRec has three recording modes: `img`, `imgseq`, and `vid`. Files are automatically stored in the configured directory (`recdir`), by default a directory called `recordings` in the home directory, and are automatically named according to the provided `label`, the computer name, the date and time, and the session number or image sequence nr (e.g. "pilot\_180312\_PI13\_101300.jpg", "pilot\_180312\_PI13\_img00231_101300.jpg", and "pilot\_180312\_PI13\_S01\_101300.h264").
 
 1. `img` mode: This mode records a single image with the custom settings and then quits.
-2. `imgseq` mode: This mode creates a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`). 
+2. `imgseq` mode: This mode creates a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`).
 3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each recording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps`, the framerate of the video; `vidduration`, the duration of the video; and `viddelay`, extra recording time in seconds that will be added to vidduration.
 
 **See the [animrec guide](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md) for a more detailed explanation of all the functionalities of *AnimRec*.**
