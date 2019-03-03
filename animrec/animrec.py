@@ -98,9 +98,11 @@ class Recorder:
         between images so a standard imgwait time should be chosen that is 6+
         times more than the shutterspeed. For example, for a shutterspeed of
         300000 imgwait should be > 1.8s.
-    imgdims : tuple, default = (3280,2464)
+    imgdims : tuple, default = (2592, 1944)
         The resolution of the images to be taken in pixels. The default is the
-        max resolution that does not return an error for this mode.
+        max resolution that does not return an error for this mode for the v1.5
+        rpi camera. Note that rpi camera v2 has a much higher maximum resolution
+        of 3280 × 2464.
     viddims : tuple, default = (1640,1232)
         The resolution of the videos to be taken in pixels. The default is the
         max resolution that does not return an error for this mode.
@@ -185,7 +187,7 @@ class Recorder:
                             rotation=0, brighttune=0, roi=None, gains=(1.0, 2.5),
                             brightness=45, contrast=10, saturation=-100, iso=200,
                             sharpness=0, compensation=0, shutterspeed=8000,
-                            imgdims=(3280, 2464), viddims=(1640, 1232), imgfps=1,
+                            imgdims=(2592, 1944), viddims=(1640, 1232), imgfps=1,
                             vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
                             imgquality=50, vidduration=10, viddelay=10,
                             vidquality = 11,internal="")
