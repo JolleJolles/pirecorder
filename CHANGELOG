@@ -2,6 +2,9 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 
+2019-06-07 - version 1.2.0
+    * Moved the convert functionality and tutorial to the AnimLab package
+
 2018-03093 - version 1.2.0
     * Completely rewritten the AnimRec Readme
     * Added a very detailed guide for setting-up the rpi and installing and

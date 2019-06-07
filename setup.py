@@ -44,10 +44,6 @@ def check_dependencies():
 
     # Make sure dependencies exist
     try:
-        import pathos
-    except ImportError:
-        install_requires.append('pathos')
-    try:
         import crontab
         crontab.CronTab(user = "")
     except:
