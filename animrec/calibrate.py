@@ -41,8 +41,6 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
 
     time.sleep(0.1)
 
-    cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-
     for frame in cam.capture_continuous(raw, format="bgr", use_video_port=True):
 
         img = frame.array
@@ -59,7 +57,7 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
             break
 
     cam.close()
-    cv2.waitKey(1)
     cv2.destroyWindow('Image')
+    cv2.waitKey(1)
     cv2.waitKey(1)
     cv2.waitKey(1)
