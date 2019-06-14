@@ -474,7 +474,6 @@ class Recorder:
 
         """ Sets the roi for recording with the Raspberry Pi camera"""
 
-        self.rectangle = False
         self._setup_cam()
         res = (int(self.cam.resolution[0]/4), int(self.cam.resolution[0]/4))
         self.cam.capture(self.rawCapture, format = "bgr")

@@ -1,6 +1,9 @@
 # Import the package
 import animrec
 
+# Run showcam function to optimize camera position
+animrec.showcam(res = (640, 480), cross = False)
+
 # Initiate the recorder instance
 AR = animrec.Recorder()
 
