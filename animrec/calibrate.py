@@ -24,7 +24,7 @@ import cv2
 import animlab.imutils as alimu
 
 
-def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
+def showcam(res = (1640, 1232), zoom = (0,0,1,1), compensation = 0,
             cross = True):
 
     """
@@ -32,7 +32,7 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
     """
 
     cam = picamera.PiCamera()
-    cam.framerate = 32
+    cam.framerate = 16
     cam.resolution = res
     cam.zoom = zoom
     cam.exposure_compensation = compensation
@@ -40,7 +40,7 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
     raw = picamera.array.PiRGBArray(cam)
 
     cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
-    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN, cv2.cv.WINDOW_FULLSCREEN)
 
     time.sleep(0.1)
 
