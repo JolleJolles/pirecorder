@@ -39,6 +39,9 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
 
     raw = picamera.array.PiRGBArray(cam)
 
+    cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+
     time.sleep(0.1)
 
     for frame in cam.capture_continuous(raw, format="bgr", use_video_port=True):
@@ -58,6 +61,5 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
 
     cam.close()
     cv2.destroyWindow('Image')
-    cv2.waitKey(1)
-    cv2.waitKey(1)
-    cv2.waitKey(1)
+    for i in range(4):
+        cv2.waitKey(1)
