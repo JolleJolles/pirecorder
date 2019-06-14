@@ -2,6 +2,10 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 
+2019-06-14 - version 1.3.1
+    * Fixed init file not loading new function files
+    
+
 2019-06-14 - version 1.3.0
     * Improved draw_rectangle functionality and moved to animlab package
     * Added video positioning function

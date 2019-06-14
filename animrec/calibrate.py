@@ -24,8 +24,8 @@ import cv2
 import animlab.imutils as alimu
 
 
-def position_cam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
-                 cross = True):
+def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
+            cross = True):
 
     """
     Videostream of raspberry pi with cross to accurately position the camera
@@ -57,4 +57,7 @@ def position_cam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
 
     cam.close()
     cv2.destroyWindow('Image')
+    cv2.waitKey(1)
+    cv2.waitKey(1)
+    cv2.waitKey(1)
     cv2.waitKey(1)
