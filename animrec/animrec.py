@@ -19,6 +19,7 @@ from __future__ import print_function
 from builtins import input
 
 from .__version__ import __version__
+import animlab.imutils as alimu
 import animlab.utils as alu
 
 import os
@@ -291,30 +292,6 @@ class Recorder:
             self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
 
 
-    def _drawrect(self, event, x, y, flags, param):
-
-        """ Draws a rectangle on an opencv window """
-
-        self.draw_frame = self.frame.copy()
-        if event == cv2.EVENT_LBUTTONDOWN:
-            self.rectangle = True
-            self.refPt = [(x,y)]
-
-        elif event == cv2.EVENT_LBUTTONUP:
-            self.rectangle = False
-            self.refPt.append((x, y))
-            cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
-
-        elif event == cv2.EVENT_MOUSEMOVE:
-            if self.rectangle:
-                cv2.rectangle(self.draw_frame,self.refPt[0],(x,y),(0,0,255),2)
-            else:
-                if hasattr(self, 'refPt'):
-                    cv2.rectangle(self.draw_frame,self.refPt[0],self.refPt[1],(0,0,255),2)
-
-        cv2.line(self.draw_frame, (x-5,y), (x+5,y), alu.namedcols("white"), 1)
-        cv2.line(self.draw_frame, (x,y-5), (x,y+5), alu.namedcols("white"), 1)
-
 
     def _check_job(self):
 
@@ -499,34 +476,40 @@ class Recorder:
 
         self.rectangle = False
         self._setup_cam()
-        res = (int(self.cam.resolution[0]/4),int(self.cam.resolution[0]/4))
-        self.cam.capture(self.rawCapture, format="bgr")
+        res = (int(self.cam.resolution[0]/4), int(self.cam.resolution[0]/4))
+        self.cam.capture(self.rawCapture, format = "bgr")
         self.frame = self.rawCapture.array
         self.draw_frame = self.frame.copy()
 
+        mouse = alimu.mouse_events()
+
         cv2.namedWindow('window', cv2.WINDOW_NORMAL)
-        cv2.setMouseCallback('window', self._drawrect)
+        cv2.setMouseCallback('window', mouse.draw)
 
         alu.lineprint("Select roi..")
 
         while True:
+
+            alimu.draw_crosshair(self.draw_frame, mouse)
+            alimu.draw_rectangle(self.draw_frame, mouse)
+
             cv2.imshow('window', self.draw_frame)
             cv2.moveWindow('window', 50,0)
             k = cv2.waitKey(1) & 0xFF
 
-            if k == ord('e') and hasattr(self, "refPt"):
-                del self.refPt
+            if k == ord('e'):
+                mouse.pointer = ()
 
             if k == ord('s'):
-                if hasattr(self, "refPt"):
-                    pt = self.refPt
-                    if len(self.refPt) == 1:
-                        pt = [self.refPt[0],self.refPt[0]]
+                if mouse.pointer:
+                    pt = mouse.pointer
+                    if len(mouse.pointer) == 1:
+                        pt = [mouse.pointer[0], mouse.pointer[0]]
                     pt1 = (min(pt[0][0], pt[1][0]), min(pt[0][1], pt[1][1]))
                     pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
                     roi = ((pt1,pt2))
 
-                    self.set_config(roi=roi,internal="")
+                    self.set_config(roi=roi, internal="")
                     alu.lineprint("roi coordinates " + str(roi) + " stored..")
                     break
 
