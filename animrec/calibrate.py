@@ -39,8 +39,8 @@ def showcam(res = (1640, 1232), zoom = (0,0,1,1), compensation = 0,
 
     raw = picamera.array.PiRGBArray(cam)
 
-    cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
-    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN, cv2.cv.WINDOW_FULLSCREEN)
+    cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty("Image", 0,1)
 
     time.sleep(0.1)
 
