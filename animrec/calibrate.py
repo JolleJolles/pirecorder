@@ -24,7 +24,7 @@ import cv2
 import animlab.imutils as alimu
 
 
-def showcam(res = (1640, 1232), zoom = (0,0,1,1), compensation = 0,
+def showcam(res = (1648, 1232), zoom = (0,0,1,1), compensation = 0,
             cross = True):
 
     """
@@ -60,6 +60,7 @@ def showcam(res = (1640, 1232), zoom = (0,0,1,1), compensation = 0,
             break
 
     cam.close()
+    cv2.setWindowProperty('Image', 0, 0)
     cv2.destroyWindow('Image')
-    for i in range(4):
+    for i in range(5):
         cv2.waitKey(1)
