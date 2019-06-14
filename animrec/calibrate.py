@@ -42,7 +42,6 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
     time.sleep(0.1)
 
     cv2.namedWindow('Image', cv2.WINDOW_NORMAL)
-    cv2.moveWindow('Image', 50,0)
 
     for frame in cam.capture_continuous(raw, format="bgr", use_video_port=True):
 
@@ -51,6 +50,7 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
             alimu.draw_cross(img, res)
 
         cv2.imshow("Image", img)
+        cv2.moveWindow('Image', 0,0)
         k = cv2.waitKey(1) & 0xFF
 
         raw.truncate(0)
@@ -61,4 +61,5 @@ def showcam(res = (832,624), zoom = (0,0,1,1), compensation = 0,
     cam.close()
     cv2.waitKey(1)
     cv2.destroyWindow('Image')
+    cv2.waitKey(1)
     cv2.waitKey(1)
