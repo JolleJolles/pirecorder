@@ -17,5 +17,6 @@
 
 from .__version__ import __version__
 from .animrec import *
+from .videostream import VideoStream
 from .calibrate import *
 from .undistort import *

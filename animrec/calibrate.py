@@ -20,123 +20,114 @@ from __future__ import print_function
 import cv2
 import time
 import numpy as np
-import picamera
-import picamera.array
 
+import animlab.utils as alu
 import animlab.imutils as alimu
 
+from animrec.videoin import VideoIn
 
 class showcam:
 
-    def __init__(self, res = (640, 480), cross = False):
+    def __init__(self, cam = "rpi", framerate=8, resolution=(640, 480),
+                 cross = False):
 
         """
-        Videostream of raspberry pi with cross to accurately position the camera
+        Opens a video stream with user interface for calibrating the camera
         """
 
+        self.framerate = framerate
+        self.resolution = (min(820, resolution[0]), min(616, resolution[1]))
         self.cross = cross
-        self.stream = True
-        self.camera = picamera.PiCamera()
-        res = (min(820, res[0]), min(616, res[1]))
-        self.res = (alimu.closenr(res[0],32), alimu.closenr(res[1], 16))
-        self.camera.framerate = 8
-        self.camera.resolution = self.res
-        self.camera.zoom = (0,0,1,1)
-        self.raw = picamera.array.PiRGBArray(self.camera)
 
-        time.sleep(1)
+        self.vid = VideoIn(framerate=self.framerate,
+                           resolution=self.resolution).start()
+        self.stream = True
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
-
         self.drawer()
 
 
     def drawstream(self):
-        print("Streaming video")
+        alu.lineprint("Streaming video..")
 
-        for frame in self.camera.capture_continuous(self.raw, format="bgr", use_video_port=True):
-            self.img = frame.array
+        while True:
+            self.img = self.vid.read()
 
             if self.cross:
-                alimu.draw_cross(self.img, self.camera.resolution)
+                animlab.imutils.draw_cross(self.img, self.resolution)
 
             cv2.imshow("Image", self.img)
-            cv2.resizeWindow("Image", self.camera.resolution[0], self.camera.resolution[1])
+            cv2.resizeWindow("Image", self.resolution[0], self.resolution[1])
 
             self.k = cv2.waitKey(1) & 0xFF
-            if self.k == ord('c'):
+            if self.k == ord("c"):
                 self.cross = not self.cross
 
-            if self.k == ord('f'):
+            if self.k == ord("f"):
                 winval = abs(1 - cv2.getWindowProperty('Image', 0))
                 cv2.setWindowProperty("Image", 0, winval)
 
-            self.raw.truncate(0)
-
             if self.k == ord("d"):
                 self.stream = False
-                break
 
-            if self.k == 27:
+            if self.k in ["d",27]:
+                self.vid.stop()
                 break
 
 
     def drawframe(self):
-        print("Select roi for zoom")
-
+        alu.lineprint("Select roi..")
         self.imgbak = self.img.copy()
+
         while True:
             self.img = self.imgbak.copy()
             alimu.draw_crosshair(self.img, self.m.pointer)
-            alimu.draw_rectangle(self.img, self.m.pointer, self.m.rect, self.m.drawing)
+            alimu.draw_rectangle(self.img, self.m.pointer,
+                                           self.m.rect, self.m.drawing)
             cv2.imshow("Image", self.img)
 
             self.k = cv2.waitKey(1) & 0xFF
-            if self.k == ord('f'):
+            if self.k == ord("f"):
                 winval = abs(1 - cv2.getWindowProperty('Image', 0))
                 cv2.setWindowProperty("Image", 0, winval)
 
-            if self.k == ord('z'):
-                if self.m.rect:
-                    if len(self.m.rect) == 2:
-                        print("Creating zoomed image")
-                        x = min(self.m.rect[0][0], self.m.rect[1][0])
-                        y = min(self.m.rect[0][1], self.m.rect[1][1])
-                        w = abs(self.m.rect[1][0] - self.m.rect[0][0])
-                        h = abs(self.m.rect[1][1] - self.m.rect[0][1])
+            if self.k == ord("s"):
+                if self.m.rect and len(self.m.rect) == 2:
+                    roi = alimu.get_reccoords(self.m.rect)
+                    alu.lineprint("roi coordinates " + str(roi) + " stored..")
+                else:
+                    alu.lineprint("Nothing to store..")
 
-                        xp = x / float(self.res[0])
-                        yp = y / float(self.res[1])
-                        wp = w / float(self.res[0])
-                        hp = h / float(self.res[1])
+            if self.k == ord("z"):
+                if self.m.rect and len(self.m.rect) == 2:
+                    alu.lineprint("Creating zoomed image..")
+                    rect = alimu.get_reccoords(self.m.rect)
+                    zoom = alimu.roi_to_zoom(rect, self.resolution)
+                    maxres = (2592, 1944)
+                    img = VideoIn(resolution=maxres,
+                                  zoom = (0,0,1,1)).img()
+                    cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
 
-                        maxres = (2592, 1944)
-                        self.camera.resolution = maxres
-                        self.camera.zoom = (xp,yp,wp,hp)
-                        self.camera.capture("testimg.jpg")
-                        img = cv2.imread("testimg.jpg",0)
-                        cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
+                    while True:
+                        cv2.imshow("Zoomed", img)
+                        xwin, ywin = int(hp*maxres[0]), int(wp*maxres[1])
+                        cv2.resizeWindow("Zoomed", xwin, ywin)
 
-                        while True:
-                            cv2.imshow("Zoomed", img)
-                            xwin, ywin = int(hp*maxres[0]), int(wp*maxres[1])
-                            cv2.resizeWindow("Zoomed", xwin, ywin)
+                        self.k = cv2.waitKey(1) & 0xFF
+                        if self.k == ord("f"):
+                            winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
+                            cv2.setWindowProperty("Zoomed", 0, winval)
 
-                            self.k = cv2.waitKey(1) & 0xFF
-                            if self.k == ord('f'):
-                                winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
-                                cv2.setWindowProperty("Zoomed", 0, winval)
-
-                            if self.k == 27:
-                                self.camera.resolution = self.res
-                                self.camera.zoom = (0,0,1,1)
-                                self.stream = True
-                                cv2.destroyWindow('Zoomed')
-                                cv2.waitKey(1)
-                                self.k = 255
-                                break
+                        if self.k == 27:
+                            cv2.destroyWindow("Zoomed")
+                            cv2.waitKey(1)
+                            self.vid = VideoIn(resolution=self.resolution,
+                                             zoom = (0,0,1,1)).start()
+                            self.stream = True
+                            self.k = 255
+                            break
 
             if self.k == 27:
                 self.m.rect = ()
@@ -151,9 +142,6 @@ class showcam:
             if not self.stream:
                 self.drawframe()
             if self.k == 27:
+                cv2.waitKey(1)
+                cv2.destroyWindow('Image')
                 break
-
-        self.camera.close()
-        cv2.destroyWindow('Image')
-        for i in range(5):
-            cv2.waitKey(1)

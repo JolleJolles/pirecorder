@@ -470,60 +470,6 @@ class Recorder:
                 alu.lineprint("Config settings stored and loaded..")
 
 
-    def set_roi(self):
-
-        """ Sets the roi for recording with the Raspberry Pi camera"""
-
-        self._setup_cam()
-        res = (int(self.cam.resolution[0]/4), int(self.cam.resolution[0]/4))
-        self.cam.capture(self.rawCapture, format = "bgr")
-        self.frame = self.rawCapture.array
-        self.draw_frame = self.frame.copy()
-
-        mouse = alimu.mouse_events()
-
-        cv2.namedWindow('window', cv2.WINDOW_NORMAL)
-        cv2.setMouseCallback('window', mouse.draw)
-
-        alu.lineprint("Select roi..")
-
-        while True:
-
-            alimu.draw_crosshair(self.draw_frame, mouse)
-            alimu.draw_rectangle(self.draw_frame, mouse)
-
-            cv2.imshow('window', self.draw_frame)
-            cv2.moveWindow('window', 50,0)
-            k = cv2.waitKey(1) & 0xFF
-
-            if k == ord('e'):
-                mouse.pointer = ()
-
-            if k == ord('s'):
-                if mouse.pointer:
-                    pt = mouse.pointer
-                    if len(mouse.pointer) == 1:
-                        pt = [mouse.pointer[0], mouse.pointer[0]]
-                    pt1 = (min(pt[0][0], pt[1][0]), min(pt[0][1], pt[1][1]))
-                    pt2 = (max(pt[0][0], pt[1][0]), max(pt[0][1], pt[1][1]))
-                    roi = ((pt1,pt2))
-
-                    self.set_config(roi=roi, internal="")
-                    alu.lineprint("roi coordinates " + str(roi) + " stored..")
-                    break
-
-                else:
-                    alu.lineprint("Nothing to save..")
-
-            if k == 27:
-                alu.lineprint("User escaped..")
-                break
-
-        self.cam.close()
-        cv2.destroyWindow('window')
-        cv2.waitKey(1)
-
-
     def set_gains(self, attempts = 100, step = 0.05):
 
         """ Automatically finds the best gains for the raspberry pi camera"""
