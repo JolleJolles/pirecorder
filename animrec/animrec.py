@@ -470,6 +470,12 @@ class Recorder:
                 alu.lineprint("Config settings stored and loaded..")
 
 
+    def set_roi(self):
+
+        roi = .Calibrate().draw_frame()
+        self.set_config(roi=roi, internal="")
+
+
     def set_gains(self, attempts = 100, step = 0.05):
 
         """ Automatically finds the best gains for the raspberry pi camera"""

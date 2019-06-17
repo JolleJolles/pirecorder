@@ -26,10 +26,10 @@ import animlab.imutils as alimu
 
 from animrec.videoin import VideoIn
 
-class showcam:
+class Calibrate:
 
-    def __init__(self, cam = "rpi", framerate=8, resolution=(640, 480),
-                 cross = False):
+    def __init__(self, stream = True, cam = "rpi", framerate=8,
+                 resolution=(640, 480), cross = False):
 
         """
         Opens a video stream with user interface for calibrating the camera
@@ -41,15 +41,20 @@ class showcam:
 
         self.vid = VideoIn(framerate=self.framerate,
                            resolution=self.resolution).start()
-        self.stream = True
+        self.img = self.vid.read()
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
-        self.drawer()
+
+        self.stream = stream
+        self.roi = False
+
+        if self.stream:
+            self.drawer()
 
 
-    def drawstream(self):
+    def draw_stream(self):
         alu.lineprint("Streaming video..")
 
         while True:
@@ -77,7 +82,7 @@ class showcam:
                 break
 
 
-    def drawframe(self):
+    def draw_frame(self):
         alu.lineprint("Select roi..")
         self.imgbak = self.img.copy()
 
@@ -95,8 +100,9 @@ class showcam:
 
             if self.k == ord("s"):
                 if self.m.rect and len(self.m.rect) == 2:
-                    roi = alimu.get_reccoords(self.m.rect)
+                    self.roi = alimu.get_reccoords(self.m.rect)
                     alu.lineprint("roi coordinates " + str(roi) + " stored..")
+                    return self.roi
                 else:
                     alu.lineprint("Nothing to store..")
 
@@ -106,8 +112,7 @@ class showcam:
                     rect = alimu.get_reccoords(self.m.rect)
                     zoom = alimu.roi_to_zoom(rect, self.resolution)
                     maxres = (2592, 1944)
-                    img = VideoIn(resolution=maxres,
-                                  zoom = (0,0,1,1)).img()
+                    img = VideoIn(resolution=maxres, zoom = (0,0,1,1)).img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
 
                     while True:
@@ -138,9 +143,9 @@ class showcam:
     def drawer(self):
         while True:
             if self.stream:
-                self.drawstream()
+                self.draw_stream()
             if not self.stream:
-                self.drawframe()
+                self.draw_frame()
             if self.k == 27:
                 cv2.waitKey(1)
                 cv2.destroyWindow('Image')

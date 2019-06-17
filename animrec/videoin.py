@@ -55,9 +55,11 @@ class VideoIn:
 
         self.stopped = False
 
+
     def start(self):
         Thread(target=self.update, args=()).start()
         return self
+
 
     def update(self):
         if self.cam == "rpi":
@@ -75,8 +77,10 @@ class VideoIn:
                     return
                 (self.grabbed, self.frame) = self.stream.read()
 
+
     def read(self):
         return self.frame
+
 
     def img(self):
         if self.cam == "rpi":
@@ -84,6 +88,7 @@ class VideoIn:
             return cv2.imread(".temp.jpg",0)
         else:
             return self.frame
+
 
     def stop(self):
         self.stopped = True

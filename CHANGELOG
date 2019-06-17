@@ -2,6 +2,11 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 
+2019-06-17 - version 1.5.1
+    * Incorporated and improved roi functionality in the calibrate class
+    * Incorporated some utility functions to improve calibration functionality
+    * Integrated roi functionality into the animrec function
+
 2019-06-17 - version 1.5.0
     * Incorprated a new VideoStream class to facilitate the easy opening
       of a video stream either being a native camera or a webcam in addition
