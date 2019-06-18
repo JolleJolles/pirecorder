@@ -24,7 +24,7 @@ import numpy as np
 import animlab.utils as alu
 import animlab.imutils as alimu
 
-from .videin import VideoIn
+from .videoin import VideoIn
 
 class Calibrate:
 
