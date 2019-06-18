@@ -61,7 +61,7 @@ class Calibrate:
             self.img = self.vid.read()
 
             if self.cross:
-                animlab.imutils.draw_cross(self.img, self.resolution)
+                alimu.draw_cross(self.img, self.resolution)
 
             cv2.imshow("Image", self.img)
             cv2.resizeWindow("Image", self.resolution[0], self.resolution[1])
