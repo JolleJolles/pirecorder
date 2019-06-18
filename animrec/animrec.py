@@ -38,8 +38,8 @@ from time import sleep, strftime
 from localconfig import LocalConfig
 from cron_descriptor import get_description
 
-import animrec.Calibrate as Calibrate
-import animrec.VideoIn as VideoIn
+from .calibrate import Calibrate
+from .videoin import VideoIn
 
 
 class Recorder:
@@ -480,7 +480,7 @@ class Recorder:
 
         roi = Calibrate().draw_frame()
         self.set_config(roi=roi, internal="")
-        
+
 
     def set_gains(self, attempts = 100, step = 0.05):
 
