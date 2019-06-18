@@ -98,7 +98,7 @@ class VideoIn:
         if self.cam == "rpi":
             self.camera.capture(".temp.jpg")
             img = cv2.imread(".temp.jpg",0)
-            os.remove(".temp.jpg")
+            #os.remove(".temp.jpg")
             return img
         else:
             return self.frame
