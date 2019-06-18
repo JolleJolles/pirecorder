@@ -20,6 +20,7 @@ import cv2
 import time
 import animlab.utils as alu
 import animlab.imutils as alimu
+import animlab.mathutils as almau
 
 class VideoIn:
     def __init__(self, system="auto", resolution=(1920,1080), framerate=32,
@@ -38,13 +39,17 @@ class VideoIn:
             from picamera.array import PiRGBArray
             from picamera import PiCamera
             self.camera = PiCamera()
-            self.camera.resolution = resolution
+            width = almau.closenr(resolution[0],32)
+            height = almau.closenr(resolution[1],16))
+            self.resolution = (width,height)
+            self.camera.resolution = self.resolution
             self.camera.framerate = framerate
             self.camera.zoom = zoom
-            self.rawCapture = PiRGBArray(self.camera, size=resolution)
+            self.rawCapture = PiRGBArray(self.camera, size=self.resolution)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
             self.frame = None
+            time.sleep(1)
 
         else:
             self.stream = cv2.VideoCapture(self.cam)
@@ -59,7 +64,6 @@ class VideoIn:
                 ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
                 self.frame = self.frame[y1:y2, x1:x2]
 
-        time.sleep(1)
         self.stopped = False
 
 
