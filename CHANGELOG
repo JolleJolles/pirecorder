@@ -2,6 +2,11 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 
+2019-06-17 - version 1.5.2
+    * Updated stream_video script to reflect VideoIn class change
+    * Created new sub folder with demo scrips that can be executed from command
+      line
+
 2019-06-17 - version 1.5.1
     * Incorporated and improved roi functionality in the calibrate class
     * Incorporated some utility functions to improve calibration functionality

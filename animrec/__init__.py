@@ -20,5 +20,3 @@ from .animrec import *
 from .videoin import VideoIn
 from .calibrate import Calibrate
 from .undistort import *
-
-#from .demos import *
