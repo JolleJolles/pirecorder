@@ -105,10 +105,13 @@ class Calibrate:
                 if self.m.rect and len(self.m.rect) == 2:
                     alu.lineprint("Creating zoomed image..")
                     rect = alimu.get_reccoords(self.m.rect)
+                    print(rect)
                     zoom = alimu.roi_to_zoom(rect, self.vid.resolution)
+                    print(zoom)
                     vid = VideoIn(system=self.system, resolution=(2592,1944),
                                   zoom=zoom)
                     zoomedimg = vid.img()
+                    print(zoomedimg.shape)
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:
                         cv2.imshow("Zoomed", zoomedimg)
@@ -121,7 +124,7 @@ class Calibrate:
                             winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
                             cv2.setWindowProperty("Zoomed", 0, winval)
                         if k == 27:
-                            vid.stop()
+                            #vid.stop()
                             break
 
                     k = 255
