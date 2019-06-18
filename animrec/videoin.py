@@ -48,6 +48,8 @@ class VideoIn:
 
         else:
             self.stream = cv2.VideoCapture(self.cam)
+            if not self.stream.isOpened():
+                raise Exception("Could not open video device")
             self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
             self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
             self.resolution = (int(self.stream.get(3)),int(self.stream.get(4)))
@@ -56,9 +58,6 @@ class VideoIn:
             if zoom != (0,0,1,1):
                 ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
                 self.frame = self.frame[y1:y2, x1:x2]
-
-        if not self.stream.isOpened():
-            raise Exception("Could not open video device")
 
         time.sleep(1)
         self.stopped = False
