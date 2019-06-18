@@ -43,12 +43,14 @@ class VideoIn:
             width = almau.closenr(resolution[0],32)
             height = almau.closenr(resolution[1],16)
             self.resolution = (width,height)
-            self.camera.resolution = self.resolution
-            self.camera.framerate = framerate
-            self.camera.zoom = zoom
+            print(self.resolution)
             if zoom != (0,0,1,1):
                 ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
                 self.resolution = ((x2-x1),(y2-y1))
+            print(self.resolution)
+            self.camera.resolution = self.resolution
+            self.camera.framerate = framerate
+            self.camera.zoom = zoom
             self.rawCapture = PiRGBArray(self.camera, size=self.resolution)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
