@@ -49,7 +49,6 @@ class VideoIn:
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
             self.frame = None
-            time.sleep(1)
 
         else:
             self.stream = cv2.VideoCapture(self.cam)
@@ -65,7 +64,7 @@ class VideoIn:
                 self.frame = self.frame[y1:y2, x1:x2]
 
         self.stopped = False
-
+        time.sleep(2)
 
     def start(self):
         Thread(target=self.update, args=()).start()
