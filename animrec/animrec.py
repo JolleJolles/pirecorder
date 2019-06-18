@@ -480,10 +480,7 @@ class Recorder:
 
         roi = Calibrate().draw_frame()
         self.set_config(roi=roi, internal="")
-
-    sef auto_gains(self):
-
-
+        
 
     def set_gains(self, attempts = 100, step = 0.05):
 
