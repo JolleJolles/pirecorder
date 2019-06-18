@@ -64,7 +64,7 @@ class VideoIn:
                 self.frame = self.frame[y1:y2, x1:x2]
 
         self.stopped = False
-        time.sleep(2)
+        time.sleep(4)
 
     def start(self):
         Thread(target=self.update, args=()).start()
