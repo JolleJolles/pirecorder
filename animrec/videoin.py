@@ -40,7 +40,7 @@ class VideoIn:
             from picamera import PiCamera
             self.camera = PiCamera()
             width = almau.closenr(resolution[0],32)
-            height = almau.closenr(resolution[1],16))
+            height = almau.closenr(resolution[1],16)
             self.resolution = (width,height)
             self.camera.resolution = self.resolution
             self.camera.framerate = framerate
