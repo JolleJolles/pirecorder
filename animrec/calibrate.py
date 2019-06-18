@@ -28,19 +28,19 @@ from .videoin import VideoIn
 
 class Calibrate:
 
-    def __init__(self,  cam = 0, framerate=8,
-                 resolution=(640, 480), cross = False):
+    def __init__(self, system="auto", framerate=8, resolution=(640,480),
+                 cross = False):
 
         """
         Opens a video stream with user interface for calibrating the camera
         """
 
+        self.system = system
         self.framerate = framerate
-        self.cross = cross
         self.resolution = resolution
+        self.cross = cross
         self.stream = True
         self.exit = False
-        self.roi = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
@@ -52,8 +52,8 @@ class Calibrate:
     def draw_stream(self):
         alu.lineprint("Streaming video..")
 
-        self.vid = VideoIn(framerate=self.framerate,
-                      resolution=self.resolution)
+        self.vid = VideoIn(system=self.system, framerate=self.framerate,
+                           resolution=self.resolution)
         self.vid.start()
 
         while True:
@@ -106,7 +106,8 @@ class Calibrate:
                     alu.lineprint("Creating zoomed image..")
                     rect = alimu.get_reccoords(self.m.rect)
                     zoom = alimu.roi_to_zoom(rect, self.vid.resolution)
-                    vid = VideoIn(resolution=(2592,1944), zoom=zoom)
+                    vid = VideoIn(system=self.system, resolution=(2592,1944),
+                                  zoom=zoom)
                     zoomedimg = vid.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:

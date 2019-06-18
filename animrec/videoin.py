@@ -21,12 +21,17 @@ import time
 import animlab.imutils as alimu
 
 class VideoIn:
-    def __init__(self, cam=0, resolution=(1920,1080), framerate=32,
+    def __init__(self, system="auto", resolution=(1920,1080), framerate=32,
                  zoom = (0,0,1,1)):
 
         """ Opens a video stream from native camera, webcam or rpi camera """
 
-        self.cam = cam
+        if system == "auto":
+            self.cam = "rpi" if alu.is_rpi() else 0
+        elif system in ["rpi",0,1]:
+            self.cam = system
+        else:
+            self.cam = 0
 
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
