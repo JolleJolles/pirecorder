@@ -40,6 +40,8 @@ from time import sleep, strftime
 from localconfig import LocalConfig
 from cron_descriptor import get_description
 
+import animrec.Calibrate as Calibrate
+
 
 class Recorder:
 
@@ -472,7 +474,7 @@ class Recorder:
 
     def set_roi(self):
 
-        roi = .Calibrate().draw_frame()
+        roi = calibrate.Calibrate().draw_frame()
         self.set_config(roi=roi, internal="")
 
 
