@@ -28,8 +28,6 @@ import cv2
 import yaml
 import crontab
 import getpass
-import picamera
-import picamera.array
 
 import numpy as np
 from ast import literal_eval
@@ -41,6 +39,7 @@ from localconfig import LocalConfig
 from cron_descriptor import get_description
 
 import animrec.Calibrate as Calibrate
+import animrec.VideoIn as VideoIn
 
 
 class Recorder:
@@ -156,13 +155,14 @@ class Recorder:
 
     """
 
-    def __init__(self, configfile = "animrec.conf"):
+    def __init__(self, cam="rpi", configfile = "animrec.conf"):
 
         alu.lineprint("==========================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
         alu.lineprint(txt, False)
         alu.lineprint("==========================================", False)
 
+        self.cam = cam
         self.host = gethostname()
         self.home = alu.homedir()
         self.setupdir = self.home + "setup"
@@ -217,36 +217,40 @@ class Recorder:
     def _setup_cam(self, simple = False):
 
         """ Sets-up the raspberry pi camera based on configuration """
+        if self.cam == "rpi":
+            import picamera
+            import picamera.array
 
-        self.cam = picamera.PiCamera()
-        self.cam.rotation = self.config.cus.rotation
-        self.cam.exposure_compensation = self.config.cam.compensation
+        self.vid = VideoIn(cam=self.cam)
+        self.vid.camera.rotation = self.config.cus.rotation
+        self.vid.camera.exposure_compensation = self.config.cam.compensation
 
         if simple:
-            self.cam.resolution = (1280, 720)
+            self.vid.camera.resolution = (1280, 720)
         else:
             if self.config.rec.type == "img":
-                self.cam.resolution = literal_eval(self.config.img.dims)
-                self.cam.framerate = self.config.img.fps
+                self.vid.camera.resolution = literal_eval(self.config.img.dims)
+                self.vid.camera.framerate = self.config.img.fps
             if self.config.rec.type == "vid":
-                self.cam.resolution = literal_eval(self.config.vid.dims)
-                self.cam.framerate = self.config.vid.fps
-            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
+                self.vid.camera.resolution = literal_eval(self.config.vid.dims)
+                self.vid.camera.framerate = self.config.vid.fps
+            self.rawCapture = picamera.array.PiRGBArray(self.vid.camera,
+                              size=self.vid.camera.resolution)
 
         sleep(0.1)
 
-        self.cam.shutter_speed = self.config.cam.shutterspeed
-        self.cam.exposure_mode = 'off'
-        self.cam.awb_mode = 'off'
-        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
+        self.vid.camera.shutter_speed = self.config.cam.shutterspeed
+        self.vid.camera.exposure_mode = 'off'
+        self.vid.camera.awb_mode = 'off'
+        self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
-        self.cam.brightness = brightness
+        self.vid.camera.brightness = brightness
 
         if not simple:
-            self.cam.contrast = self.config.cam.contrast
-            self.cam.saturation = self.config.cam.saturation
-            self.cam.iso = self.config.cam.iso
-            self.cam.sharpness = self.config.cam.sharpness
+            self.vid.camera.contrast = self.config.cam.contrast
+            self.vid.camera.saturation = self.config.cam.saturation
+            self.vid.camera.iso = self.config.cam.iso
+            self.vid.camera.sharpness = self.config.cam.sharpness
 
         alu.lineprint("Camera started..")
 
@@ -474,8 +478,11 @@ class Recorder:
 
     def set_roi(self):
 
-        roi = calibrate.Calibrate().draw_frame()
+        roi = Calibrate().draw_frame()
         self.set_config(roi=roi, internal="")
+
+    sef auto_gains(self):
+
 
 
     def set_gains(self, attempts = 100, step = 0.05):
