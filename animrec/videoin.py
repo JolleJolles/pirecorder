@@ -37,7 +37,7 @@ class VideoIn:
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
             from picamera import PiCamera
-            self.camera = Picamera()
+            self.camera = PiCamera()
             self.camera.resolution = resolution
             self.camera.framerate = framerate
             self.camera.zoom = zoom
