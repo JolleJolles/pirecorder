@@ -103,7 +103,7 @@ class Recorder:
         The resolution of the images to be taken in pixels. The default is the
         max resolution that does not return an error for this mode for the v1.5
         rpi camera. Note that rpi camera v2 has a much higher maximum resolution
-        of 3280 × 2464.
+        of 3280 x 2464.
     viddims : tuple, default = (1640,1232)
         The resolution of the videos to be taken in pixels. The default is the
         max resolution that does not return an error for this mode.
