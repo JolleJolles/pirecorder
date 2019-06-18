@@ -18,6 +18,7 @@
 from threading import Thread
 import cv2
 import time
+import animlab.utils as alu
 import animlab.imutils as alimu
 
 class VideoIn:
