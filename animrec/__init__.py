@@ -21,4 +21,4 @@ from .videoin import VideoIn
 from .calibrate import Calibrate
 from .undistort import *
 
-from .. import scripts
+from .scripts import stream_video

@@ -16,7 +16,7 @@
 # limitations under the License.
 
 from __future__ import print_function
-from setuptools import setup
+from setuptools import setup, find_packages
 import sys
 
 exec(open('animrec/__version__.py').read())
@@ -99,7 +99,8 @@ if __name__ == "__main__":
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,
-          packages=['animrec'],
+          packages=find_packages(),
+          include_package_data=True,
           classifiers=[
                      'Intended Audience :: Science/Research',
                      'Programming Language :: Python :: 2.7',
