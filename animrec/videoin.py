@@ -16,6 +16,7 @@
 # limitations under the License.
 
 from threading import Thread
+import os
 import cv2
 import time
 import animlab.utils as alu
