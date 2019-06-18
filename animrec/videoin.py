@@ -38,13 +38,14 @@ class VideoIn:
             self.rawCapture = PiRGBArray(self.camera, size=resolution)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
-            time.sleep(1)
             self.frame = None
 
         else:
             self.stream = cv2.VideoCapture(self.cam)
             self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
             self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
+            self.resolution = (int(self.stream.get(3)),int(self.stream.get(4)))
+            time.sleep(1)
             (self.grabbed, self.frame) = self.stream.read()
             if zoom != (0,0,1,1):
                 ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
@@ -53,6 +54,7 @@ class VideoIn:
         if not self.stream.isOpened():
             raise Exception("Could not open video device")
 
+        time.sleep(1)
         self.stopped = False
 
 
@@ -74,6 +76,7 @@ class VideoIn:
         else:
             while True:
                 if self.stopped:
+                    self.stream.release()
                     return
                 (self.grabbed, self.frame) = self.stream.read()
 
@@ -85,14 +88,12 @@ class VideoIn:
     def img(self):
         if self.cam == "rpi":
             self.camera.capture(".temp.jpg")
-            return cv2.imread(".temp.jpg",0)
+            img = cv2.imread(".temp.jpg",0)
+            os.remove(".temp.jpg")
+            return img
         else:
             return self.frame
 
 
     def stop(self):
         self.stopped = True
-
-
-if __name__ == "__main__":
-      print("thisworks")

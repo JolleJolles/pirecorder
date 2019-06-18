@@ -28,7 +28,7 @@ from .videoin import VideoIn
 
 class Calibrate:
 
-    def __init__(self, stream = True, cam = "rpi", framerate=8,
+    def __init__(self,  cam = 0, framerate=8,
                  resolution=(640, 480), cross = False):
 
         """
@@ -36,107 +36,99 @@ class Calibrate:
         """
 
         self.framerate = framerate
-        self.resolution = (min(820, resolution[0]), min(616, resolution[1]))
         self.cross = cross
-
-        self.vid = VideoIn(framerate=self.framerate,
-                           resolution=self.resolution).start()
-        self.img = self.vid.read()
+        self.resolution = resolution
+        self.stream = True
+        self.exit = False
+        self.roi = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
 
-        self.stream = stream
-        self.roi = False
-
-        if self.stream:
-            self.drawer()
+        self.drawer()
 
 
     def draw_stream(self):
         alu.lineprint("Streaming video..")
 
+        self.vid = VideoIn(framerate=self.framerate,
+                      resolution=self.resolution)
+        self.vid.start()
+
         while True:
             self.img = self.vid.read()
 
             if self.cross:
-                alimu.draw_cross(self.img, self.resolution)
+                alimu.draw_cross(self.img, self.vid.resolution)
 
             cv2.imshow("Image", self.img)
-            cv2.resizeWindow("Image", self.resolution[0], self.resolution[1])
+            cv2.resizeWindow("Image", self.vid.resolution[0], self.vid.resolution[1])
 
-            self.k = cv2.waitKey(1) & 0xFF
-            if self.k == ord("c"):
+            k = cv2.waitKey(1) & 0xFF
+            if k == ord("c"):
                 self.cross = not self.cross
-
-            if self.k == ord("f"):
+            if k == ord("f"):
                 winval = abs(1 - cv2.getWindowProperty('Image', 0))
                 cv2.setWindowProperty("Image", 0, winval)
-
-            if self.k == ord("d"):
+            if k == ord("d"):
                 self.stream = False
-
-            if self.k in ["d",27]:
-                self.vid.stop()
                 break
+            if k == 27:
+                alu.lineprint("User exited..")
+                self.exit = True
+                break
+
+        self.vid.stop()
 
 
     def draw_frame(self):
-        alu.lineprint("Select roi..")
+        alu.lineprint("Selecting roi..")
         self.imgbak = self.img.copy()
 
         while True:
-            self.img = self.imgbak.copy()
-            alimu.draw_crosshair(self.img, self.m.pointer)
-            alimu.draw_rectangle(self.img, self.m.pointer,
-                                           self.m.rect, self.m.drawing)
-            cv2.imshow("Image", self.img)
+            img = self.imgbak.copy()
+            alimu.draw_crosshair(img, self.m.pointer)
+            alimu.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
+            cv2.imshow("Image", img)
 
-            self.k = cv2.waitKey(1) & 0xFF
-            if self.k == ord("f"):
-                winval = abs(1 - cv2.getWindowProperty('Image', 0))
-                cv2.setWindowProperty("Image", 0, winval)
-
-            if self.k == ord("s"):
+            k = cv2.waitKey(1) & 0xFF
+            if k == ord("s"):
                 if self.m.rect and len(self.m.rect) == 2:
                     self.roi = alimu.get_reccoords(self.m.rect)
-                    alu.lineprint("roi coordinates " + str(roi) + " stored..")
-                    return self.roi
+                    alu.lineprint("roi "+str(self.roi)+" stored..")
+                    break
                 else:
                     alu.lineprint("Nothing to store..")
 
-            if self.k == ord("z"):
+            if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
                     alu.lineprint("Creating zoomed image..")
                     rect = alimu.get_reccoords(self.m.rect)
-                    zoom = alimu.roi_to_zoom(rect, self.resolution)
-                    maxres = (2592, 1944)
-                    img = VideoIn(resolution=maxres, zoom = (0,0,1,1)).img()
+                    zoom = alimu.roi_to_zoom(rect, self.vid.resolution)
+                    vid = VideoIn(resolution=(2592,1944), zoom=zoom)
+                    zoomedimg = vid.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
-
                     while True:
-                        cv2.imshow("Zoomed", img)
-                        xwin, ywin = int(hp*maxres[0]), int(wp*maxres[1])
+                        cv2.imshow("Zoomed", zoomedimg)
+                        xwin = int(zoom[2]*vid.resolution[0])
+                        ywin = int(zoom[3]*vid.resolution[1])
                         cv2.resizeWindow("Zoomed", xwin, ywin)
 
-                        self.k = cv2.waitKey(1) & 0xFF
-                        if self.k == ord("f"):
+                        k = cv2.waitKey(1) & 0xFF
+                        if k == ord("f"):
                             winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
                             cv2.setWindowProperty("Zoomed", 0, winval)
-
-                        if self.k == 27:
-                            cv2.destroyWindow("Zoomed")
-                            cv2.waitKey(1)
-                            self.vid = VideoIn(resolution=self.resolution,
-                                             zoom = (0,0,1,1)).start()
-                            self.stream = True
-                            self.k = 255
+                        if k == 27:
                             break
 
-            if self.k == 27:
+                    k = 255
+                    vid.stop()
+                    cv2.destroyWindow("Zoomed")
+
+            if k == 27:
+                self.stream = True
                 self.m.rect = ()
-                self.k = 255
                 break
 
 
@@ -146,7 +138,14 @@ class Calibrate:
                 self.draw_stream()
             if not self.stream:
                 self.draw_frame()
-            if self.k == 27:
+            if self.exit:
                 cv2.waitKey(1)
-                cv2.destroyWindow('Image')
+                cv2.destroyWindow("Image")
+                cv2.destroyWindow("Zoomed")
+                cv2.destroyAllWindows()
+                for i in range(5):
+                    cv2.waitKey(1)
                 break
+
+if __name__ == "__main__":
+    Calibrate()
