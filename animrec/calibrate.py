@@ -121,10 +121,10 @@ class Calibrate:
                             winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
                             cv2.setWindowProperty("Zoomed", 0, winval)
                         if k == 27:
+                            vid.stop()
                             break
 
                     k = 255
-                    vid.stop()
                     cv2.destroyWindow("Zoomed")
 
             if k == 27:
