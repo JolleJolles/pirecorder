@@ -92,3 +92,7 @@ class VideoIn:
 
     def stop(self):
         self.stopped = True
+
+
+if __name__ == "__main__":
+      print("thisworks")
