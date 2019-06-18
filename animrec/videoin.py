@@ -43,11 +43,9 @@ class VideoIn:
             width = almau.closenr(resolution[0],32)
             height = almau.closenr(resolution[1],16)
             self.resolution = (width,height)
-            print(self.resolution)
             if zoom != (0,0,1,1):
                 ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
                 self.resolution = ((x2-x1),(y2-y1))
-            print(self.resolution)
             self.camera.resolution = self.resolution
             self.camera.framerate = framerate
             self.camera.zoom = zoom
@@ -102,7 +100,7 @@ class VideoIn:
         if self.cam == "rpi":
             self.camera.capture(".temp.jpg")
             img = cv2.imread(".temp.jpg",0)
-            os.remove(".temp.jpg")
+            #os.remove(".temp.jpg")
             return img
         else:
             return self.frame
