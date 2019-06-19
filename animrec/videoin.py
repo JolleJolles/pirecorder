@@ -24,47 +24,43 @@ import animlab.imutils as alimu
 import animlab.mathutils as almau
 
 class VideoIn:
-    def __init__(self, system="auto", resolution=(1920,1080), framerate=32,
-                 zoom = (0,0,1,1)):
+    def __init__(self, system="auto", vidsize=0.3, framerate=32, roi=False):
 
         """ Opens a video stream from native camera, webcam or rpi camera """
 
         if system == "auto":
             self.cam = "rpi" if alu.is_rpi() else 0
-        elif system in ["rpi",0,1]:
+        elif system in ["rpi",0,1,2]:
             self.cam = system
         else:
             self.cam = 0
 
+        self.roi = roi
+
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
             from picamera import PiCamera
+            self.maxres = (2592,1944)
+            self.res = (self.maxres[0]*vidsize,self.maxres[1]*vidsize)
+            self.res = alimu.picamconv(self.res)
             self.camera = PiCamera()
-            width = almau.closenr(resolution[0],32)
-            height = almau.closenr(resolution[1],16)
-            self.resolution = (width,height)
-            self.resolution = (int(zoom[2]*self.resolution[0]), int(zoom[3]*self.resolution[1]))
-            self.camera.resolution = self.resolution
+            self.camera.resolution = self.res
             self.camera.framerate = framerate
-            self.camera.zoom = zoom
             self.rawCapture = PiRGBArray(self.camera, size=self.resolution)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
 
         else:
             self.stream = cv2.VideoCapture(self.cam)
-            if not self.stream.isOpened():
-                raise Exception("Could not open video device")
-            self.stream.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
-            self.stream.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
-            self.resolution = (int(self.stream.get(3)),int(self.stream.get(4)))
-            time.sleep(1)
-            (self.grabbed, self.frame) = self.stream.read()
-            if zoom != (0,0,1,1):
-                ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
-                self.frame = self.frame[y1:y2, x1:x2]
+            self.stream.set(3, 4000)
+            self.stream.set(4, 4000)
+            self.maxresolution = (int(self.stream.get(3)), int(self.stream.get(4)))
+            self.stream.set(3, resolution[0])
+            self.stream.set(4, resolution[1])
+            self.resolution = (int(self.stream.get(3)), int(self.stream.get(4)))
 
         self.stopped = False
+
 
     def start(self):
         Thread(target=self.update, args=()).start()
@@ -84,28 +80,39 @@ class VideoIn:
                     return
         else:
             while True:
-                (self.grabbed, self.frame) = self.stream.read()
+                _, self.frame) = self.stream.read()
                 if self.stopped:
                     self.stream.release()
                     return
 
 
     def read(self):
+        if self.roi:
+            self.frame = alimu.crop(self.frame, self.roi[0], self.roi[1])
         return self.frame
 
 
     def img(self):
+        w,h = self.maxresolution
         if self.cam == "rpi":
-            self.camera.capture(".temp.jpg")
-            img = cv2.imread(".temp.jpg",0)
-            #os.remove(".temp.jpg")
+            self.image = np.empty((h * w * 3,), dtype=np.uint8)
+            camera.capture(self.image, 'bgr')
+            self.image = self.image.reshape((h, w, 3))
             self.stream.close()
             self.rawCapture.close()
             self.camera.close()
-            return img
         else:
+            self.stream.set(3, w)
+            self.stream.set(4, h)
+            _, self.image = self.stream.read()
             self.stop()
-            return self.frame
+
+        if self.roi:
+            zoom = alimu.roi_to_zoom(self.roi, self.resolution)
+            newroi = alimu.zoom_to_roi(zoom, self.maxresolution)
+            self.image = alimu.crop(self.image, newroi[0], newroi[1])
+
+        return self.image
 
 
     def stop(self):
