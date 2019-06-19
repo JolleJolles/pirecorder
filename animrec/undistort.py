@@ -16,7 +16,6 @@ limitations under the License.
 Modified by Jolle W. Jolles <j.w.jolles@gmail.com>
 
 All modifications are Copyright (C) 2016-2019 Jolle W. Jolles
-
 """
 
 from __future__ import print_function
