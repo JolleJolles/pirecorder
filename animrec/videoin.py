@@ -123,7 +123,7 @@ class VideoIn:
             print((rx1,ry1),(rx2,ry2))
             print(fixx, fixy)
             fixx = ((self.maxres[0]/2.)-rx1)/(self.maxres[0]/2.)*fixx
-            fixy = ((self.maxres[1]/2.)-rx1)/(self.maxres[1]/2.)*fixy
+            fixy = ((self.maxres[1]/2.)-ry1)/(self.maxres[1]/2.)*fixy
             print(fixx, fixy)
             self.roil = ((rx1+fixx, ry1+fixy),(rx2, ry2))
             print(self.roil)
