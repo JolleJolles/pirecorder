@@ -95,6 +95,7 @@ class VideoIn:
 
 
     def img(self):
+        time.sleep(2)
         w,h = self.maxres
         if self.cam == "rpi":
             self.image = np.empty((h * w * 3,), dtype=np.uint8)
