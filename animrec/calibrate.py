@@ -36,7 +36,7 @@ class Calibrate:
 
         self.system = system
         self.framerate = framerate
-        self.vidsize = resolution
+        self.vidsize = vidsize
         self.cross = cross
         self.stream = True
         self.exit = False
