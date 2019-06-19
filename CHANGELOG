@@ -2,7 +2,21 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 
-2019-06-17 - version 1.5.2
+2019-06-19 - version 1.6.0
+    * Added time delay to get right video resolution for VideoIn class
+    * Temporary image for rpi zooming is now automatically deleted
+    * Considerably fixed and improved calibrate function throughout
+    * Integrated functionality that detects if system is rpi or not
+    * Integrated rpi picamera resolution conversion to fit in (32,16) conversion
+    * Fixed rpi camera not closing properly when taking an image
+    * Renamed stream_video demo file to stream
+    * Changed copyright statement for all files
+    * Moved demo files to main animrec directory and renamed for easier
+      execution from the terminal
+    * Integrated fix for videoin function when max resolution and resolution
+      differ so the roi is not displayed correctly.
+
+=2019-06-17 - version 1.5.2
     * Updated stream_video script to reflect VideoIn class change
     * Created new sub folder with demo scrips that can be executed from command
       line
