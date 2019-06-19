@@ -28,8 +28,7 @@ from .videoin import VideoIn
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, resolution=(640,480),
-                 cross = False):
+    def __init__(self, system="auto", framerate=8, vidsize=0.3, cross = False):
 
         """
         Opens a video stream with user interface for calibrating the camera
@@ -37,7 +36,7 @@ class Calibrate:
 
         self.system = system
         self.framerate = framerate
-        self.resolution = resolution
+        self.vidsize = resolution
         self.cross = cross
         self.stream = True
         self.exit = False
@@ -53,7 +52,7 @@ class Calibrate:
         alu.lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
-                           resolution=self.resolution)
+                           vidsize=self.vidsize)
         self.vid.start()
 
         while True:
