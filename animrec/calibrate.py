@@ -28,7 +28,7 @@ from .videoin import VideoIn
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.3, cross = False):
+    def __init__(self, system="auto", framerate=8, vidsize=0.3, cross=False):
 
         """
         Opens a video stream with user interface for calibrating the camera
@@ -59,10 +59,10 @@ class Calibrate:
             self.img = self.vid.read()
 
             if self.cross:
-                alimu.draw_cross(self.img, self.vid.resolution)
+                alimu.draw_cross(self.img, self.vid.res)
 
             cv2.imshow("Image", self.img)
-            cv2.resizeWindow("Image", self.vid.resolution[0], self.vid.resolution[1])
+            cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):

@@ -54,10 +54,10 @@ class VideoIn:
             self.stream = cv2.VideoCapture(self.cam)
             self.stream.set(3, 4000)
             self.stream.set(4, 4000)
-            self.maxresolution = (int(self.stream.get(3)), int(self.stream.get(4)))
-            self.stream.set(3, resolution[0])
-            self.stream.set(4, resolution[1])
-            self.resolution = (int(self.stream.get(3)), int(self.stream.get(4)))
+            self.maxres = (int(self.stream.get(3)), int(self.stream.get(4)))
+            self.stream.set(3, int(self.maxres[0]*vidsize))
+            self.stream.set(4, int(self.maxres[1]*vidsize))
+            self.res = (int(self.stream.get(3)), int(self.stream.get(4)))
 
         self.stopped = False
 
