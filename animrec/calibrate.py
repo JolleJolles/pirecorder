@@ -103,9 +103,7 @@ class Calibrate:
             if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
                     alu.lineprint("Creating zoomed image..")
-                    vid = VideoIn(system=self.system, vidsize=self.vid.maxres,
-                                  roi=self.m.rect)
-                    zimg = vid.img()
+                    zimg = VideoIn(system=self.system, roi=self.m.rect).img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:
                         cv2.imshow("Zoomed", zimg)
