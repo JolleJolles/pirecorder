@@ -106,9 +106,10 @@ class Calibrate:
                     vid = VideoIn(system=self.system, roi=self.m.rect)
                     zimg = vid.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
+                    print(vid.roiw, vid.roih)
                     while True:
                         cv2.imshow("Zoomed", zimg)
-                        cv2.resizeWindow("Zoomed", vid.roiw, id.roih)
+                        cv2.resizeWindow("Zoomed", vid.roiw, vid.roih)
 
                         k = cv2.waitKey(1) & 0xFF
                         if k == ord("f"):
