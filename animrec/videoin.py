@@ -77,9 +77,17 @@ class VideoIn:
             for f in self.stream:
                 self.frame = f.array
                 self.rawCapture.truncate(0)
+                if self.stopped:
+                    self.stream.close()
+                    self.rawCapture.close()
+                    self.camera.close()
+                    return
         else:
             while True:
                 (self.grabbed, self.frame) = self.stream.read()
+                if self.stopped:
+                    self.stream.release()
+                    return
 
 
     def read(self):
@@ -91,16 +99,14 @@ class VideoIn:
             self.camera.capture(".temp.jpg")
             img = cv2.imread(".temp.jpg",0)
             #os.remove(".temp.jpg")
+            self.stream.close()
+            self.rawCapture.close()
+            self.camera.close()
             return img
         else:
+            self.stop()
             return self.frame
 
 
     def stop(self):
-        if self.cam == "rpi":
-            self.stream.close()
-            self.rawCapture.close()
-            self.camera.close()
-        else:
-            self.stream.release()
-        return
+        self.stopped = True
