@@ -120,7 +120,7 @@ class VideoIn:
             self.roil = alimu.zoom_to_roi(zoom, self.maxres)
             self.roiw = self.roil[1][0] - self.roil[0][0]
             self.roih = self.roil[1][1] - self.roil[0][1]
-            print(newroi)
+            print(self.roil)
             print(self.image.shape)
             self.image = alimu.crop(self.image, self.roil[0], self.roil[1])
 
