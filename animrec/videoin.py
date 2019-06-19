@@ -98,9 +98,9 @@ class VideoIn:
         time.sleep(2)
         w,h = self.maxres
         if self.cam == "rpi":
-            self.image = np.empty((h * w * 3,), dtype=np.uint8) + 255
-            self.camera.capture(self.image, 'bgr')
-            self.image = self.image.reshape((h, w, 3))
+            image = np.empty((h * w * 3,), dtype=np.uint8) + 255
+            self.camera.capture(image, 'bgr')
+            self.image = image.reshape((h, w, 3))
             self.stream.close()
             self.rawCapture.close()
             self.camera.close()
