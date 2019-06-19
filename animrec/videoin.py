@@ -124,8 +124,8 @@ class VideoIn:
             print(fixx, fixy)
             rx1 = int(((self.maxres[0]/2.)-rx1)/(self.maxres[0]/2.)*fixx)
             yx1 = int(((self.maxres[1]/2.)-ry1)/(self.maxres[1]/2.)*fixy)
-            rx2 = int((self.maxres[0]-rx2)/self.maxres[0]*fixx)
-            yx2 = int((self.maxres[1]-ry2)/self.maxres[1]*fixy)
+            rx2 = int((self.maxres[0]-rx2)/float(self.maxres[0])*fixx)
+            yx2 = int((self.maxres[1]-ry2)/float(self.maxres[1])*fixy)
             self.roil = ((rx1,ry1),(rx2,ry2))
             print(self.roil)
             self.roiw = self.roil[1][0] - self.roil[0][0]
