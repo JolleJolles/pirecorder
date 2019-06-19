@@ -98,28 +98,31 @@ class VideoIn:
         time.sleep(2)
         w,h = self.maxres
         if self.cam == "rpi":
-            image = np.empty((h * w * 3,), dtype=np.uint8) + 255
             self.camera.resolution = self.maxres
-            self.camera.capture(image, 'bgr')
-            self.image = image.reshape((h, w, 3))
+            self.image = np.empty((h * w * 3,), dtype=np.uint8)
+            self.camera.capture(self.image, 'bgr')
+            self.image = self.image.reshape((h, w, 3))
             self.stream.close()
             self.rawCapture.close()
             self.camera.close()
         else:
+            print(self.res)
             self.stream.set(3, w)
             self.stream.set(4, h)
             print(w,h)
             _, self.image = self.stream.read()
-            self.stop()
+            print(self.image.shape)
+            self.stream.release()
 
         if self.roi:
             zoom = alimu.roi_to_zoom(self.roi, self.res)
             print(zoom)
-            newroi = alimu.zoom_to_roi(zoom, self.maxres)
+            self.roil = alimu.zoom_to_roi(zoom, self.maxres)
+            self.roiw = self.roil[1][0] - self.roil[0][0]
+            self.roih = self.roil[1][1] - self.roil[0][1]
             print(newroi)
             print(self.image.shape)
-            self.image = alimu.crop(self.image, newroi[0], newroi[1])
-            print(self.image.shape)
+            self.image = alimu.crop(self.image, self.roil[0], self.roil[1])
 
         return self.image
 
