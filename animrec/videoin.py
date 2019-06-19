@@ -43,10 +43,7 @@ class VideoIn:
             width = almau.closenr(resolution[0],32)
             height = almau.closenr(resolution[1],16)
             self.resolution = (width,height)
-            print(self.resolution)
-            print(zoom)
-            print(self.resolution)
-            self.resolution = (zoom[2]*self.resolution, zoom[3]*self.resolution)
+            self.resolution = (zoom[2]*self.resolution[0], zoom[3]*self.resolution[1])
             self.camera.resolution = self.resolution
             self.camera.framerate = framerate
             self.camera.zoom = zoom
