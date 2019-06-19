@@ -46,7 +46,7 @@ class VideoIn:
             self.camera = PiCamera()
             self.camera.resolution = self.res
             self.camera.framerate = framerate
-            self.rawCapture = PiRGBArray(self.camera, size=self.resolution)
+            self.rawCapture = PiRGBArray(self.camera, size=self.res)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
 
@@ -93,7 +93,7 @@ class VideoIn:
 
 
     def img(self):
-        w,h = self.maxresolution
+        w,h = self.maxres
         if self.cam == "rpi":
             self.image = np.empty((h * w * 3,), dtype=np.uint8)
             camera.capture(self.image, 'bgr')
@@ -108,8 +108,8 @@ class VideoIn:
             self.stop()
 
         if self.roi:
-            zoom = alimu.roi_to_zoom(self.roi, self.resolution)
-            newroi = alimu.zoom_to_roi(zoom, self.maxresolution)
+            zoom = alimu.roi_to_zoom(self.roi, self.res)
+            newroi = alimu.zoom_to_roi(zoom, self.maxres)
             self.image = alimu.crop(self.image, newroi[0], newroi[1])
 
         return self.image
