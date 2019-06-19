@@ -118,6 +118,7 @@ class VideoIn:
         if self.roi:
             zoom = alimu.roi_to_zoom(self.roi, self.res)
             (rx1,ry1),(rx2,ry2) = alimu.zoom_to_roi(zoom, self.maxres)
+            print(self.res, self.maxres)
             fixx,fixy = alimu.fix_vidshape(self.res, self.maxres)
             print(fixx, fixy)
             print((rx1,ry1),(rx2,ry2))
