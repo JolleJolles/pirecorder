@@ -43,9 +43,7 @@ class VideoIn:
             width = almau.closenr(resolution[0],32)
             height = almau.closenr(resolution[1],16)
             self.resolution = (width,height)
-            if zoom != (0,0,1,1):
-                ((x1,y1),(x2,y2)) = alimu.zoom_to_roi(zoom, self.resolution)
-                self.resolution = ((x2-x1),(y2-y1))
+            self.resolution = (zoom[2]*self.resolution, zoom[3]*self.resolution)
             self.camera.resolution = self.resolution
             self.camera.framerate = framerate
             self.camera.zoom = zoom
@@ -79,16 +77,8 @@ class VideoIn:
             for f in self.stream:
                 self.frame = f.array
                 self.rawCapture.truncate(0)
-                if self.stopped:
-                    self.stream.close()
-                    self.rawCapture.close()
-                    self.camera.close()
-                    return
         else:
             while True:
-                if self.stopped:
-                    self.stream.release()
-                    return
                 (self.grabbed, self.frame) = self.stream.read()
 
 
@@ -107,4 +97,10 @@ class VideoIn:
 
 
     def stop(self):
-        self.stopped = True
+        if self.cam == "rpi":
+            self.stream.close()
+            self.rawCapture.close()
+            self.camera.close()
+        else:
+            self.stream.release()
+        return
