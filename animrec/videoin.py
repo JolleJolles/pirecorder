@@ -80,7 +80,7 @@ class VideoIn:
                     return
         else:
             while True:
-                _, self.frame) = self.stream.read()
+                _, self.frame = self.stream.read()
                 if self.stopped:
                     self.stream.release()
                     return
