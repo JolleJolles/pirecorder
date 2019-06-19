@@ -106,23 +106,19 @@ class VideoIn:
             self.rawCapture.close()
             self.camera.close()
         else:
+            self.stream.release()
             self.stream = cv2.VideoCapture(self.cam)
             self.stream.set(3, w)
             self.stream.set(4, h)
-            print(self.res)
-            print(w,h)
             _, self.image = self.stream.read()
             print(self.image.shape)
             self.stream.release()
 
         if self.roi:
             zoom = alimu.roi_to_zoom(self.roi, self.res)
-            print(zoom)
             self.roil = alimu.zoom_to_roi(zoom, self.maxres)
             self.roiw = self.roil[1][0] - self.roil[0][0]
             self.roih = self.roil[1][1] - self.roil[0][1]
-            print(self.roil)
-            print(self.image.shape)
             self.image = alimu.crop(self.image, self.roil[0], self.roil[1])
 
         return self.image
