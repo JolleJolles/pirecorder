@@ -19,6 +19,8 @@ from threading import Thread
 import os
 import cv2
 import time
+import numpy as np
+
 import animlab.utils as alu
 import animlab.imutils as alimu
 import animlab.mathutils as almau
