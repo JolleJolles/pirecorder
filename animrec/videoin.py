@@ -42,7 +42,7 @@ class VideoIn:
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
             from picamera import PiCamera
-            self.maxres = (2592,1944)
+            self.maxres = (2592,1952)
             self.res = (self.maxres[0]*vidsize,self.maxres[1]*vidsize)
             self.res = alimu.picamconv(self.res)
             self.camera = PiCamera()
