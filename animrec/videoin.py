@@ -106,9 +106,10 @@ class VideoIn:
             self.rawCapture.close()
             self.camera.close()
         else:
-            print(self.res)
+            self.stream = cv2.VideoCapture(self.cam)
             self.stream.set(3, w)
             self.stream.set(4, h)
+            print(self.res)
             print(w,h)
             _, self.image = self.stream.read()
             print(self.image.shape)
