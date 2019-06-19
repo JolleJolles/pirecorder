@@ -1,6 +1,8 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
+Uncommited
+    * Created a test branch
 
 2019-06-19 - version 1.6.0
     * Added time delay to get right video resolution for VideoIn class
