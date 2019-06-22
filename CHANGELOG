@@ -3,6 +3,7 @@ complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 Uncommited
     * Created a test branch
+    * Changed the package name and short description
 
 2019-06-19 - version 1.6.0
     * Added time delay to get right video resolution for VideoIn class

@@ -1,9 +1,9 @@
 # AnimRec
-**A python module for controlled image and video recording for the Rasperry Pi**
+**A python module for controlled and automated image and video recording**
 
 ![logo](https://github.com/JolleJolles/animrec/blob/master/animrec-logo.jpg)
 
-*AnimRec* is a package to facilitate controlled and automated video recording using raspberry pi (rpi). It was specifically designed with the Behavioural Scientist in mind or like-minded people that have a wish for easy automed recording but may not have the required knowledge or coding skills at hand.
+*AnimRec* is a package to facilitate controlled and automated video recording, especially using  Raspberry Pi (rpi) computers. It was specifically designed with the Behavioural Scientist in mind to facilitate controlled and automated image and video recording without requiring considerable coding skills.
 
 *AnimRec* consists of a main recorder class and a number of [helper methods](#othmethods) that facilitate setting-up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. *AnimRec* also contains detailed documentation and tutorials that are continuously updated with the aim to help people with very limited coding knowledge to set-up their rpi, install the required packaged, and get working with *AnimRec*.
 
