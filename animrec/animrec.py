@@ -497,8 +497,8 @@ class Recorder:
 
         self._setup_cam(simple=True)
         rg, bg = self.vid.camera.awb_gains
+        print(rg, bg)
         import picamera.array
-
 
         with picamera.array.PiRGBArray(self.vid.camera, size=(128, 72)) as output:
 
