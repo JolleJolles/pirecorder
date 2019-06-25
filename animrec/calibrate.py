@@ -107,6 +107,12 @@ class Calibrate:
                     self.vid2 = VideoIn(system=self.system, roi=self.m.rect)
                     zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
+                    print(self.roi)
+                    print(self.vid2.roi, self.vid2.res)
+                    print(zimg.shape)
+                    print(self.vid2.roil)
+                    print(self.vid2.roiw)
+                    print(self.vid2.roih)
                     while True:
                         cv2.imshow("Zoomed", zimg)
                         cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
