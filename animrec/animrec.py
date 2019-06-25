@@ -247,7 +247,7 @@ class Recorder:
         print(self.config.cus.gains)
         print(alu.check_frac(self.config.cus.gains))
         print(alu.check_frac("(1.0, 2.5)"))
-        print(alu.check_frac(literal_eval"(1.0, 2.5)"))
+        print(alu.check_frac(literal_eval("(1.0, 2.5)"))
         print(alu.check_frac((1.0, 2.5)))
         self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
         print(self.vid.camera.awb_gains)
