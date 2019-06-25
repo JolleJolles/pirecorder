@@ -479,7 +479,7 @@ class Recorder:
 
     def set_roi(self):
 
-        C = Calibrate().draw_frame()
+        C = Calibrate()
         if C.roi:
             self.set_config(roi=roi, internal="")
             alu.lineprint("Roi stored..")

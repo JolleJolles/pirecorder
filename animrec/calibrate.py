@@ -41,6 +41,7 @@ class Calibrate:
         self.cross = cross
         self.stream = True
         self.exit = False
+        self.roi = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
@@ -53,7 +54,7 @@ class Calibrate:
         alu.lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
-                           vidsize=self.vidsize)
+                           vidsize=self.vidsize, roi=self.roi)
         self.vid.start()
 
         while True:
