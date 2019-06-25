@@ -5,6 +5,7 @@ Uncommited
     * Created a test branch
     * Changed the package name and short description
     * Fixed zoom error when using custom vidsize
+    * Fixed set_roi function to work with videoin class
 
 2019-06-19 - version 1.6.0
     * Added time delay to get right video resolution for VideoIn class

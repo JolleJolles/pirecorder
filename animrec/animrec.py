@@ -479,8 +479,12 @@ class Recorder:
 
     def set_roi(self):
 
-        roi = Calibrate().draw_frame()
-        self.set_config(roi=roi, internal="")
+        C = Calibrate().draw_frame()
+        if C.roi:
+            self.set_config(roi=roi, internal="")
+            alu.lineprint("Roi stored..")
+        else:
+            alu.lineprint("No roi selected..")
 
 
     def set_gains(self, attempts = 100, step = 0.05):
@@ -491,13 +495,13 @@ class Recorder:
         # reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 
         self._setup_cam(simple=True)
-        rg, bg = self.cam.awb_gains
+        rg, bg = self.vid.camera.awb_gains
 
-        with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
+        with picamera.array.PiRGBArray(self.vid.camera, size=(128, 72)) as output:
 
             for i in range(attempts):
 
-                self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+                self.vid.camera.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
@@ -512,13 +516,13 @@ class Recorder:
                     else:
                         bg += step
 
-                self.cam.awb_gains = (rg, bg)
+                self.vid.camera.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
 
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
-        self.cam.close()
+        self.vid.camera.close()
 
 
     def record(self, singlevid = False):
@@ -531,13 +535,13 @@ class Recorder:
         if self.config.rec.type == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
-            self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
+            self.vid.camera.capture(self.filename, format="jpeg", quality = self.config.img.quality)
             alu.lineprint("Captured "+self.filename)
 
         elif self.config.rec.type == "imgseq":
 
             timepoint = datetime.now()
-            for i, img in enumerate(self.cam.capture_continuous(self.filename,
+            for i, img in enumerate(self.vid.camera.capture_continuous(self.filename,
                                     format="jpeg", quality = self.config.img.quality)):
                 if i < self.config.img.nr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
@@ -555,10 +559,10 @@ class Recorder:
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if singlevid else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
-                self.cam.start_recording(filename, quality = self.config.vid.quality)
+                self.vid.camera.start_recording(filename, quality = self.config.vid.quality)
                 alu.lineprint("Recording "+filename)
-                self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
-                self.cam.stop_recording()
+                self.vid.camera.wait_recording(self.config.vid.duration + self.config.vid.delay)
+                self.vid.camera.stop_recording()
                 alu.lineprint("Finished")
                 if singlevid:
                     break
@@ -566,7 +570,7 @@ class Recorder:
                     if input("\nn for new session, e to exit: ") == 'e':
                         break
 
-        self.cam.close()
+        self.vid.camera.close()
 
 
     def schedule(self, jobname = None, timeplan = None, enable = True,
