@@ -54,7 +54,7 @@ class Calibrate:
         alu.lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
-                           vidsize=self.vidsize, roi=self.roi)
+                           vidsize=self.vidsize)
         self.vid.start()
 
         while True:

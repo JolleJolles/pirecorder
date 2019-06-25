@@ -481,7 +481,7 @@ class Recorder:
 
         C = Calibrate()
         if C.roi:
-            self.set_config(roi=roi, internal="")
+            self.set_config(roi=C.roi, internal="")
             alu.lineprint("Roi stored..")
         else:
             alu.lineprint("No roi selected..")

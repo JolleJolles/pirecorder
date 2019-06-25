@@ -27,7 +27,7 @@ import animlab.imutils as alimu
 import animlab.mathutils as almau
 
 class VideoIn:
-    def __init__(self, system="auto", vidsize=0.2, framerate=32, roi=False):
+    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False):
 
         """ Opens a video stream from native camera, webcam or rpi camera """
 
@@ -38,7 +38,7 @@ class VideoIn:
         else:
             self.cam = 0
 
-        self.roi = roi
+        self.crop = crop
 
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
@@ -90,8 +90,8 @@ class VideoIn:
 
 
     def read(self):
-        if self.roi:
-            self.frame = alimu.crop(self.frame, self.roi[0], self.roi[1])
+        if self.crop:
+            self.frame = alimu.crop(self.frame, self.crop[0], self.crop[1])
         return self.frame
 
 
@@ -115,8 +115,8 @@ class VideoIn:
             _, self.image = self.stream.read()
             self.stream.release()
 
-        if self.roi:
-            zoom = alimu.roi_to_zoom(self.roi, self.res)
+        if self.crop:
+            zoom = alimu.roi_to_zoom(self.crop, self.res)
             (rx1,ry1),(rx2,ry2) = alimu.zoom_to_roi(zoom, self.maxres)
             fixx, fixy = alimu.fix_vidshape(self.res, self.maxres)
             if fixx > 100 or fixy > 100:
