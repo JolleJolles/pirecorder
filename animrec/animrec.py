@@ -156,14 +156,14 @@ class Recorder:
 
     """
 
-    def __init__(self, cam="rpi", configfile = "animrec.conf"):
+    def __init__(self, system="auto", configfile = "animrec.conf"):
 
         alu.lineprint("==========================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
         alu.lineprint(txt, False)
         alu.lineprint("==========================================", False)
 
-        self.cam = cam
+        self.system = system
         self.host = gethostname()
         self.home = alu.homedir()
         self.setupdir = self.home + "setup"
@@ -218,11 +218,11 @@ class Recorder:
     def _setup_cam(self, simple = False):
 
         """ Sets-up the raspberry pi camera based on configuration """
-        if self.cam == "rpi":
+        if self.system == "rpi":
             import picamera
             import picamera.array
 
-        self.vid = VideoIn(cam=self.cam)
+        self.vid = VideoIn()
         self.vid.camera.rotation = self.config.cus.rotation
         self.vid.camera.exposure_compensation = self.config.cam.compensation
 
@@ -501,7 +501,8 @@ class Recorder:
 
             for i in range(attempts):
 
-                self.vid.camera.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+                self.vid.camera.capture(output, format='rgb', resize=(128, 80),
+                                        use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 
