@@ -460,6 +460,7 @@ class Recorder:
         if "vidquality" in kwargs:
             self.config.vid.quality = kwargs["vidquality"]
 
+        brightchange = False
         if os.path.exists(self.brightfile):
             with open(self.brightfile) as f:
                 brighttune = yaml.load(f)
