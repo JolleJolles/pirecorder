@@ -6,6 +6,7 @@ Uncommited
     * Changed the package name and short description
     * Fixed zoom error when using custom vidsize
     * Fixed set_roi function to work with videoin class
+    * Fixed set_gains function to update based on custom gains
 
 2019-06-19 - version 1.6.0
     * Added time delay to get right video resolution for VideoIn class
