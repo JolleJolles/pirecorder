@@ -243,11 +243,7 @@ class Recorder:
         self.vid.camera.shutter_speed = self.config.cam.shutterspeed
         self.vid.camera.exposure_mode = 'off'
         self.vid.camera.awb_mode = 'off'
-        print(self.vid.camera.awb_gains)
-        print(self.config.cus.gains)
-        print(alu.check_frac(self.config.cus.gains))
         self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
-        print(self.vid.camera.awb_gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.vid.camera.brightness = brightness
 
@@ -501,7 +497,6 @@ class Recorder:
 
         self._setup_cam(simple=True)
         rg, bg = alu.check_frac(self.config.cus.gains)
-        print(rg, bg)
         import picamera.array
 
         with picamera.array.PiRGBArray(self.vid.camera, size=(128, 72)) as output:
