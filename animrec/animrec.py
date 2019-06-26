@@ -246,9 +246,6 @@ class Recorder:
         print(self.vid.camera.awb_gains)
         print(self.config.cus.gains)
         print(alu.check_frac(self.config.cus.gains))
-        print(alu.check_frac("(1.0, 2.5)"))
-        print(alu.check_frac(literal_eval("(1.0, 2.5)")))
-        print(alu.check_frac((1.0, 2.5)))
         self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
         print(self.vid.camera.awb_gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
@@ -503,7 +500,7 @@ class Recorder:
         # reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 
         self._setup_cam(simple=True)
-        rg, bg = self.vid.camera.awb_gains
+        rg, bg = alu.check_frac(self.config.cus.gains)
         print(rg, bg)
         import picamera.array
 
