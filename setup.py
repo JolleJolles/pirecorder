@@ -97,7 +97,7 @@ if __name__ == "__main__":
           long_description=LONG_DESCRIPTION,
           url=URL,
           entry_points={
-                     'console_scripts': ['ar_calib = animrec.Calibrate:Calibrate'],
+                     'console_scripts': ['ar_calib = animrec.calibrate:Calibrate'],
           },
           download_url=DOWNLOAD_URL,
           version=__version__,
