@@ -96,6 +96,9 @@ if __name__ == "__main__":
           description=DESCRIPTION,
           long_description=LONG_DESCRIPTION,
           url=URL,
+          entry_points={
+                     'console_scripts': ['ar_calib = animrec.Calibrate:Calibrate'],
+          },
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,
