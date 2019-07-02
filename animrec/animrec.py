@@ -218,27 +218,17 @@ class Recorder:
     def _setup_cam(self, simple = False):
 
         """ Sets-up the raspberry pi camera based on configuration """
-        if self.system == "rpi":
-            import picamera
-            import picamera.array
 
         self.vid = VideoIn()
         self.vid.camera.rotation = self.config.cus.rotation
         self.vid.camera.exposure_compensation = self.config.cam.compensation
 
-        if simple:
-            self.vid.camera.resolution = (1280, 720)
-        else:
-            if self.config.rec.type == "img":
-                self.vid.camera.resolution = literal_eval(self.config.img.dims)
-                self.vid.camera.framerate = self.config.img.fps
-            if self.config.rec.type == "vid":
-                self.vid.camera.resolution = literal_eval(self.config.vid.dims)
-                self.vid.camera.framerate = self.config.vid.fps
-            self.rawCapture = picamera.array.PiRGBArray(self.vid.camera,
-                              size=self.vid.camera.resolution)
-
-        sleep(0.1)
+        if self.config.rec.type == "img":
+            self.vid.camera.resolution = literal_eval(self.config.img.dims)
+            self.vid.camera.framerate = self.config.img.fps
+        if self.config.rec.type == "vid":
+            self.vid.camera.resolution = literal_eval(self.config.vid.dims)
+            self.vid.camera.framerate = self.config.vid.fps
 
         self.vid.camera.shutter_speed = self.config.cam.shutterspeed
         self.vid.camera.exposure_mode = 'off'
@@ -246,12 +236,10 @@ class Recorder:
         self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.vid.camera.brightness = brightness
-
-        if not simple:
-            self.vid.camera.contrast = self.config.cam.contrast
-            self.vid.camera.saturation = self.config.cam.saturation
-            self.vid.camera.iso = self.config.cam.iso
-            self.vid.camera.sharpness = self.config.cam.sharpness
+        self.vid.camera.contrast = self.config.cam.contrast
+        self.vid.camera.saturation = self.config.cam.saturation
+        self.vid.camera.iso = self.config.cam.iso
+        self.vid.camera.sharpness = self.config.cam.sharpness
 
         alu.lineprint("Camera started..")
 
