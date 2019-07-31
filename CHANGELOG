@@ -2,6 +2,10 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/animrec/commits/
 
 Uncommited
+    * Moved getgains function to its own file and updated integrated function
+    * Moved scheduling functionality to its own class in a separate file
+    * Fixed stream class parameters
+    * Fixed issue with clearing all jobs with scheduler
     * Created a test branch
     * Changed the package name and short description
     * Fixed zoom error when using custom vidsize
@@ -16,7 +20,7 @@ Uncommited
     * Integrated functionality that detects if system is rpi or not
     * Integrated rpi picamera resolution conversion to fit in (32,16) conversion
     * Fixed rpi camera not closing properly when taking an image
-    * Renamed stream_video demo file to stream
+    * Renamed stream_video demo file to streamf
     * Changed copyright statement for all files
     * Moved demo files to main animrec directory and renamed for easier
       execution from the terminal
