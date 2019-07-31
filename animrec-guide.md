@@ -112,63 +112,50 @@ Configuring AnimRec
 
 Running AnimRec
 --------
-1. Now you are ready to run recordings with the `Record` method. This is as simple as running:
+Now you are ready to run recordings with the `Record` method. To do so within python, simply enter:
 
-    `AR.record()`
+```
+AR.record()
+```
 
-    When recording video, after each video recording has ended the user is automatically asked to record another video and a sequence number is added to the video. This makes it very easy to run multiple video recordings after another, such as when filming trials of a behavioural experiment. To just run a single video recording enter instead:
+When recording video, after each video recording has ended the user is automatically asked to record another video and a sequence number is added to the video. This makes it very easy to run multiple video recordings after another, such as when filming trials of a behavioural experiment. To just run a single video recording enter instead:
 
-    `AR.record(singlevid = True)`
+```
+AR.record(singlevid = True)
+```
 
-2. You can run your animrec recordings in a number of different ways. Following from the steps above, the easiest is simply interactively with python running in the terminal. Thus, open an instance of python:
+You can run your animrec recordings in a number of different ways. Following from the steps above, the easiest is simply interactively with python running in the terminal. Thus, open an instance of python:
 
-    `python`
+```
+python
+```
 
-    Import animrec and set-up the Recorder instance:
+Import animrec and set-up the Recorder instance:
 
-    `import animrec`
-    `AR = animrec.Recorder()`
+```
+import animrec
+AR = animrec.Recorder()
+```
 
-    And run record:
+And run record:
 
-    `AR.record()`.
+```
+AR.record()
+```
 
-    You could even run the code directly from the terminal:
+You could even run the code directly from the terminal:
 
-    `python -c import animrec; AR=animrec.Recorder(); AR.record()`
+```
+python -c import animrec; AR=animrec.Recorder(); AR.record()
+```
 
-3. The second way is to create a simple python file with the code to run a recording. For example, you could create the file `rec.py` with the following code:
+AnimRec also comes with a so-called 'console script' that runs the above code directly. Simply open a terminal and enter:
 
-    ```
-    # Import the package
-    import animrec
+```
+rec
+```
 
-    # Initiate the recorder instance
-    AR = animrec.Recorder()
-
-    # Update the configuration
-    AR.set_config(label="test", rectype="img", iso=200, contrast=20)
-    AR.record()
-    ```
-
-    and run that from the terminal:
-
-    `python rec.py`
-
-    To make running this even easier, we can create an alias for our recording script with a custom command. For this we need to open the `.bashrc` file in our root directory:
-
-    `sudo nano ~/.bashrc`
-
-    and add the following to the bottom of the file:
-
-    `alias rec='sudo python rec.py'`
-
-    Now all you need to enter in terminal to start your recordings is `rec`, and AnimRec automatically starts with the right custom settings.
-
-    Note: Do not call your file like the package, i.e. `animrec.py`, as then the code will not be run properly.
-
-
-3. A third way is to store your code in a jupyter file, like the tutorial file [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-virtual-python-environments.md), with the option to have many different cells with different parameters or calls and only run those cells that you want.
+and now animrec is started with the default `animrec.conf` configuration file. You could also make use of a jupyter file, like explained in my tutorial [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-virtual-python-environments.md).
 
 Scheduling recordings
 --------
