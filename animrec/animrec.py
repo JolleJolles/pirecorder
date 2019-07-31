@@ -154,7 +154,7 @@ class Recorder:
 
     def __init__(self, system="auto", configfile = "animrec.conf"):
 
-        alu.lineprint("========================================", False)
+        alu.lineprint("==========================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
         alu.lineprint(txt, False)
         alu.lineprint("==========================================", False)
@@ -193,9 +193,9 @@ class Recorder:
                             vidquality = 11,internal="")
             alu.lineprint("Config settings stored..")
         else:
-            alu.lineprint("Config settings loaded.. Recording " +\
-                          self.config.rec.type + " in " + self.home +\
-                          self.config.rec.dir)
+            alu.lineprint("Config file " + configfile + " loaded..")
+            alu.lineprint("Recording " + self.config.rec.type + " in " +\
+                          self.home + self.config.rec.dir)
 
         self._imgparams()
         self._shuttertofps()
