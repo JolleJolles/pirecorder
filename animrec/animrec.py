@@ -27,8 +27,6 @@ import os
 import sys
 import cv2
 import yaml
-import crontab
-import getpass
 
 import numpy as np
 from ast import literal_eval
@@ -37,11 +35,9 @@ from socket import gethostname
 from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
-from cron_descriptor import get_description
 
 from .calibrate import Calibrate
-from .videoin import VideoIn
-
+from .schedule import Schedule
 
 class Recorder:
 
@@ -156,14 +152,14 @@ class Recorder:
 
     """
 
-    def __init__(self, cam="rpi", configfile = "animrec.conf"):
+    def __init__(self, system="auto", configfile = "animrec.conf"):
 
         alu.lineprint("==========================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
         alu.lineprint(txt, False)
         alu.lineprint("==========================================", False)
 
-        self.cam = cam
+        self.system = system
         self.host = gethostname()
         self.home = alu.homedir()
         self.setupdir = self.home + "setup"
@@ -183,7 +179,7 @@ class Recorder:
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            alu.lineprint("New config file created")
+            alu.lineprint("Config file not found, new file created..")
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
@@ -195,11 +191,11 @@ class Recorder:
                             vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
                             imgquality=50, vidduration=10, viddelay=10,
                             vidquality = 11,internal="")
-            alu.lineprint("Config settings stored")
+            alu.lineprint("Config settings stored..")
         else:
-            alu.lineprint("Config settings loaded.. Recording " +\
-                          self.config.rec.type + " in " + self.home +\
-                          self.config.rec.dir)
+            alu.lineprint("Config file " + configfile + " loaded..")
+            alu.lineprint("Recording " + self.config.rec.type + " in " +\
+                          self.home + self.config.rec.dir)
 
         self._imgparams()
         self._shuttertofps()
@@ -215,43 +211,40 @@ class Recorder:
         os.chdir(self.recdir)
 
 
-    def _setup_cam(self, simple = False):
+    def _setup_cam(self, simple = True):
 
         """ Sets-up the raspberry pi camera based on configuration """
-        if self.cam == "rpi":
-            import picamera
-            import picamera.array
 
-        self.vid = VideoIn(cam=self.cam)
-        self.vid.camera.rotation = self.config.cus.rotation
-        self.vid.camera.exposure_compensation = self.config.cam.compensation
+        import picamera
+        self.cam = picamera.PiCamera()
+        self.cam.rotation = self.config.cus.rotation
+        self.cam.exposure_compensation = self.config.cam.compensation
 
         if simple:
-            self.vid.camera.resolution = (1280, 720)
+            self.cam.resolution = (1280, 720)
         else:
             if self.config.rec.type == "img":
-                self.vid.camera.resolution = literal_eval(self.config.img.dims)
-                self.vid.camera.framerate = self.config.img.fps
+                self.cam.resolution = literal_eval(self.config.img.dims)
+                self.cam.framerate = self.config.img.fps
             if self.config.rec.type == "vid":
-                self.vid.camera.resolution = literal_eval(self.config.vid.dims)
-                self.vid.camera.framerate = self.config.vid.fps
-            self.rawCapture = picamera.array.PiRGBArray(self.vid.camera,
-                              size=self.vid.camera.resolution)
+                self.cam.resolution = literal_eval(self.config.vid.dims)
+                self.cam.framerate = self.config.vid.fps
+            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
         sleep(0.1)
 
-        self.vid.camera.shutter_speed = self.config.cam.shutterspeed
-        self.vid.camera.exposure_mode = 'off'
-        self.vid.camera.awb_mode = 'off'
-        self.vid.camera.awb_gains = alu.check_frac(self.config.cus.gains)
+        self.cam.shutter_speed = self.config.cam.shutterspeed
+        self.cam.exposure_mode = 'off'
+        self.cam.awb_mode = 'off'
+        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
-        self.vid.camera.brightness = brightness
+        self.cam.brightness = brightness
 
         if not simple:
-            self.vid.camera.contrast = self.config.cam.contrast
-            self.vid.camera.saturation = self.config.cam.saturation
-            self.vid.camera.iso = self.config.cam.iso
-            self.vid.camera.sharpness = self.config.cam.sharpness
+            self.cam.contrast = self.config.cam.contrast
+            self.cam.saturation = self.config.cam.saturation
+            self.cam.iso = self.config.cam.iso
+            self.cam.sharpness = self.config.cam.sharpness
 
         alu.lineprint("Camera started..")
 
@@ -297,107 +290,6 @@ class Recorder:
         else:
             date = strftime("%y%m%d")
             self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
-
-
-
-    def _check_job(self):
-
-        """ Returns scheduled jobs with a certain name """
-
-        return [job for job in self.cron if job.comment == self.jobname]
-
-
-    def _checktimeplan(self):
-
-        """ Checks timeplan and prints description"""
-
-        if self.jobtimeplan is None:
-            alu.lineprint("No timeplan provided..")
-        else:
-            valid = crontab.CronSlices.is_valid(self.jobtimeplan)
-            if valid:
-                timedesc = get_description(self.jobtimeplan)
-                print("Your timeplan will run " + timedesc)
-            else:
-                alu.lineprint("Timeplan is not valid..")
-
-
-    def _clear_jobs(self):
-
-        """ Clears a specific or all jobs currently scheduled """
-
-        if self.jobsclear == None:
-            pass
-        elif self.jobsclear == "all":
-            for job in jobs:
-                if job.comment[:3]=="AR_":
-                    self.cron.remove(job)
-            alu.lineprint("All scheduled jobs removed..")
-        elif self.jobsclear == "job":
-            if len(self.jobfits)>0:
-                self.cron.remove(self.jobfits[0])
-                alu.lineprint(self.jobname[3:]+" job removed..")
-            else:
-                if(self.jobname == None):
-                    alu.lineprint("No jobname provided..")
-                else:
-                    alu.lineprint("No fitting job found to remove..")
-        else:
-            alu.lineprint("No correct clear command provided..")
-        self.cron.write()
-
-
-    def _show_jobs(self):
-
-        """ Prints a table of all scheduled jobs """
-
-        if len(self.cron)>0:
-            alu.lineprint("Current job schedule:")
-            for job in self.cron:
-                lenjob = max(8, len(job.comment[3:]))
-                lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
-            print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
-            print("="*40)
-            jobs = [job for job in self.cron if job.comment[:3]=="AR_"]
-            for job in jobs:
-                sch = job.schedule(date_from = datetime.now())
-                jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
-                plan = str(job)[:str(job).find("/usr")-1]
-                plan = plan[2:] if plan[0] == "#" else plan
-                plan = plan + " "*(lenplan-(len(plan)-2))
-                next = str(sch.get_next()) if job.is_enabled() else " disabled"
-                print(jobname + plan + next)
-        else:
-            alu.lineprint("Currently no jobs scheduled..")
-
-
-    def _set_job(self):
-
-        """ Creates/modifies a specific job """
-
-        if len(self.jobfits)>0:
-            self.job = self.jobfits[0]
-            self.job.command = self.task
-        else:
-            self.job = self.cron.new(command = self.task, comment = self.jobname)
-        self.job.setall(self.jobtimeplan)
-
-        self.cron.write()
-        alu.lineprint(self.jobname[3:]+" job succesfully set..")
-        self._enable_job()
-
-
-    def _enable_job(self):
-
-        """ Enables/disables a specific job """
-
-        if self.jobenable:
-            self.job.enable(True)
-            alu.lineprint(self.jobname[3:]+" job enabled..")
-        else:
-            self.job.enable(False)
-            alu.lineprint(self.jobname[3:]+" job disabled..")
-        self.cron.write()
 
 
     def set_config(self, **kwargs):
@@ -460,6 +352,7 @@ class Recorder:
         if "vidquality" in kwargs:
             self.config.vid.quality = kwargs["vidquality"]
 
+        brightchange = False
         if os.path.exists(self.brightfile):
             with open(self.brightfile) as f:
                 brighttune = yaml.load(f)
@@ -479,46 +372,27 @@ class Recorder:
 
     def set_roi(self):
 
-        roi = Calibrate().draw_frame()
-        self.set_config(roi=roi, internal="")
+        C = Calibrate()
+        if C.roi:
+            self.set_config(roi=C.roi, internal="")
+            alu.lineprint("Roi stored..")
+        else:
+            alu.lineprint("No roi selected..")
 
 
-    def set_gains(self, attempts = 100, step = 0.05):
+    def set_gains(self):
 
-        """ Automatically finds the best gains for the raspberry pi camera"""
-
-        # This function was written based on code provided by Dave Jones in a
-        # reply on a question posted on stackoverflow: https://bit.ly/2V49f48
-
-        self._setup_cam(simple=True)
-        rg, bg = self.cam.awb_gains
-
-        with picamera.array.PiRGBArray(self.cam, size=(128, 72)) as output:
-
-            for i in range(attempts):
-
-                self.cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
-                r, g, b = (np.mean(output.array[..., i]) for i in range(3))
-                print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
-
-                if abs(r - g) > 2:
-                    if r > g:
-                        rg -= step
-                    else:
-                        rg += step
-                if abs(b - g) > 1:
-                    if b > g:
-                        bg -= step
-                    else:
-                        bg += step
-
-                self.cam.awb_gains = (rg, bg)
-                output.seek(0)
-                output.truncate()
+        (rg, bg) = getgains(startgains = alu.check_frac(self.config.cus.gains))
 
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
-        self.cam.close()
+
+
+    def schedule(self, jobname = None, timeplan = None, enable = True,
+                showjobs = True, clear = None, test = False):
+
+        S = Schedule(jobname, timeplan, enable, showjobs, clear, test,
+                     logfolder = self.logfolder)
 
 
     def record(self, singlevid = False):
@@ -567,90 +441,3 @@ class Recorder:
                         break
 
         self.cam.close()
-
-
-    def schedule(self, jobname = None, timeplan = None, enable = True,
-                 showjobs = True, clear = None, test = False):
-
-        """
-        Schedules future recordings configured with a Recorder instance.
-
-        !Important: Make sure Recorder configuration timing settings are within
-        the timespan between subsequent scheduled recordings based on the
-        provided timeplan. For example, a vid duration of 20 min and a scheduled
-        recording every 15 min between 13:00-16:00 (*/15 13-16 * * *) will fail.
-
-        Parameters
-        ----------
-        jobname : str, default = None
-            Name for the scheduled recorder task to create, modify or remove.
-        timeplan : string, default = None
-            Code string representing the time planning for the recorder to run
-            with current configuration set. Build on CRON, the time plan should
-            consist of the following parts:
-            * * * * *
-            - - - - -
-            | | | | |
-            | | | | +----- day of week (0 - 7) (sunday = 0 or 7)
-            | | | +---------- month (1 - 12)
-            | | +--------------- day of month (1 - 31)
-            | +-------------------- hour (0 - 23)
-            +------------------------- min (0 - 59)
-            Each of the parts supports wildcards (*), ranges (2-5), and lists
-            (2,5,6,11). For example, if you want to schedule a recording at
-            22:00, every workday of the week, enter the code '0 22 * * 1-5' If
-            uncertain, crontab.guru is a great website for checking your CRON
-            code. Note that the minimum time between subsequent scheduled
-            recordings is 1 minute. Smaller intervals between recordings is
-            possible for images with the imgseq command with the Record method.
-        enable : bool, default = True
-            If the scheduled job should be enabled or not.
-        showjobs : bool, default = False
-            If the differently timed tasks should be shown or not.
-        clear : [None, "job", "all"], default = None
-            If a specific job ('job'), all jobs ('all') or no jobs (None)
-            should be removed from the scheduler.
-        test : bool; default = False
-            Determine if the timeplan is valid and how often it will run the
-            record command.
-        """
-
-        alu.lineprint("Running scheduler.. ")
-        self.cron = crontab.CronTab(user = getpass.getuser())
-
-        if jobname is not None:
-            self.jobname = "AR_" + jobname
-            pythexec = sys.executable + " -c "
-            pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
-            logloc = " >> " + self.logfolder + "/"
-            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
-            self.task = pythexec + pythcomm + logloc + logcom
-        else:
-            self.jobname = None
-
-        self.jobtimeplan = timeplan
-        self.jobenable = enable
-        self.jobsshow = showjobs
-        self.jobsclear = clear
-
-        self.jobfits = self._check_job()
-
-        if test:
-            self._checktimeplan()
-        elif self.jobsclear is not None:
-            self._clear_jobs()
-        else:
-            if self.jobtimeplan is None:
-                if len(self.jobfits)==0:
-                    alu.lineprint("No time plan provided or fitting job found..")
-                else:
-                    self.job = self.jobfits[0]
-                    self._enable_job()
-            elif self.jobname is None:
-                alu.lineprint("No jobname provided..")
-            else:
-                alu.lineprint("Note: Make sure recording duration configuration < "+\
-                              "interval between scheduled recordings")
-                self._set_job()
-        if self.jobsshow:
-            self._show_jobs()

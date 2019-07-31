@@ -23,12 +23,12 @@ exec(open('animrec/__version__.py').read())
 
 
 DESCRIPTION = """
-AnimRec: Controlled image and video recording with the Rasperry Pi
+A python module for controlled and automated image and video recording
 """
 LONG_DESCRIPTION = """\
-AnimRec is a python package designed to help facilitate automated
-recording using the RPi, specifically with easy, customized, repeated
-image and video recording for behavioural scientists in mind.
+AnimRec is a python package designed to help facilitate controlled and
+automated image and video recording, especially on the raspberry pi, with the
+behavioural scientist in mind.
 """
 
 DISTNAME = 'animrec'
@@ -96,6 +96,10 @@ if __name__ == "__main__":
           description=DESCRIPTION,
           long_description=LONG_DESCRIPTION,
           url=URL,
+          entry_points={
+                     'console_scripts': ['ar_calib = animrec.calibrate:Calibrate',
+                     'rec = animrec.rec:rec'],
+          },
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,

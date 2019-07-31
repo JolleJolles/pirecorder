@@ -41,6 +41,7 @@ class Calibrate:
         self.cross = cross
         self.stream = True
         self.exit = False
+        self.roi = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = alimu.mouse_events()
@@ -104,12 +105,13 @@ class Calibrate:
             if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
                     alu.lineprint("Creating zoomed image..")
-                    vid = VideoIn(system=self.system, roi=self.m.rect)
-                    zimg = vid.img()
+                    self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
+                                        crop=self.m.rect)
+                    zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:
                         cv2.imshow("Zoomed", zimg)
-                        cv2.resizeWindow("Zoomed", vid.roiw, vid.roih)
+                        cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
 
                         k = cv2.waitKey(1) & 0xFF
                         if k == ord("f"):

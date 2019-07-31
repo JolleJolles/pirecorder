@@ -23,7 +23,7 @@ from animrec.videoin import VideoIn
 def stream():
     # Open a video stream: cam = "rpi" will open the native raspberry
     # pi camera, while cam = 0 will open the natively attached camera or webcam
-    vid = VideoIn(resolution=(1920, 1080)).start()
+    vid = VideoIn(vidsize=0.25).start()
 
     # Run videostream until user presses ESC
     while True:

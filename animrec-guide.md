@@ -21,19 +21,19 @@ Setting up the rpi
 
 Installing AnimRec
 --------
-1. *AnimRec* makes use of the [Pandas](http://pandas.pydata.org) data analysis library. Although it would be automatically installed when you are installing *AnimRec*, it is best to install it manually with apt-get, replacing 'python-pandas' by 'python3-pandas' when using Python3:
+1. *AnimRec* makes use of a number of helper functions that are (currently) part of my *AnimLab* package. This package in turn uses the [Pandas](http://pandas.pydata.org) data analysis library, which is fastest to install manually with apt-get (replacing 'python-pandas' by 'python3-pandas' when using Python3):
 
     `sudo apt-get install python-pandas`
+    
+  Next, to install AnimLab enter:
 
+    `pip install git+https://github.com/JolleJolles/animlab.git`
+    
 2. For some of its functionality, *AnimRec* makes use of the *OpenCV* image processing library. To install this dependency follow my simple guide [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-opencv.md).
 
 3. If you plan on wanting to convert the recorded videos (which are in .h264 format) to .mp4 format, *ffmpeg* with h264 support is required. Follow my guide for installing ffmpeg [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-ffmpeg-with-h264.md) or if not required skip this step.
 
-4. *AnimRec* makes use of a number of helper functions that are (currently) part of my *AnimLab* package. To install this enter:
-
-    `pip install git+https://github.com/JolleJolles/animlab.git`
-
-5. Now we are ready to install *AnimRec*. To do so simply enter (use pip for python2 and pip3 for python3):
+4. Now we are ready to install *AnimRec*. To do so simply enter (use pip for python2 and pip3 for python3):
 
     `pip install git+https://github.com/JolleJolles/animrec.git`
 
@@ -48,11 +48,11 @@ Starting with AnimRec
 
     `AR = animrec.Recorder()`
 
-    Remember that the Recorder functionality is a class instance and therefore needs to be stored as a variable. I chose the variable name `AR` but any variable is possible.
+    Remember that the Recorder functionality is a class instance and therefore needs to be stored as a variable. I chose the variable name `AR` above as an example.
 
-3. All commands and output after creating your Recorder instance will be stored in a log file in the setup directory with a timestamp so it is easy to look back at the recordings you did back in time.
+3. All commands and output after creating your Recorder instance will be stored in a log file in the setup directory with a timestamp so it is easy to go through all recordings you did back in time.
 
-4. Before continuing first carefully read the Recorder documentation to understand the wide range of possible settings:
+4. Before continuing, first carefully read the documentation for the Recorder class to understand the wide range of possible settings:
 
     `print(animrec.Recorder._doc_)`
 
@@ -112,63 +112,50 @@ Configuring AnimRec
 
 Running AnimRec
 --------
-1. Now you are ready to run recordings with the `Record` method. This is as simple as running:
+Now you are ready to run recordings with the `Record` method. To do so within python, simply enter:
 
-    `AR.record()`
+```
+AR.record()
+```
 
-    When recording video, after each video recording has ended the user is automatically asked to record another video and a sequence number is added to the video. This makes it very easy to run multiple video recordings after another, such as when filming trials of a behavioural experiment. To just run a single video recording enter instead:
+When recording video, after each video recording has ended the user is automatically asked to record another video and a sequence number is added to the video. This makes it very easy to run multiple video recordings after another, such as when filming trials of a behavioural experiment. To just run a single video recording enter instead:
 
-    `AR.record(singlevid = True)`
+```
+AR.record(singlevid = True)
+```
 
-2. You can run your animrec recordings in a number of different ways. Following from the steps above, the easiest is simply interactively with python running in the terminal. Thus, open an instance of python:
+You can run your animrec recordings in a number of different ways. Following from the steps above, the easiest is simply interactively with python running in the terminal. Thus, open an instance of python:
 
-    `python`
+```
+python
+```
 
-    Import animrec and set-up the Recorder instance:
+Import animrec and set-up the Recorder instance:
 
-    `import animrec`
-    `AR = animrec.Recorder()`
+```
+import animrec
+AR = animrec.Recorder()
+```
 
-    And run record:
+And run record:
 
-    `AR.record()`.
+```
+AR.record()
+```
 
-    You could even run the code directly from the terminal:
+You could even run the code directly from the terminal:
 
-    `python -c import animrec; AR=animrec.Recorder(); AR.record()`
+```
+python -c import animrec; AR=animrec.Recorder(); AR.record()
+```
 
-3. The second way is to create a simple python file with the code to run a recording. For example, you could create the file `recim.py` with the following code:
+AnimRec also comes with a so-called 'console script' that runs the above code directly. Simply open a terminal and enter:
 
-    ```
-    # Import the package
-    import animrec
+```
+rec
+```
 
-    # Initiate the recorder instance
-    AR = animrec.Recorder()
-
-    # Update the configuration
-    AR.set_config(label="test", rectype="img", iso=200, contrast=20)
-    AR.record()
-    ```
-
-    and run that from the terminal:
-
-    `python recim.py`
-
-    To make running this even easier, we can create an alias for our recording script with a custom command. For this we need to open the `.bashrc` file in our root directory:
-
-    `sudo nano ~/.bashrc`
-
-    and add the following to the bottom of the file:
-
-    `alias rec='sudo python recim.py'`
-
-    Now all you need to enter in terminal to start your recordings is `rec`, and AnimRec automatically starts with the right custom settings.
-
-    Note: Do not call your file like the package, i.e. `animrec.py`, as then the code will not be run properly.
-
-
-3. A third way is to store your code in a jupyter file, like the tutorial file [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-virtual-python-environments.md), with the option to have many different cells with different parameters or calls and only run those cells that you want.
+and now animrec is started with the default `animrec.conf` configuration file. You could also make use of a jupyter file, like explained in my tutorial [here](https://github.com/JolleJolles/animlab/tree/master/docs/install-virtual-python-environments.md).
 
 Scheduling recordings
 --------
@@ -206,26 +193,3 @@ Scheduling recordings
     Or to clear the job completely:
 
     `AR.schedule(jobname = "rec1", clear = "job")`
-
-
-Converting video recordings
---------
-1. It is very tricky to record to compressed formats like `.mp4` directly with the rpi and therefore *AnimRec* stores, like *picamera* and other packages, videos in the `.h264` format. These videos are very hard to open (I only know of VLC player to make it work partly) but luckily we can easily convert them with the `Converter` class of the package.
-
-2. To import the Convert class enter:
-
-   `from animrec import Converter`
-
-   and to read the documentation enter:
-
-   `print(Converter.__doc__)`
-
-3. To start recording you can set the `dir_in` parameter to the directory of videos you would like to convert. If nothing is provided it will attempt to convert videos from the  location at which you initiated python.
-
-4. The `Converter` class makes it possible to simply convert a folder of videos directly  or to also add a running framenumber in the top left corner, such as to facilitate the behavioural observations of video recordings. While the former uses `ffmpeg` and is considerably faster, the latter uses `opencv`, with both making use of multiprocessing such that multiple videos can be converted simultaneously. Converting without frame is default (`conv_type = "standard"`). To convert videos with the frame number displayed enter:
-
-   `Converter(conv_type = "withframe")`
-
-5. It is also possible to resize videos. Simply ad the resize value to `resizeval` with which the video should be resized. For example, to make the video half the dimensions of what it was enter:
-
-   `Converter(resizeval = 0.5)`

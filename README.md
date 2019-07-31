@@ -1,9 +1,9 @@
 # AnimRec
-**A python module for controlled image and video recording for the Rasperry Pi**
+**A python module for controlled and automated image and video recording**
 
 ![logo](https://github.com/JolleJolles/animrec/blob/master/animrec-logo.jpg)
 
-*AnimRec* is a package to facilitate controlled and automated video recording using raspberry pi (rpi). It was specifically designed with the Behavioural Scientist in mind or like-minded people that have a wish for easy automed recording but may not have the required knowledge or coding skills at hand.
+*AnimRec* is a package to facilitate controlled and automated video recording, especially using  Raspberry Pi (rpi) computers. It was specifically designed with the Behavioural Scientist in mind to facilitate controlled and automated image and video recording without requiring considerable coding skills.
 
 *AnimRec* consists of a main recorder class and a number of [helper methods](#othmethods) that facilitate setting-up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. *AnimRec* also contains detailed documentation and tutorials that are continuously updated with the aim to help people with very limited coding knowledge to set-up their rpi, install the required packaged, and get working with *AnimRec*.
 
@@ -21,8 +21,6 @@ Dependencies
 
 - [numpy](http://www.numpy.org/)
 
-- [pandas](http://pandas.pydata.org)
-
 - [pyyaml](https://pyyaml.org)
 
 - [OpenCV](http://opencv.org/)
@@ -35,7 +33,7 @@ Citing
 ------------
 *AnimRec* should be of interest to the broader academic community and the general code-minded public. If you use *AnimRec*, do let me know, I'd love to hear how you like and use it. Also please cite the software using the following DOI:
 
-*Jolles, J. W. (2019) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.1.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
+*Jolles, J. W. (2019) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.6.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
 
 [![DOI](https://zenodo.org/badge/163422997.svg)](https://zenodo.org/badge/latestdoi/163422997)
 
@@ -65,7 +63,7 @@ In addition to the main recording module, AnimRec contains a number of other mod
 
 1. `setgains()`: Method that automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
 2. `setroi()`: Method that lets the user draw a rectangular region on a live video stream of the rpi camera and select the region of interest to be used for recording. Again roi settings are automatically stored and called from the configuration file.
-3. `schedule()`: Method that enables the future scheduling of automated image and video recording jobs. To read the detailed documentation import the animrec package and call: `print(animrec.schedule.__doc__)`.
+3. `schedule()`: Method that enables the future scheduling of automated image and video recording jobs. To read the detailed documentation import the animrec package and call: `print(animrec.Schedule.__doc__)`.
 4. `Converter()`: Class that enables converting videos to `.mp4` format with the option to resize them as well as print a frame number in the top left corner. Makes use of multiprocessing such that multiple videos can be converted simultaneously.
 
 ### Recording modes
