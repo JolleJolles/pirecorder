@@ -179,7 +179,7 @@ class Recorder:
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            alu.lineprint("New config file created")
+            alu.lineprint("Config file not found, new file created..")
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
@@ -191,7 +191,7 @@ class Recorder:
                             vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
                             imgquality=50, vidduration=10, viddelay=10,
                             vidquality = 11,internal="")
-            alu.lineprint("Config settings stored")
+            alu.lineprint("Config settings stored..")
         else:
             alu.lineprint("Config settings loaded.. Recording " +\
                           self.config.rec.type + " in " + self.home +\
