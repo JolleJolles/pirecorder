@@ -216,6 +216,7 @@ class Recorder:
         """ Sets-up the raspberry pi camera based on configuration """
 
         import picamera
+        import picamera.array
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
