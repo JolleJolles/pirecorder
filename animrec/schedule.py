@@ -97,7 +97,6 @@ class Schedule:
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
-        print(self.jobfits)
 
         if test:
             self.checktimeplan()
@@ -105,7 +104,7 @@ class Schedule:
             self.clear_jobs()
         else:
             if self.jobtimeplan is None:
-                alu.lineprint("No time plan provided..")
+                alu.lineprint("No timeplan provided..")
             elif self.jobname is None:
                 alu.lineprint("No jobname provided..")
             else:
@@ -114,7 +113,6 @@ class Schedule:
                 self.set_job()
         if self.jobsshow:
             self.jobs = self.get_jobs()
-            print(self.jobs)
             self.show_jobs()
 
 
@@ -179,7 +177,6 @@ class Schedule:
             self.job.enable(False)
             alu.lineprint(self.jobname[3:]+" job disabled..")
         self.cron.write()
-        print([job for job in self.cron])
 
 
     def set_job(self):
