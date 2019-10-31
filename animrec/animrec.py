@@ -36,6 +36,7 @@ from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
 
+from .getgains import getgains
 from .calibrate import Calibrate
 from .schedule import Schedule
 
@@ -384,7 +385,6 @@ class Recorder:
     def set_gains(self):
 
         (rg, bg) = getgains(startgains = alu.check_frac(self.config.cus.gains))
-
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
