@@ -23,7 +23,7 @@ import picamera
 import picamera.array
 import numpy as np
 
-def getgains(attempts = 100, step = 0.05, startgains = 0.5, 0.5):
+def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
     """ Automatically finds the best gains for the raspberry pi camera"""
 
