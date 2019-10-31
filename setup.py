@@ -49,6 +49,10 @@ def check_dependencies():
     except:
         install_requires.append('python-crontab')
     try:
+        import picamera
+    except ImportError:
+        install_requires.append('picamera')
+    try:
         import croniter
     except ImportError:
         install_requires.append('croniter')
@@ -74,7 +78,7 @@ def check_dependencies():
         if sys.version_info[0] == 2:
             install_requires.append('localconfig==0.4.2')
         if sys.version_info[0] == 3:
-            install_requires.append('localconfig')
+            install_requires.append('localconfig==1.1.1')
     try:
         import animlab
     except ImportError:

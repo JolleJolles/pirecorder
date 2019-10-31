@@ -137,8 +137,6 @@ class Calibrate:
                 self.draw_frame()
             if self.exit:
                 cv2.waitKey(1)
-                cv2.destroyWindow("Image")
-                cv2.destroyWindow("Zoomed")
                 cv2.destroyAllWindows()
                 for i in range(5):
                     cv2.waitKey(1)

@@ -36,6 +36,7 @@ from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
 
+from .getgains import getgains
 from .calibrate import Calibrate
 from .schedule import Schedule
 
@@ -54,8 +55,9 @@ class Recorder:
         check if the folder links to a mounted drive.
     label : str, default = "test"
         Label for associating with the recording and stored in the filenames.
-    rectype : ["img", "imgseq", "vid"], default = "img"
-        Recording type, either a single image, a sequence of images, or a video.
+    rectype : ["img", "imgseq", "vid", "vidseq"], default = "img"
+        Recording type, either a single image or video or a sequence of images
+        or videos.
 
     Config settings
     ---------------
@@ -380,7 +382,6 @@ class Recorder:
     def set_gains(self):
 
         (rg, bg) = getgains(startgains = alu.check_frac(self.config.cus.gains))
-
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
@@ -392,7 +393,7 @@ class Recorder:
                      logfolder = self.logfolder)
 
 
-    def record(self, singlevid = False):
+    def record(self):
 
         """ Runs the Recorder instance """
 
@@ -421,17 +422,17 @@ class Recorder:
                     break
 
 
-        elif self.config.rec.type == "vid":
+        elif self.config.rec.type in ["vid","vidseq"]:
 
             for session in ["_S%02d" % i for i in range(1,999)]:
-                session = "" if singlevid else session
+                session = "" if self.config.rec.type == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
                 alu.lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
                 alu.lineprint("Finished")
-                if singlevid:
+                if self.config.rec.type == "vid":
                     break
                 else:
                     if input("\nn for new session, e to exit: ") == 'e':
