@@ -213,25 +213,23 @@ class Recorder:
         os.chdir(self.recdir)
 
 
-    def _setup_cam(self, simple = True):
+    def _setup_cam(self):
 
         """ Sets-up the raspberry pi camera based on configuration """
 
         import picamera
+        import picamera.array
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if simple:
-            self.cam.resolution = (1280, 720)
-        else:
-            if self.config.rec.type == "img":
-                self.cam.resolution = literal_eval(self.config.img.dims)
-                self.cam.framerate = self.config.img.fps
-            if self.config.rec.type == "vid":
-                self.cam.resolution = literal_eval(self.config.vid.dims)
-                self.cam.framerate = self.config.vid.fps
-            self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
+        if self.config.rec.type == "img":
+            self.cam.resolution = literal_eval(self.config.img.dims)
+            self.cam.framerate = self.config.img.fps
+        if self.config.rec.type == "vid":
+            self.cam.resolution = literal_eval(self.config.vid.dims)
+            self.cam.framerate = self.config.vid.fps
+        self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
         sleep(0.1)
 
@@ -242,11 +240,10 @@ class Recorder:
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
-        if not simple:
-            self.cam.contrast = self.config.cam.contrast
-            self.cam.saturation = self.config.cam.saturation
-            self.cam.iso = self.config.cam.iso
-            self.cam.sharpness = self.config.cam.sharpness
+        self.cam.contrast = self.config.cam.contrast
+        self.cam.saturation = self.config.cam.saturation
+        self.cam.iso = self.config.cam.iso
+        self.cam.sharpness = self.config.cam.sharpness
 
         alu.lineprint("Camera started..")
 

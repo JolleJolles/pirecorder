@@ -33,9 +33,9 @@ Citing
 ------------
 *AnimRec* should be of interest to the broader academic community and the general code-minded public. If you use *AnimRec*, do let me know, I'd love to hear how you like and use it. Also please cite the software using the following DOI:
 
-*Jolles, J. W. (2019) AnimRec: A python module for controlled image and video recording for the Rasperry Pi v1.6.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
+*Jolles, J. W. (2019) AnimRec: A python module for controlled and automated image and video recording v1.7.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
 
-[![DOI](https://zenodo.org/badge/163422997.svg)](https://zenodo.org/badge/latestdoi/163422997)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2529515.svg)](https://doi.org/10.5281/zenodo.2529515)
 
 
 <a name="install"></a>Quick install
