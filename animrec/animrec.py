@@ -387,7 +387,7 @@ class Recorder:
 
 
     def schedule(self, jobname = None, timeplan = None, enable = True,
-                showjobs = True, clear = None, test = False):
+                showjobs = False, clear = None, test = False):
 
         S = Schedule(jobname, timeplan, enable, showjobs, clear, test,
                      logfolder = self.logfolder)
