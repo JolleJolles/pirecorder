@@ -211,6 +211,8 @@ class Schedule:
                 lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
+            self.jobs = self.get_jobs()
+            print(self.jobs)
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.now())
                 jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
