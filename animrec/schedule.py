@@ -98,9 +98,7 @@ class Schedule:
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
 
-        if test:
-            self.checktimeplan()
-        elif self.jobsclear is not None:
+        if self.jobsclear is not None:
             self.clear_jobs()
         else:
             if self.jobtimeplan is None:
@@ -108,9 +106,9 @@ class Schedule:
             elif self.jobname is None:
                 alu.lineprint("No jobname provided..")
             else:
-                alu.lineprint("Note: Make sure recording duration configuration < "+\
-                              "interval between scheduled recordings")
-                self.set_job()
+                valid = self.checktimeplan()
+                if not test and valid:
+                    self.set_job()
         if self.jobsshow:
             self.jobs = self.get_jobs()
             self.show_jobs()
@@ -130,15 +128,14 @@ class Schedule:
 
         """ Checks timeplan and prints description """
 
-        if self.jobtimeplan is None:
-            alu.lineprint("No timeplan provided..")
+        valid = crontab.CronSlices.is_valid(self.jobtimeplan)
+        if valid:
+            timedesc = get_description(self.jobtimeplan)
+            print("Your timeplan will run " + timedesc)
         else:
-            valid = crontab.CronSlices.is_valid(self.jobtimeplan)
-            if valid:
-                timedesc = get_description(self.jobtimeplan)
-                print("Your timeplan will run " + timedesc)
-            else:
-                alu.lineprint("Timeplan is not valid..")
+            alu.lineprint("Timeplan is not valid..")
+
+        return valid
 
 
     def clear_jobs(self):
@@ -207,7 +204,6 @@ class Schedule:
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
             self.jobs = self.get_jobs()
-            print(self.jobs)
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.now())
                 jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
