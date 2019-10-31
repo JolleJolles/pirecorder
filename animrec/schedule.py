@@ -116,6 +116,7 @@ class Schedule:
                               "interval between scheduled recordings")
                 self.set_job()
         if self.jobsshow:
+            self.get_jobs()
             self.show_jobs()
 
 
