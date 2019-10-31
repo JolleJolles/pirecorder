@@ -93,6 +93,7 @@ class Schedule:
         self.jobtimeplan = timeplan
         self.jobenable = enable
         self.jobsshow = showjobs
+        print(self.jobsshow)
         self.jobsclear = clear
 
         self.jobs = self.get_jobs()
@@ -111,7 +112,6 @@ class Schedule:
                 if self.checktimeplan():
                     self.set_job()
         if self.jobsshow:
-            self.jobs = self.get_jobs()
             self.show_jobs()
 
 
