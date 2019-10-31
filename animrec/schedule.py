@@ -117,6 +117,7 @@ class Schedule:
                 self.set_job()
         if self.jobsshow:
             self.jobs = self.get_jobs()
+            print(self.jobs)
             self.show_jobs()
 
 
