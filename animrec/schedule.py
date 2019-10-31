@@ -83,7 +83,7 @@ class Schedule:
         if jobname is not None:
             self.jobname = "AR_" + jobname
             pythexec = sys.executable + " -c "
-            pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record(True)'"
+            pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record()'"
             logloc = " >> " + logfolder + "/"
             logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
             self.task = pythexec + pythcomm + logloc + logcom
