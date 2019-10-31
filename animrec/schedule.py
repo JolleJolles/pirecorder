@@ -74,7 +74,7 @@ class Schedule:
     """
 
     def __init__(self, jobname = None, timeplan = None, enable = True,
-                showjobs = True, clear = None, test = False,
+                showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/setup"):
 
         alu.lineprint("Running scheduler.. ")
@@ -103,11 +103,12 @@ class Schedule:
         else:
             if self.jobtimeplan is None:
                 alu.lineprint("No timeplan provided..")
+            elif test:
+                self.checktimeplan()
             elif self.jobname is None:
                 alu.lineprint("No jobname provided..")
             else:
-                valid = self.checktimeplan()
-                if not test and valid:
+                if self.checktimeplan():
                     self.set_job()
         if self.jobsshow:
             self.jobs = self.get_jobs()
@@ -174,6 +175,7 @@ class Schedule:
             self.job.enable(False)
             alu.lineprint(self.jobname[3:]+" job disabled..")
         self.cron.write()
+        self.jobsshow = True
 
 
     def set_job(self):
