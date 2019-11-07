@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
 Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +16,8 @@ limitations under the License.
 """
 
 from .__version__ import __version__
-from .animrec import *
+from .pirecorder import *
 from .videoin import VideoIn
 from .calibrate import Calibrate
 from .getgains import getgains
 from .schedule import Schedule
-from .undistort import *
