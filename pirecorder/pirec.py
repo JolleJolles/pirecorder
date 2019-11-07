@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
-Copyright (c) 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2018 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,35 +15,34 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-# Import the package
-import animrec
+from .pirecorder import Recorder
 
-def rec():
+def pirec():
 
     # Initiate the recorder instance
-    AR = animrec.Recorder()
+    pirec = Recorder()
 
     # # General config
-    # AR.set_config(recdir = "", label = "test", rectype = "vid",
+    # pirec.set_config(recdir = "", label = "test", rectype = "vid",
     #               brightness = 45, contrast = 10, saturation = -100, iso = 200,
     #               sharpness = 0, compensation = 0, shutterspeed = 8000,
     #               quality = 11, brighttune = 0)
 
     # # Config for videos
-    # AR.set_config(viddims = (1640, 1232), vidfps = 24, vidduration = 5, viddelay = 2)
+    # pirec.set_config(viddims = (1640, 1232), vidfps = 24, vidduration = 5, viddelay = 2)
 
     # # Config for images
-    # AR.set_config(imgdims = (3280, 2464), imgfps = 1, imgwait = 5.0, imgnr = 100,
+    # pirec.set_config(imgdims = (3280, 2464), imgfps = 1, imgwait = 5.0, imgnr = 100,
     #               imgtime = 600)
 
     # # Draw the region of interest
-    # AR.set_roi()
+    # pirec.set_roi()
 
     # # Dynamically set the Gains
-    # AR.set_gains()
+    # pirec.set_gains()
 
     # Run record function
-    AR.record()
+    pirec.record()
 
 if __name__ == "__main__":
-      rec()
+      pirec()

@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
-Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-This function was written based on code provided by Dave Jones in a
+This function was partly based on code provided by Dave Jones in a
 reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 """
 
@@ -25,7 +24,7 @@ import numpy as np
 
 def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
-    """ Automatically finds the best gains for the raspberry pi camera"""
+    """Automatically finds the best gains for the raspberry pi camera"""
 
     cam = picamera.PiCamera()
     cam.resolution = (1280, 720)

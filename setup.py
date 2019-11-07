@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 #
-# Controlled media recording library for the Rasperry-Pi
 # Copyright (c) 2018-2019 Jolle Jolles <j.w.jolles@gmail.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +14,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 from setuptools import setup, find_packages
 import sys
 
-exec(open('animrec/__version__.py').read())
+exec(open('pirecorder/__version__.py').read())
 
+DESCRIPTION = """A python module for controlled and automated image and video \
+recording with the raspberry pi"""
 
-DESCRIPTION = """
-A python module for controlled and automated image and video recording
-"""
-LONG_DESCRIPTION = """\
-AnimRec is a python package designed to help facilitate controlled and
-automated image and video recording, especially on the raspberry pi, with the
-behavioural scientist in mind.
-"""
-
-DISTNAME = 'animrec'
+DISTNAME = 'pirecorder'
 MAINTAINER = 'Jolle Jolles'
 MAINTAINER_EMAIL = 'j.w.jolles@gmail.com'
-URL = 'http://jollejolles.com'
-DOWNLOAD_URL = 'https://github.com/JolleJolles/animrec/archive/v1.7.0.tar.gz'
+URL = 'https://github.com/JolleJolles'
+DOWNLOAD_URL = 'https://github.com/JolleJolles/pirecorder/archive/v1.0.0.tar.gz'
 LICENSE = 'Apache Software License 2.0'
 
 
@@ -43,6 +34,10 @@ def check_dependencies():
     install_requires = []
 
     # Make sure dependencies exist
+    try:
+        import pythutils
+    except ImportError:
+        install_requires.append('pythutils')
     try:
         import crontab
         crontab.CronTab(user = "")
@@ -79,11 +74,6 @@ def check_dependencies():
             install_requires.append('localconfig==0.4.2')
         if sys.version_info[0] == 3:
             install_requires.append('localconfig==1.1.1')
-    try:
-        import animlab
-    except ImportError:
-        print("Package animlab is required. To install development version:")
-        print("pip install git+https://github.com/JolleJolles/animlab.git")
 
     return install_requires
 
@@ -98,11 +88,12 @@ if __name__ == "__main__":
           maintainer=MAINTAINER,
           maintainer_email=MAINTAINER_EMAIL,
           description=DESCRIPTION,
-          long_description=LONG_DESCRIPTION,
+          long_description=readme,
+          long_description_content_type="text/markdown",
           url=URL,
           entry_points={
-                     'console_scripts': ['ar_calib = animrec.calibrate:Calibrate',
-                     'rec = animrec.rec:rec'],
+                     'console_scripts': ['picalib = pirecorder.calibrate:Calibrate',
+                     'pirec = pirecorder.pirec:pirec'],
           },
           download_url=DOWNLOAD_URL,
           version=__version__,
@@ -117,7 +108,7 @@ if __name__ == "__main__":
                      'Topic :: Scientific/Engineering :: Visualization',
                      'Topic :: Scientific/Engineering :: Image Recognition',
                      'Topic :: Scientific/Engineering :: Information Analysis',
-                     'Topic :: Multimedia :: Video'
+                     'Topic :: Multimedia :: Video',
                      'Operating System :: POSIX',
                      'Operating System :: Unix',
                      'Operating System :: MacOS'],

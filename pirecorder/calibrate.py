@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
-Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,14 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from __future__ import print_function
-
 import cv2
 import time
 import numpy as np
-
-import animlab.utils as alu
-import animlab.imutils as alimu
+from pythutils.sysutils import lineprint
+import pythutils.drawutils as draw
 
 from .videoin import VideoIn
 
@@ -31,9 +27,7 @@ class Calibrate:
 
     def __init__(self, system="auto", framerate=8, vidsize=0.2, cross=False):
 
-        """
-        Opens a video stream with user interface for calibrating the camera
-        """
+        """Opens a video stream with user interface to calibrate camera"""
 
         self.system = system
         self.framerate = framerate
@@ -44,14 +38,14 @@ class Calibrate:
         self.roi = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
-        self.m = alimu.mouse_events()
+        self.m = draw.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
 
         self.drawer()
 
 
     def draw_stream(self):
-        alu.lineprint("Streaming video..")
+        lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
                            vidsize=self.vidsize)
@@ -61,7 +55,7 @@ class Calibrate:
             self.img = self.vid.read()
 
             if self.cross:
-                alimu.draw_cross(self.img, self.vid.res)
+                draw.draw_cross(self.img, self.vid.res)
 
             cv2.imshow("Image", self.img)
             cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
@@ -76,7 +70,7 @@ class Calibrate:
                 self.stream = False
                 break
             if k == 27:
-                alu.lineprint("User exited..")
+                lineprint("User exited..")
                 self.exit = True
                 break
 
@@ -84,27 +78,27 @@ class Calibrate:
 
 
     def draw_frame(self):
-        alu.lineprint("Selecting roi..")
+        lineprint("Selecting roi..")
         self.imgbak = self.img.copy()
 
         while True:
             img = self.imgbak.copy()
-            alimu.draw_crosshair(img, self.m.pointer)
-            alimu.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
+            draw.draw_crosshair(img, self.m.pointer)
+            draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
             cv2.imshow("Image", img)
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("s"):
                 if self.m.rect and len(self.m.rect) == 2:
                     self.roi = self.m.rect
-                    alu.lineprint("roi "+str(self.roi)+" stored..")
+                    lineprint("roi "+str(self.roi)+" stored..")
                     break
                 else:
-                    alu.lineprint("Nothing to store..")
+                    lineprint("Nothing to store..")
 
             if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
-                    alu.lineprint("Creating zoomed image..")
+                    lineprint("Creating zoomed image..")
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
                                         crop=self.m.rect)
                     zimg = self.vid2.img()

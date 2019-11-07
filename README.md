@@ -1,84 +1,60 @@
-# AnimRec
-**A python module for controlled and automated image and video recording**
+# PiRecorder
+**A python module for controlled and automated image and video recording with the raspberry pi**
 
-![logo](https://github.com/JolleJolles/animrec/blob/master/animrec-logo.jpg)
+*PiRecorder* is a package to facilitate controlled and automated image and video recording for the Raspberry Pi (rpi), specifically developed with the Behavioural Scientist in mind.
 
-*AnimRec* is a package to facilitate controlled and automated video recording, especially using  Raspberry Pi (rpi) computers. It was specifically designed with the Behavioural Scientist in mind to facilitate controlled and automated image and video recording without requiring considerable coding skills.
+![logo](https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg)
 
-*AnimRec* consists of a main recorder class and a number of [helper methods](#othmethods) that facilitate setting-up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. *AnimRec* also contains detailed documentation and tutorials that are continuously updated with the aim to help people with very limited coding knowledge to set-up their rpi, install the required packaged, and get working with *AnimRec*.
-
-**[Click here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md) for a detailed and an easy-to-follow guide to start setting-up your rpi and installing AnimRec, with detailed explanation of all its functionalities.**
-
-Dependencies
-------------
-*AnimRec* is written in [Python](http://www.python.org) and is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package and makes use of various utility functions of my [AnimLab](https://github.com/JolleJolles/animlab) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. Converting requires [ffmpeg](https://www.ffmpeg.org) and [OpenCV](http://opencv.org/). For detailed steps to get these dependencies, follow the setting-up guide [here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md).
-
-- [Python 2.7 or 3.x](http://www.python.org)
-
-- [picamera](http://picamera.readthedocs.io/)
-
-- [AnimLab](https://github.com/JolleJolles/animlab)
-
-- [numpy](http://www.numpy.org/)
-
-- [pyyaml](https://pyyaml.org)
-
-- [OpenCV](http://opencv.org/)
-
-- [python-crontab](https://pypi.org/project/python-crontab/)
-
-- [ffmpeg](https://www.ffmpeg.org)
-
-Citing
-------------
-*AnimRec* should be of interest to the broader academic community and the general code-minded public. If you use *AnimRec*, do let me know, I'd love to hear how you like and use it. Also please cite the software using the following DOI:
-
-*Jolles, J. W. (2019) AnimRec: A python module for controlled and automated image and video recording v1.7.0. Zenodo. https://doi.org/10.5281/zenodo.2529515*
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2529515.svg)](https://doi.org/10.5281/zenodo.2529515)
+*PiRecorder* consists of a main Recorder class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi for easy (and automated) image and video recording with optimal recording settings.
 
 
-<a name="install"></a>Quick install
-------------
+## <a name="install"></a>Install
 
-Open a terminal window and enter:
+PiRecorder is very easy to install. Simply open a terminal window and enter:
 
 ```bash
-pip install git+https://github.com/JolleJolles/animrec.git
+pip install pirecorder
 ```
 
-*Note: please keep in mind its dependencies. A detailed guide for setting-up your rpi and installing animrec can be found [here](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md).*
+All dependencies (see below) will be automatically installed with *PiRecorder* except for *opencv*, which has to be manually installed. [click here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my guide how to do so.
+
+**See the PiRecorder [wiki](https://github.com/JolleJolles/pirecorder/wiki) for a detailed guide for setting up your raspberry pi and installing and working with pirecorder.**
+
+## Dependencies
+*PiRecorder* is written in [Python](http://www.python.org) and is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package, uses [numpy](http://www.numpy.org/), [pyyaml](https://pyyaml.org), and [opencv](http://opencv.org) for some of its core functionality, and relies on various utility functions of my [pythutils](https://github.com/JolleJolles/pythutils) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package.
 
 
-AnimRec overview
-------------
+## Module overview
 
 ### Recorder class
-The main functionality of *AnimRec* is the `Recorder` class. This class initiates a Recorder instance that sets up the Raspberry Pi to record either A) a single image, b) a sequence of images, or C) a loop of videos. There are many custom recording parameters that can be set with the animrec.Recorder class, which are divided into 1) general user recording parameters, 2) camera settings, 3) specific video and 4) specific image recording settings, and 5) custom settings linked to the specific rpi being used. A detailed overview and description of all these settings can be found by importing the animrec class and then calling `print(animrec.Recorder._doc_)`.
+The main functionality of *PiRecorder* is the `Recorder` class. This class initiates a Recorder instance that sets up the Raspberry Pi to record either A) a single image, b) a sequence of images, C) a video, or D) subsequent video sessions.
 
-When the `Recorder` is run for the first time, it creates a `setup` directory in the user's home directory to store all relevant setup files. Central is the default configuration file *animrec.conf*. *AnimRec* is set up in such a way that it is very easy to set and save custom settings that are then automatically used for future use without further user input. Multiple configuration files can be created and called for specifics recording settings and the configuration file(s) can be easily edited with any text editor as well as updated from the command line with the `set_config()` method. In addition the setup directory will contain a log file *animrec.log* that will store all terminal output when *AnimRec* is used to help keep a history log of your recordings.
+There are many custom recording parameters that can be set with the `pirecorder.Recorder` class, which are divided into 1) general user recording parameters, 2) camera settings, 3) video recording settings, 4) image recording settings, and 5) custom settings linked to the specific rpi being used. A detailed overview and description of all these settings can be found by calling `print(pirecorder.Recorder._doc_)`.
 
-### <a name="othmethods"></a>Other methods
-In addition to the main recording module, AnimRec contains a number of other modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, scheduling recordings, and converting recorded media:
+When the `Recorder` is run for the first time, it creates a `setup` directory in the user's home directory to store all relevant setup files. Central is the default configuration file `pirecorder.conf`. *PiRecorder* is set up in such a way that it is very easy to set and save custom settings that are then automatically used for future use without further user input.
 
-1. `setgains()`: Method that automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
-2. `setroi()`: Method that lets the user draw a rectangular region on a live video stream of the rpi camera and select the region of interest to be used for recording. Again roi settings are automatically stored and called from the configuration file.
-3. `schedule()`: Method that enables the future scheduling of automated image and video recording jobs. To read the detailed documentation import the animrec package and call: `print(animrec.Schedule.__doc__)`.
-4. `Converter()`: Class that enables converting videos to `.mp4` format with the option to resize them as well as print a frame number in the top left corner. Makes use of multiprocessing such that multiple videos can be converted simultaneously.
+Multiple configuration files can be created and called for specifics recording settings and the configuration file(s) can be easily edited with any text editor as well as updated from the command line with the `set_config()` method. In addition the setup directory will contain a log file *pirecorder.log* that will store all terminal output when *PiRecorder* is used to help keep a history log of your recordings.
 
 ### Recording modes
-AnimRec has three recording modes: `img`, `imgseq`, and `vid`. Files are automatically stored in the configured directory (`recdir`), by default a directory called `recordings` in the home directory, and are automatically named according to the provided `label`, the computer name, the date and time, and the session number or image sequence nr (e.g. "pilot\_180312\_PI13\_101300.jpg", "pilot\_180312\_PI13\_img00231_101300.jpg", and "pilot\_180312\_PI13\_S01\_101300.h264").
+*PiRecorder* has four recording modes (set with `rectype`):
 
-1. `img` mode: This mode records a single image with the custom settings and then quits.
-2. `imgseq` mode: This mode creates a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`).
-3. `vid` mode: This mode records a loop of standardized videos based on the custom settings. After each recording has finished, the user is asked if a new recording should be started or the recorder should exit. Specific settings that can be set for this mode are `vidfps`, the framerate of the video; `vidduration`, the duration of the video; and `viddelay`, extra recording time in seconds that will be added to vidduration.
+1. `img`: Records a single image with the custom settings and then quits.
+2. `imgseq`: Creates a controlled sequence of images based on either a set duration (setting `imgtime`) or total number of images to be recorded (setting `imgnr`) with a certain delay between images (setting `imgwait`).
+3. `vid` : Records a single video. Specific settings that can be set for this mode are `vidfps`, the framerate of the video; `vidduration`, the duration of the video; and `viddelay`, extra recording time in seconds that will be added to vidduration.
+4. `vidseq`: Starts a series of standardized videos using the custom settings. After each recording has finished, the user is asked with a keypress if a new recording should be started or exit.
 
-**See the [animrec guide](https://github.com/JolleJolles/animrec/tree/master/animrec-guide.md) for a more detailed explanation of all the functionalities of *AnimRec*.**
+Files are automatically stored in the configured directory (`recdir`), by default a directory called `recordings` in the home directory, and are automatically named according to the provided `label`, the computer name, the date and time, and potentially the session number or image sequence nr.
 
-Development
---------
-For an overview of version changes see the [CHANGELOG](https://github.com/JolleJolles/animrec/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/JolleJolles/animrec/commits/). Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/JolleJolles/animrec/issues).
+### <a name="submodules"></a>Submodules
+In addition to the main recording module, *PiRecorder* contains a number of other modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, and schedule future recordings, with more functionalities integrated weekly.
 
-License
---------
-Released under a Apache 2.0 License. See [LICENSE](https://github.com/JolleJolles/animrec/blob/master/LICENSE) for details.
+1. `Calibrate()`: Opens a video stream with user interface to calibrate the raspberry pi camera in terms of its position, focus, and region of interest (roi).
+2. `setgains()`: Automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
+3. `schedule()`: Automatically start image and video recording in the future according to custom recording schedules.
+
+
+## Development
+For an overview of version changes see the [CHANGELOG](https://github.com/JolleJolles/pirecorder/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/JolleJolles/pirecorder/commits/). Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/JolleJolles/pirecorder/issues).
+
+## License
+Released under a Apache 2.0 License. See [LICENSE](https://github.com/JolleJolles/pirecorder/blob/master/LICENSE) for details.
