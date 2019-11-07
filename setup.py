@@ -93,7 +93,7 @@ if __name__ == "__main__":
           url=URL,
           entry_points={
                      'console_scripts': ['picalib = pirecorder.calibrate:Calibrate',
-                     'pirec = pirecorder.rec:rec'],
+                     'pirec = pirecorder.pirec:pirec'],
           },
           download_url=DOWNLOAD_URL,
           version=__version__,
