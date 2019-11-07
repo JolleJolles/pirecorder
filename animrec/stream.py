@@ -17,7 +17,7 @@ limitations under the License.
 
 import cv2
 
-from animrec.videoin import VideoIn
+from .videoin import VideoIn
 
 def stream():
 
