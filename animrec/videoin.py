@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
 Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,17 +21,17 @@ import cv2
 import time
 import numpy as np
 
-import animlab.utils as alu
-import animlab.imutils as alimu
-import animlab.mathutils as almau
+from pythutils.sysutils import isrpi
+from pythutils.sysutils import *
 
 class VideoIn:
+
     def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False):
 
-        """ Opens a video stream from native camera, webcam or rpi camera """
+        """Opens a video stream from native camera, webcam or rpi camera"""
 
         if system == "auto":
-            self.cam = "rpi" if alu.is_rpi() else 0
+            self.cam = "rpi" if is_rpi() else 0
         elif system in ["rpi",0,1,2]:
             self.cam = system
         else:
@@ -45,7 +44,7 @@ class VideoIn:
             from picamera import PiCamera
             self.maxres = (2592,1952)
             self.res = (self.maxres[0]*vidsize,self.maxres[1]*vidsize)
-            self.res = alimu.picamconv(self.res)
+            self.res = picamconv(self.res)
             self.camera = PiCamera()
             self.camera.resolution = self.res
             self.camera.framerate = framerate
@@ -91,7 +90,7 @@ class VideoIn:
 
     def read(self):
         if self.crop:
-            self.frame = alimu.crop(self.frame, self.crop[0], self.crop[1])
+            self.frame = crop(self.frame, self.crop[0], self.crop[1])
         return self.frame
 
 
@@ -116,9 +115,9 @@ class VideoIn:
             self.stream.release()
 
         if self.crop:
-            zoom = alimu.roi_to_zoom(self.crop, self.res)
-            (rx1,ry1),(rx2,ry2) = alimu.zoom_to_roi(zoom, self.maxres)
-            fixx, fixy = alimu.fix_vidshape(self.res, self.maxres)
+            zoom = roi_to_zoom(self.crop, self.res)
+            (rx1,ry1),(rx2,ry2) = zoom_to_roi(zoom, self.maxres)
+            fixx, fixy = fix_vidshape(self.res, self.maxres)
             if fixx > 100 or fixy > 100:
                 rx1 = rx1+int(((self.maxres[0]/2.)-rx1)/(self.maxres[0]/2.)*fixx)
                 ry1 = ry1+int(((self.maxres[1]/2.)-ry1)/(self.maxres[1]/2.)*fixy)
@@ -127,7 +126,7 @@ class VideoIn:
             self.roil = ((rx1,ry1),(rx2,ry2))
             self.roiw = self.roil[1][0] - self.roil[0][0]
             self.roih = self.roil[1][1] - self.roil[0][1]
-            self.image = alimu.crop(self.image, self.roil[0], self.roil[1])
+            self.image = crop(self.image, self.roil[0], self.roil[1])
 
         return self.image
 
