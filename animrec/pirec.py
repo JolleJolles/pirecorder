@@ -15,12 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import animrec
+from .pirecorder import Recorder
 
 def pirec():
 
     # Initiate the recorder instance
-    pirec = pirecorder.Recorder()
+    pirec = Recorder()
 
     # # General config
     # pirec.set_config(recdir = "", label = "test", rectype = "vid",
