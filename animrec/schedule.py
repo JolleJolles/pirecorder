@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
-Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2017 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,24 +18,23 @@ limitations under the License.
 from __future__ import print_function
 from builtins import input
 
-from datetime import datetime
+import datetime
 import sys
-
-import animlab.utils as alu
-from cron_descriptor import get_description
 import crontab
 import getpass
 
+from pythutils.sysutils import lineprint
+from cron_descriptor import get_description
 
 class Schedule:
 
     """
-    Class for scheduling future recordings configured with a Recorder instance.
+    Class for scheduling future recordings configured with a Recorder instance
 
-    !Important: Make sure Recorder configuration timing settings are within
-    the timespan between subsequent scheduled recordings based on the
-    provided timeplan. For example, a vid duration of 20 min and a scheduled
-    recording every 15 min between 13:00-16:00 (*/15 13-16 * * *) will fail.
+    !Make sure Recorder configuration timing settings are within the timespan
+    between subsequent scheduled recordings based on the provided timeplan. For
+    example, a video duration of 20 min and a scheduled recording every 15 min
+    between 13:00-16:00 (*/15 13-16 * * *) will fail.
 
     Parameters
     ----------
@@ -77,13 +75,13 @@ class Schedule:
                 showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/setup"):
 
-        alu.lineprint("Running scheduler.. ")
+        lineprint("Running scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
-            self.jobname = "AR_" + jobname
+            self.jobname = "PiRec_" + jobname
             pythexec = sys.executable + " -c "
-            pythcomm = "'import animrec; AR=animrec.Recorder(); AR.record()'"
+            pythcomm = "'import pirecorder; PiRec=pirecorder.Recorder(); PiRec.record()'"
             logloc = " >> " + logfolder + "/"
             logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
             self.task = pythexec + pythcomm + logloc + logcom
@@ -102,11 +100,11 @@ class Schedule:
             self.clear_jobs()
         else:
             if self.jobtimeplan is None:
-                alu.lineprint("No timeplan provided..")
+                lineprint("No timeplan provided..")
             elif test:
                 self.checktimeplan()
             elif self.jobname is None:
-                alu.lineprint("No jobname provided..")
+                lineprint("No jobname provided..")
             else:
                 if self.checktimeplan():
                     self.set_job()
@@ -116,7 +114,7 @@ class Schedule:
 
     def get_jobs(self, name = None):
 
-        """ Returns a list of jobs or specific jobs fitting a specific name """
+        """Returns a list of jobs or specific jobs fitting a specific name"""
 
         if name == None:
             return [job for job in self.cron if job.comment[:3]=="AR_"]
@@ -126,21 +124,21 @@ class Schedule:
 
     def checktimeplan(self):
 
-        """ Checks timeplan and prints description """
+        """Checks timeplan and prints description"""
 
         valid = crontab.CronSlices.is_valid(self.jobtimeplan)
         if valid:
             timedesc = get_description(self.jobtimeplan)
             print("Your timeplan will run " + timedesc)
         else:
-            alu.lineprint("Timeplan is not valid..")
+            lineprint("Timeplan is not valid..")
 
         return valid
 
 
     def clear_jobs(self):
 
-        """ Clears a specific or all jobs currently scheduled """
+        """Clears a specific or all jobs currently scheduled"""
 
         if self.jobsclear == None:
             pass
@@ -148,38 +146,38 @@ class Schedule:
             for job in self.jobs:
                 if job.comment[:3]=="AR_":
                     self.cron.remove(job)
-            alu.lineprint("All scheduled jobs removed..")
+            lineprint("All scheduled jobs removed..")
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                alu.lineprint(self.jobname[3:]+" job removed..")
+                lineprint(self.jobname[3:]+" job removed..")
             else:
                 if(self.jobname == None):
-                    alu.lineprint("No jobname provided..")
+                    lineprint("No jobname provided..")
                 else:
-                    alu.lineprint("No fitting job found to remove..")
+                    lineprint("No fitting job found to remove..")
         else:
-            alu.lineprint("No correct clear command provided..")
+            lineprint("No correct clear command provided..")
         self.cron.write()
 
 
     def enable_job(self):
 
-        """ Enables/disables a specific job """
+        """Enables/disables a specific job"""
 
         if self.jobenable:
             self.job.enable(True)
-            alu.lineprint(self.jobname[3:]+" job enabled..")
+            lineprint(self.jobname[3:]+" job enabled..")
         else:
             self.job.enable(False)
-            alu.lineprint(self.jobname[3:]+" job disabled..")
+            lineprint(self.jobname[3:]+" job disabled..")
         self.cron.write()
         self.jobsshow = True
 
 
     def set_job(self):
 
-        """ Creates/modifies a specific job """
+        """Creates/modifies a specific job"""
 
         if len(self.jobfits)>0:
             self.job = self.jobfits[0]
@@ -189,16 +187,16 @@ class Schedule:
         self.job.setall(self.jobtimeplan)
 
         self.cron.write()
-        alu.lineprint(self.jobname[3:]+" job succesfully set..")
+        lineprint(self.jobname[3:]+" job succesfully set..")
         self.enable_job()
 
 
     def show_jobs(self):
 
-        """ Prints a table of all scheduled jobs """
+        """Displays a table of all scheduled jobs"""
 
         if len(self.cron)>0:
-            alu.lineprint("Current job schedule:")
+            lineprint("Current job schedule:")
             for job in self.cron:
                 lenjob = max(8, len(job.comment[3:]))
                 lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
@@ -206,7 +204,7 @@ class Schedule:
             print("="*40)
             self.jobs = self.get_jobs()
             for job in self.jobs:
-                sch = job.schedule(date_from = datetime.now())
+                sch = job.schedule(date_from = datetime.datetime.now())
                 jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
                 plan = str(job)[:str(job).find("/usr")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
@@ -214,4 +212,4 @@ class Schedule:
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
                 print(jobname + plan + next)
         else:
-            alu.lineprint("Currently no jobs scheduled..")
+            lineprint("Currently no jobs scheduled..")
