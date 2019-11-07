@@ -1,6 +1,5 @@
 #! /usr/bin/env python
 """
-Controlled media recording library for the Rasperry-Pi
 Copyright (c) 2015 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +19,9 @@ from __future__ import print_function
 from builtins import input
 
 from .__version__ import __version__
-import animlab.imutils as alimu
-import animlab.utils as alu
 
 import os
 import sys
-import cv2
 import yaml
 
 import numpy as np
@@ -35,6 +31,7 @@ from socket import gethostname
 from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
+from pythutils.sysutils import Logger, lineprint, homedir, checkfrac
 
 from .getgains import getgains
 from .calibrate import Calibrate
@@ -43,7 +40,7 @@ from .schedule import Schedule
 class Recorder:
 
     """
-    Recorder class for setting up the rpi for controlled video or image recording.
+    Recorder class for setting up the rpi for controlled image & video recording
 
     Parameters
     ----------
@@ -151,29 +148,28 @@ class Recorder:
     -------
     self : class
         Recorder class instance
-
     """
 
-    def __init__(self, system="auto", configfile = "animrec.conf"):
+    def __init__(self, system="auto", configfile = "pirecorder.conf"):
 
-        alu.lineprint("==========================================", False)
-        txt = strftime("%d/%m/%y %H:%M:%S - AnimRec "+__version__+" started")
-        alu.lineprint(txt, False)
-        alu.lineprint("==========================================", False)
+        lineprint("==========================================", False)
+        txt = strftime("%d/%m/%y %H:%M:%S - PiRecorder "+__version__+" started")
+        lineprint(txt, False)
+        lineprint("==========================================", False)
 
         self.system = system
         self.host = gethostname()
-        self.home = alu.homedir()
+        self.home = homedir()
         self.setupdir = self.home + "setup"
         self.logfolder = self.setupdir+"/logs"
         if not os.path.exists(self.logfolder):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
-            alu.lineprint("Setup folder created ("+self.setupdir+")")
+            lineprint("Setup folder created ("+self.setupdir+")")
         if not os.path.exists(self.logfolder):
-            alu.lineprint("Setup folder already exists but was not set up properly..")
+            lineprint("Setup folder already exists but was not set up properly..")
 
-        sys.stdout = alu.Logger(self.logfolder+"/animrec.log")
+        sys.stdout = Logger(self.logfolder+"/pirecorder.log")
 
         self.brightfile = self.setupdir+"/cusbright.yml"
         self.roifile = self.setupdir+"/cusroi.yml"
@@ -181,7 +177,7 @@ class Recorder:
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            alu.lineprint("Config file not found, new file created..")
+            lineprint("Config file not found, new file created..")
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
@@ -193,10 +189,10 @@ class Recorder:
                             vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
                             imgquality=50, vidduration=10, viddelay=10,
                             vidquality = 11,internal="")
-            alu.lineprint("Config settings stored..")
+            lineprint("Config settings stored..")
         else:
-            alu.lineprint("Config file " + configfile + " loaded..")
-            alu.lineprint("Recording " + self.config.rec.type + " in " +\
+            lineprint("Config file " + configfile + " loaded..")
+            lineprint("Recording " + self.config.rec.type + " in " +\
                           self.home + self.config.rec.dir)
 
         self._imgparams()
@@ -205,7 +201,7 @@ class Recorder:
         if self.config.rec.dir == "NAS":
             if not os.path.ismount(self.config.rec.dir):
                 self.recdir = self.home
-                alu.lineprint("Recdir not mounted, storing in home directory..")
+                lineprint("Recdir not mounted, storing in home directory..")
         self.recdir = self.home + self.config.rec.dir
         if not os.path.exists(self.recdir):
             os.makedirs(self.recdir)
@@ -236,7 +232,7 @@ class Recorder:
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
-        self.cam.awb_gains = alu.check_frac(self.config.cus.gains)
+        self.cam.awb_gains = check_frac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
@@ -245,7 +241,7 @@ class Recorder:
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
-        alu.lineprint("Camera started..")
+        lineprint("Camera started..")
 
 
     def _imgparams(self, mintime = 0.45):
@@ -263,7 +259,7 @@ class Recorder:
 
     def _shuttertofps(self, minfps = 1, maxfps = 40):
 
-        """ Computes image fps based on shutterspeed within provided range """
+        """Computes image fps based on shutterspeed within provided range"""
 
         fps = int(1./(self.config.cam.shutterspeed/1000000.))
         fps = max(fps, minfps)
@@ -278,7 +274,8 @@ class Recorder:
         contain a sequence number. e.g. test_180708_pi12_S01_100410
         """
 
-        self.filetype = ".jpg" if self.config.rec.type in ["img","imgseq"] else ".h264"
+        imgtypes = ["img","imgseq"]
+        self.filetype = ".jpg" if self.config.rec.type in imgtypes else ".h264"
 
         if self.config.rec.type == "imgseq":
             date = "{timestamp:%y%m%d}"
@@ -366,7 +363,7 @@ class Recorder:
             self.config.save()
 
             if "internal" not in kwargs:
-                alu.lineprint("Config settings stored and loaded..")
+                lineprint("Config settings stored and loaded..")
 
 
     def set_roi(self):
@@ -374,16 +371,16 @@ class Recorder:
         C = Calibrate()
         if C.roi:
             self.set_config(roi=C.roi, internal="")
-            alu.lineprint("Roi stored..")
+            lineprint("Roi stored..")
         else:
-            alu.lineprint("No roi selected..")
+            lineprint("No roi selected..")
 
 
     def set_gains(self):
 
-        (rg, bg) = getgains(startgains = alu.check_frac(self.config.cus.gains))
+        (rg, bg) = getgains(startgains = check_frac(self.config.cus.gains))
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
-        alu.lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
+        lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
 
     def schedule(self, jobname = None, timeplan = None, enable = True,
@@ -395,7 +392,7 @@ class Recorder:
 
     def record(self):
 
-        """ Runs the Recorder instance """
+        """Runs the Recorder instance"""
 
         self._setup_cam()
         self._namefile()
@@ -404,7 +401,7 @@ class Recorder:
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
-            alu.lineprint("Captured "+self.filename)
+            lineprint("Captured "+self.filename)
 
         elif self.config.rec.type == "imgseq":
 
@@ -414,13 +411,12 @@ class Recorder:
                 if i < self.config.img.nr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
                     delay = max(0, self.config.img.wait - timepassed)
-                    alu.lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                    lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timepoint = datetime.now()
                 else:
-                    alu.lineprint("Captured "+img)
+                    lineprint("Captured "+img)
                     break
-
 
         elif self.config.rec.type in ["vid","vidseq"]:
 
@@ -428,10 +424,10 @@ class Recorder:
                 session = "" if self.config.rec.type == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
                 self.cam.start_recording(filename, quality = self.config.vid.quality)
-                alu.lineprint("Recording "+filename)
+                lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
                 self.cam.stop_recording()
-                alu.lineprint("Finished")
+                lineprint("Finished")
                 if self.config.rec.type == "vid":
                     break
                 else:
