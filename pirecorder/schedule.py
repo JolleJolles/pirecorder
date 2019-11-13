@@ -34,7 +34,8 @@ class Schedule:
     !Make sure Recorder configuration timing settings are within the timespan
     between subsequent scheduled recordings based on the provided timeplan. For
     example, a video duration of 20 min and a scheduled recording every 15 min
-    between 13:00-16:00 (*/15 13-16 * * *) will fail.
+    between 13:00-16:00 (*/15 13-16 * * *) will fail. This will be checked
+    automatically.
 
     Parameters
     ----------
@@ -79,9 +80,9 @@ class Schedule:
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
-            self.jobname = "PiRec_" + jobname
+            self.jobname = "REC_" + jobname
             pythexec = sys.executable + " -c "
-            pythcomm = "'import pirecorder; PiRec=pirecorder.Recorder(); PiRec.record()'"
+            pythcomm = "'import pirecorder; Rec=pirecorder.Recorder(); Rec.record()'"
             logloc = " >> " + logfolder + "/"
             logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
             self.task = pythexec + pythcomm + logloc + logcom
@@ -117,7 +118,7 @@ class Schedule:
         """Returns a list of jobs or specific jobs fitting a specific name"""
 
         if name == None:
-            return [job for job in self.cron if job.comment[:3]=="AR_"]
+            return [job for job in self.cron if job.comment[:3]=="REC_"]
         else:
             return [job for job in self.cron if job.comment == name]
 
@@ -144,7 +145,7 @@ class Schedule:
             pass
         elif self.jobsclear == "all":
             for job in self.jobs:
-                if job.comment[:3]=="AR_":
+                if job.comment[:3]=="REC_":
                     self.cron.remove(job)
             lineprint("All scheduled jobs removed..")
         elif self.jobsclear == "job":

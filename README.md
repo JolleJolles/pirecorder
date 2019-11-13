@@ -18,7 +18,7 @@ PiRecorder is easy to install. Simply open a terminal window and enter:
 pip install pirecorder
 ```
 
-All dependencies (see below) will be automatically installed with *PiRecorder* except for *opencv*, which has to be manually installed. [click here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my guide how to do so. Also, to be able to use numpy you may need to install the libatlas dependency, which may be missing on your rpi: `sudo apt install libatlas3-base`.
+All dependencies (see below) will be automatically installed with *PiRecorder* except for *opencv*, which has to be manually installed. [click here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my guide how to do so.
 
 **See the PiRecorder [wiki](https://github.com/JolleJolles/pirecorder/wiki) for a detailed guide for setting up your raspberry pi and installing and working with pirecorder.**
 
@@ -31,7 +31,7 @@ All dependencies (see below) will be automatically installed with *PiRecorder* e
 ### Recorder class
 The main functionality of *PiRecorder* is the `Recorder` class. This class initiates a Recorder instance that sets up the Raspberry Pi to record either A) a single image, b) a sequence of images, C) a single video, or D) sessions of video recordings.
 
-There are many custom recording parameters that can be set with the `pirecorder.Recorder` class, which are divided into 1) general user recording parameters, 2) camera settings, 3) video recording settings, 4) image recording settings, and 5) custom settings linked to the specific rpi being used. A detailed overview and description of all these settings can be found by calling `print(pirecorder.Recorder._doc_)`.
+There are many custom recording parameters that can be set with the `pirecorder.Recorder` class, which are divided into 1) general user recording parameters, 2) camera settings, 3) video recording settings, 4) image recording settings, and 5) custom settings linked to the specific rpi being used. A detailed overview and description of all these settings can be found by calling `print(pirecorder.Recorder.__doc__)`.
 
 When the `Recorder` is run for the first time, it creates a `setup` directory in the user's home directory to store all relevant setup files. Central is the default configuration file `pirecorder.conf`. *PiRecorder* is set up in such a way that it is very easy to set and save custom settings that are then automatically used for future use without further user input.
 
@@ -51,7 +51,7 @@ Files are automatically stored in the configured directory (`recdir`), by defaul
 In addition to the main recording module, *PiRecorder* contains a number of other modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, and schedule future recordings, with more functionalities integrated weekly.
 
 1. `Calibrate()`: Opens a video stream with user interface to calibrate the raspberry pi camera in terms of its position, focus, and region of interest (roi).
-2. `setgains()`: Automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
+2. `getgains()`: Automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
 3. `schedule()`: Automatically start image and video recording in the future according to custom recording schedules.
 
 

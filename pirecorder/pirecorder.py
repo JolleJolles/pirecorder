@@ -73,7 +73,7 @@ class Recorder:
     gains : tuple, default = (1.0, 2.5)
         Custom gains specific to the Raspberry PI to set the colorspace. The
         gains for an ideal white balance can be automatically set with the
-        set_gains() method.
+        get_gains() method.
 
     brightness : int, default = 45
         The brightness level of the camera, an integer value between 0 and 100.
@@ -396,7 +396,7 @@ class Recorder:
             lineprint("No roi selected..")
 
 
-    def set_gains(self):
+    def get_gains(self):
 
         """Automatically finds the best gains for the raspberry pi camera"""
 
