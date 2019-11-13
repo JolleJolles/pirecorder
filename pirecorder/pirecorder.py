@@ -185,11 +185,11 @@ class Recorder:
                     self.config.add_section(section)
             self.set_config(recdir="recordings", subdirs=False, label="test",
                             rectype="vid", rotation=0, brighttune=0, roi=None,
-                            gains=(1.0, 2.5), brightness=45, contrast=10,
+                            gains=(1.0,2.5), brightness=45, contrast=10,
                             saturation=-100, iso=200, sharpness=0, compensation=0,
-                            shutterspeed=8000, imgdims=(2592, 1944),
-                            viddims=(1640, 1232), imgfps=1, vidfps=24, imgwait=5.0,
-                            imgnr=12, imgtime=600, imgquality=50, vidduration=10,
+                            shutterspeed=8000, imgdims=(2592,1944),
+                            viddims=(1640,1232), imgfps=1, vidfps=24, imgwait=5.0,
+                            imgnr=12, imgtime=60, imgquality=50, vidduration=10,
                             viddelay=10, vidquality = 11, internal="")
             lineprint("Config settings stored..")
         else:
@@ -278,7 +278,7 @@ class Recorder:
         self.filetype = ".jpg" if self.config.rec.rectype in imgtypes else ".h264"
 
         if self.config.rec.rectype == "imgseq":
-            date = "{timestamp:%y%m%d}"
+            date = strftime("%y%m%d") #"{timestamp:%y%m%d}"
             counter = "im{counter:05d}" if self.config.img.imgnr>999 else "im{counter:03d}"
             time = "{timestamp:%H%M%S}"
             self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
@@ -288,7 +288,7 @@ class Recorder:
             self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
 
         if self.config.rec.subdirs:
-            subdir = name(self.config.rec.label+"_"+date)
+            subdir = name("_".join([self.config.rec.label,date,self.host]))
             os.makedirs(subdir, exist_ok=True)
             self.filename = subdir+"/"+self.filename
 
