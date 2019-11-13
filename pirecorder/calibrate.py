@@ -38,7 +38,7 @@ class Calibrate:
         self.roi = False
         self.fullscreen = False
 
-        cv2.namedWindow("Image", cv2.WND_PROP_AUTOSIZE)
+        cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
         self.m = draw.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
 
@@ -60,7 +60,7 @@ class Calibrate:
                 draw.draw_cross(self.img, pt2 = self.vid.res)
 
             cv2.imshow("Image", self.img)
-            cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
+            #cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
