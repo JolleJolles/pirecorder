@@ -29,6 +29,8 @@ URL = 'https://github.com/JolleJolles'
 DOWNLOAD_URL = 'https://github.com/JolleJolles/pirecorder/archive/v1.0.0.tar.gz'
 LICENSE = 'Apache Software License 2.0'
 
+with open('README.md') as f:
+    readme = f.read()
 
 def check_dependencies():
     install_requires = []
