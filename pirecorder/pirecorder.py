@@ -24,7 +24,9 @@ import os
 import sys
 import yaml
 
+import picamera
 import numpy as np
+import picamera.array
 from ast import literal_eval
 from datetime import datetime
 from socket import gethostname
@@ -32,6 +34,7 @@ from fractions import Fraction
 from time import sleep, strftime
 from localconfig import LocalConfig
 from pythutils.sysutils import Logger, lineprint, homedir, checkfrac
+from pythutils.fileutils import name
 
 from .getgains import getgains
 from .calibrate import Calibrate
@@ -109,12 +112,12 @@ class Recorder:
         the imgwait setting so should not be set by user.
     vidfps : int, default = 24
         The framerate for recording video.
-    imgwait : float, default = 1.0
+    imgwait : float, default = 5.0
     	The delay between subsequent images in seconds. When a delay is provided
       	that is less than ~0.5s (shutterspeed + processingtime) it will be
       	automatically set to 0 and images thus taken immideately one after the
         other.
-    imgnr : int, default = 60
+    imgnr : int, default = 12
         The number of images that should be taken. When this number is reached,
         the recorder will automatically terminate.
     imgtime : integer, default = 60
@@ -137,9 +140,9 @@ class Recorder:
 
     Output
     -------
-    Either one or multiple .h264 or .jpg files depending on the filetype and
-    single input. All files are automatically named according to the label,
-    the host name, date, time and potentially session number or count nr, e.g.
+    Either one or multiple .h264 or .jpg files. All files are automatically
+    named according to the label, the host name, date, time and potentially
+    session number or count nr, e.g.
     - single image: 'pilot_180312_PI13_101300.jpg
     - multiple images: 'pilot_180312_PI13_img00231_101300.jpg
     - video: 'pilot_180312_PI13_S01_101300.h264
@@ -153,7 +156,7 @@ class Recorder:
     def __init__(self, system="auto", configfile = "pirecorder.conf"):
 
         lineprint("============================================", False)
-        txt = strftime("%d/%m/%y %H:%M:%S - PiRecorder "+__version__+" started")
+        txt = strftime("%d/%m/%y %H:%M:%S - pirecorder "+__version__+" started")
         lineprint(txt, False)
         lineprint("============================================", False)
 
@@ -165,14 +168,13 @@ class Recorder:
         if not os.path.exists(self.logfolder):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
-            lineprint("Setup folder created ("+self.setupdir+")")
+            lineprint("Setup folder created ("+self.setupdir+")..")
         if not os.path.exists(self.logfolder):
             lineprint("Setup folder already exists but was not set up properly..")
 
         sys.stdout = Logger(self.logfolder+"/pirecorder.log")
 
         self.brightfile = self.setupdir+"/cusbright.yml"
-        self.roifile = self.setupdir+"/cusroi.yml"
         self.configfile = self.setupdir+"/"+configfile
 
         self.config = LocalConfig(self.configfile, compact_form = True)
@@ -181,28 +183,28 @@ class Recorder:
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
-            self.set_config(recdir="recordings", label="test", rectype="vid",
-                            rotation=0, brighttune=0, roi=None, gains=(1.0, 2.5),
-                            brightness=45, contrast=10, saturation=-100, iso=200,
-                            sharpness=0, compensation=0, shutterspeed=8000,
-                            imgdims=(2592, 1944), viddims=(1640, 1232), imgfps=1,
-                            vidfps=24, imgwait=5.0, imgnr=100, imgtime=600,
-                            imgquality=50, vidduration=10, viddelay=10,
-                            vidquality = 11,internal="")
+            self.set_config(recdir="recordings", subdirs=False, label="test",
+                            rectype="vid", rotation=0, brighttune=0, roi=None,
+                            gains=(1.0, 2.5), brightness=45, contrast=10,
+                            saturation=-100, iso=200, sharpness=0, compensation=0,
+                            shutterspeed=8000, imgdims=(2592, 1944),
+                            viddims=(1640, 1232), imgfps=1, vidfps=24, imgwait=5.0,
+                            imgnr=12, imgtime=600, imgquality=50, vidduration=10,
+                            viddelay=10, vidquality = 11, internal="")
             lineprint("Config settings stored..")
         else:
             lineprint("Config file " + configfile + " loaded..")
-            lineprint("Recording " + self.config.rec.type + " in " +\
-                          self.home + self.config.rec.dir)
+            lineprint("Recording " + self.config.rec.rectype + " in " +\
+                          self.home + self.config.rec.recdir)
 
         self._imgparams()
         self._shuttertofps()
 
-        if self.config.rec.dir == "NAS":
-            if not os.path.ismount(self.config.rec.dir):
+        if self.config.rec.recdir == "NAS":
+            if not os.path.ismount(self.config.rec.recdir):
                 self.recdir = self.home
                 lineprint("Recdir not mounted, storing in home directory..")
-        self.recdir = self.home + self.config.rec.dir
+        self.recdir = self.home + self.config.rec.recdir
         if not os.path.exists(self.recdir):
             os.makedirs(self.recdir)
 
@@ -213,18 +215,16 @@ class Recorder:
 
         """Sets-up the raspberry pi camera based on configuration"""
 
-        import picamera
-        import picamera.array
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
         if self.config.rec.type == "img":
-            self.cam.resolution = literal_eval(self.config.img.dims)
-            self.cam.framerate = self.config.img.fps
+            self.cam.resolution = literal_eval(self.config.img.imgdims)
+            self.cam.framerate = self.config.img.imgfps
         if self.config.rec.type == "vid":
-            self.cam.resolution = literal_eval(self.config.vid.dims)
-            self.cam.framerate = self.config.vid.fps
+            self.cam.resolution = literal_eval(self.config.vid.viddims)
+            self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
         sleep(0.1)
@@ -252,9 +252,9 @@ class Recorder:
         time it takes to take an image with max resolution.
         """
 
-        self.config.img.wait = max(mintime, self.config.img.wait)
-        totimg = int(self.config.img.time / self.config.img.wait)
-        self.config.img.nr = min(self.config.img.nr, totimg)
+        self.config.img.imgwait = max(mintime, self.config.img.imgwait)
+        totimg = int(self.config.img.imgtime / self.config.img.imgwait)
+        self.config.img.imgnr = min(self.config.img.imgnr, totimg)
 
 
     def _shuttertofps(self, minfps = 1, maxfps = 40):
@@ -263,7 +263,7 @@ class Recorder:
 
         fps = int(1./(self.config.cam.shutterspeed/1000000.))
         fps = max(fps, minfps)
-        self.config.img.fps = min(fps, maxfps)
+        self.config.img.imgfps = min(fps, maxfps)
 
 
     def _namefile(self):
@@ -275,11 +275,11 @@ class Recorder:
         """
 
         imgtypes = ["img","imgseq"]
-        self.filetype = ".jpg" if self.config.rec.type in imgtypes else ".h264"
+        self.filetype = ".jpg" if self.config.rec.rectype in imgtypes else ".h264"
 
-        if self.config.rec.type == "imgseq":
+        if self.config.rec.rectype == "imgseq":
             date = "{timestamp:%y%m%d}"
-            counter = "im{counter:05d}" if self.config.img.nr>999 else "im{counter:03d}"
+            counter = "im{counter:05d}" if self.config.img.imgnr>999 else "im{counter:03d}"
             time = "{timestamp:%H%M%S}"
             self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
             self.filename = self.filename+self.filetype
@@ -287,17 +287,24 @@ class Recorder:
             date = strftime("%y%m%d")
             self.filename = "_".join([self.config.rec.label, date, self.host])+"_"
 
+        if self.config.rec.subdirs:
+            subdir = name(self.config.rec.label+"_"+date)
+            os.makedirs(subdir, exist_ok=True)
+            self.filename = subdir+"/"+self.filename
+
 
     def set_config(self, **kwargs):
 
         """ Dynamically sets the configuration file """
 
         if "recdir" in kwargs:
-            self.config.rec.dir = kwargs["recdir"]
+            self.config.rec.recdir = kwargs["recdir"]
+        if "subdirs" in kwargs:
+            self.config.rec.subdirs = kwargs["subdirs"]
         if "label" in kwargs:
             self.config.rec.label = kwargs["label"]
         if "rectype" in kwargs:
-            self.config.rec.type = kwargs["rectype"]
+            self.config.rec.rectype = kwargs["rectype"]
 
         if "rotation" in kwargs:
             self.config.cus.rotation = kwargs["rotation"]
@@ -324,29 +331,29 @@ class Recorder:
             self.config.cam.shutterspeed = kwargs["shutterspeed"]
 
         if "imgdims" in kwargs:
-            self.config.img.dims = kwargs["imgdims"]
+            self.config.img.imgdims = kwargs["imgdims"]
         if "viddims" in kwargs:
-            self.config.vid.dims = kwargs["viddims"]
+            self.config.vid.viddims = kwargs["viddims"]
         if "imgfps" in kwargs:
-            self.config.img.fps = kwargs["imgfps"]
+            self.config.img.imgfps = kwargs["imgfps"]
         if "vidfps" in kwargs:
-            self.config.vid.fps = kwargs["vidfps"]
+            self.config.vid.vidfps = kwargs["vidfps"]
 
         if "imgwait" in kwargs:
-            self.config.img.wait = kwargs["imgwait"]
+            self.config.img.imgwait = kwargs["imgwait"]
         if "imgnr" in kwargs:
-            self.config.img.nr = kwargs["imgnr"]
+            self.config.img.imgnr = kwargs["imgnr"]
         if "imgtime" in kwargs:
-            self.config.img.time = kwargs["imgtime"]
+            self.config.img.imgtime = kwargs["imgtime"]
         if "imgquality" in kwargs:
-            self.config.img.quality = kwargs["imgquality"]
+            self.config.img.imgquality = kwargs["imgquality"]
 
         if "vidduration" in kwargs:
-            self.config.vid.duration = kwargs["vidduration"]
+            self.config.vid.vidduration = kwargs["vidduration"]
         if "viddelay" in kwargs:
-            self.config.vid.delay = kwargs["viddelay"]
+            self.config.vid.viddelay = kwargs["viddelay"]
         if "vidquality" in kwargs:
-            self.config.vid.quality = kwargs["vidquality"]
+            self.config.vid.vidquality = kwargs["vidquality"]
 
         brightchange = False
         if os.path.exists(self.brightfile):
@@ -412,20 +419,20 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
-        if self.config.rec.type == "img":
+        if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
-            self.cam.capture(self.filename, format="jpeg", quality = self.config.img.quality)
+            self.cam.capture(self.filename, format="jpeg", quality = self.config.img.imgquality)
             lineprint("Captured "+self.filename)
 
-        elif self.config.rec.type == "imgseq":
+        elif self.config.rec.rectype == "imgseq":
 
             timepoint = datetime.now()
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
-                                    format="jpeg", quality = self.config.img.quality)):
-                if i < self.config.img.nr-1:
+                                    format="jpeg", quality = self.config.img.imgquality)):
+                if i < self.config.img.imgnr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
-                    delay = max(0, self.config.img.wait - timepassed)
+                    delay = max(0, self.config.img.imgwait - timepassed)
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timepoint = datetime.now()
@@ -436,14 +443,14 @@ class Recorder:
         elif self.config.rec.type in ["vid","vidseq"]:
 
             for session in ["_S%02d" % i for i in range(1,999)]:
-                session = "" if self.config.rec.type == "vid" else session
+                session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
-                self.cam.start_recording(filename, quality = self.config.vid.quality)
+                self.cam.start_recording(filename, quality = self.config.vid.vidquality)
                 lineprint("Recording "+filename)
-                self.cam.wait_recording(self.config.vid.duration + self.config.vid.delay)
+                self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
                 self.cam.stop_recording()
                 lineprint("Finished")
-                if self.config.rec.type == "vid":
+                if self.config.rec.rectype == "vid":
                     break
                 else:
                     if input("\nn for new session, e to exit: ") == 'e':
