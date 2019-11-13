@@ -75,6 +75,7 @@ class Calibrate:
                 else:
                     print('normal size again')
                     cv2.setWindowProperty("Image",cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
+                    cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
             if k == ord("d"):
                 self.stream = False
                 break
