@@ -440,7 +440,7 @@ class Recorder:
                     lineprint("Captured "+img)
                     break
 
-        elif self.config.rec.type in ["vid","vidseq"]:
+        elif self.config.rec.rectype in ["vid","vidseq"]:
 
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
