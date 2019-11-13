@@ -36,6 +36,7 @@ class Calibrate:
         self.stream = True
         self.exit = False
         self.roi = False
+        self.fullscreen = False
 
         cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
         self.m = draw.mouse_events()
@@ -56,17 +57,23 @@ class Calibrate:
             self.img = self.vid.read()
 
             if self.cross:
-                draw.draw_cross(self.img, self.vid.res)
+                draw.draw_cross(self.img, pt2 = self.vid.res)
 
             cv2.imshow("Image", self.img)
             cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
+                print(self.cross)
                 self.cross = not self.cross
             if k == ord("f"):
-                winval = abs(1 - cv2.getWindowProperty('Image', 0))
-                cv2.setWindowProperty("Image", 0, winval)
+                self.fullscreen = not self.fullscreen
+                #winval = abs(1 - cv2.getWindowProperty('Image', 0))
+                if self.fullscreen:
+                    #cv2.setWindowProperty("Image", 0, winval)
+                    cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+                else:
+                    cv2.setWindowProperty("Image",cv2.WINDOW_NORMAL, 0)
             if k == ord("d"):
                 self.stream = False
                 break
