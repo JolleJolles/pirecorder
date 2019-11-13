@@ -97,20 +97,23 @@ class Schedule:
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
 
-        if self.jobsclear is not None:
-            self.clear_jobs()
-        else:
-            if self.jobtimeplan is None:
-                lineprint("No timeplan provided..")
-            elif test:
-                self.checktimeplan()
-            elif self.jobname is None:
-                lineprint("No jobname provided..")
-            else:
-                if self.checktimeplan():
-                    self.set_job()
         if self.jobsshow:
             self.show_jobs()
+        else:
+            if self.jobsclear is not None:
+                self.clear_jobs()
+            else:
+                if self.jobtimeplan is None:
+                    lineprint("No timeplan provided..")
+                elif test:
+                    self.checktimeplan()
+                elif self.jobname is None:
+                    lineprint("No jobname provided..")
+                else:
+                    if self.checktimeplan():
+                        self.set_job()
+            if self.jobsshow:
+                self.show_jobs()
 
 
     def get_jobs(self, name = None):
