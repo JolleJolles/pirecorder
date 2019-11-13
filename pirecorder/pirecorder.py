@@ -391,6 +391,8 @@ class Recorder:
 
     def set_gains(self):
 
+        """Automatically finds the best gains for the raspberry pi camera"""
+
         (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains))
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
@@ -453,5 +455,5 @@ def rec():
 
     """To run pirecorder from the command line"""
 
-    pirec = Recorder()
-    pirec.record()
+    Rec = Recorder()
+    Rec.record()
