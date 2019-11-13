@@ -98,6 +98,10 @@ class Calibrate:
                 else:
                     lineprint("Nothing to store..")
 
+            if k == ord("e"):
+                self.roi = False
+                lineprint("new roi erased..")
+
             if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
                     lineprint("Creating zoomed image..")
