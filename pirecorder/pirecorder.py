@@ -219,10 +219,10 @@ class Recorder:
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if self.config.rec.type == "img":
+        if self.config.rec.rectype == "img":
             self.cam.resolution = literal_eval(self.config.img.imgdims)
             self.cam.framerate = self.config.img.imgfps
-        if self.config.rec.type == "vid":
+        if self.config.rec.rectype == "vid":
             self.cam.resolution = literal_eval(self.config.vid.viddims)
             self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
@@ -278,7 +278,7 @@ class Recorder:
         self.filetype = ".jpg" if self.config.rec.rectype in imgtypes else ".h264"
 
         if self.config.rec.rectype == "imgseq":
-            date = strftime("%y%m%d") #"{timestamp:%y%m%d}"
+            date = strftime("%y%m%d")
             counter = "im{counter:05d}" if self.config.img.imgnr>999 else "im{counter:03d}"
             time = "{timestamp:%H%M%S}"
             self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
