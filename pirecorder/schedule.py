@@ -80,7 +80,7 @@ class Schedule:
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
-            self.jobname = "REC_" + jobname
+            self.jobname = "Rec_" + jobname
             pythexec = sys.executable + " -c "
             pythcomm = "'import pirecorder; Rec=pirecorder.Recorder(); Rec.record()'"
             logloc = " >> " + logfolder + "/"
@@ -118,7 +118,7 @@ class Schedule:
         """Returns a list of jobs or specific jobs fitting a specific name"""
 
         if name == None:
-            return [job for job in self.cron if job.comment[:3]=="REC_"]
+            return [job for job in self.cron if job.comment[:3]=="AR_"]
         else:
             return [job for job in self.cron if job.comment == name]
 
@@ -145,7 +145,7 @@ class Schedule:
             pass
         elif self.jobsclear == "all":
             for job in self.jobs:
-                if job.comment[:4]=="REC_":
+                if job.comment[:3]=="AR_":
                     self.cron.remove(job)
             lineprint("All scheduled jobs removed..")
         elif self.jobsclear == "job":
@@ -199,14 +199,14 @@ class Schedule:
         if len(self.cron)>0:
             lineprint("Current job schedule:")
             for job in self.cron:
-                lenjob = max(8, len(job.comment[4:]))
+                lenjob = max(8, len(job.comment[3:]))
                 lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
-                jobname = job.comment[4:]+" "*(lenjob-len(job.comment[4:]))
+                jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
                 plan = str(job)[:str(job).find("/usr")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-2))
