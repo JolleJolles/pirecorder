@@ -38,7 +38,7 @@ class Calibrate:
         self.roi = False
         self.fullscreen = False
 
-        cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
+        cv2.namedWindow("Image", cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
         self.m = draw.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
 
@@ -64,16 +64,17 @@ class Calibrate:
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
-                print(self.cross)
                 self.cross = not self.cross
             if k == ord("f"):
                 self.fullscreen = not self.fullscreen
                 #winval = abs(1 - cv2.getWindowProperty('Image', 0))
                 if self.fullscreen:
                     #cv2.setWindowProperty("Image", 0, winval)
+                    print('fullscreen')
                     cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
                 else:
-                    cv2.setWindowProperty("Image",cv2.WINDOW_NORMAL, 0)
+                    print('normal size again')
+                    cv2.setWindowProperty("Image",cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
             if k == ord("d"):
                 self.stream = False
                 break
@@ -93,7 +94,8 @@ class Calibrate:
         while True:
             img = self.imgbak.copy()
             draw.draw_crosshair(img, self.m.pointer)
-            draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
+            if self.m.rect != ():
+                draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
             cv2.imshow("Image", img)
 
             k = cv2.waitKey(1) & 0xFF
