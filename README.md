@@ -12,13 +12,13 @@ The package also comes with detailed documentation and tutorials that are contin
 
 ## <a name="install"></a>Install
 
-PiRecorder is very easy to install. Simply open a terminal window and enter:
+PiRecorder is easy to install. Simply open a terminal window and enter:
 
 ```bash
 pip install pirecorder
 ```
 
-All dependencies (see below) will be automatically installed with *PiRecorder* except for *opencv*, which has to be manually installed. [click here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my guide how to do so.
+All dependencies (see below) will be automatically installed with *PiRecorder* except for *opencv*, which has to be manually installed. [click here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my guide how to do so. Also, to be able to use numpy you may need to install the libatlas dependency, which may be missing on your rpi: `sudo apt install libatlas3-base`.
 
 **See the PiRecorder [wiki](https://github.com/JolleJolles/pirecorder/wiki) for a detailed guide for setting up your raspberry pi and installing and working with pirecorder.**
 

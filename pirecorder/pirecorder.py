@@ -152,10 +152,10 @@ class Recorder:
 
     def __init__(self, system="auto", configfile = "pirecorder.conf"):
 
-        lineprint("==========================================", False)
+        lineprint("============================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - PiRecorder "+__version__+" started")
         lineprint(txt, False)
-        lineprint("==========================================", False)
+        lineprint("============================================", False)
 
         self.system = system
         self.host = gethostname()
@@ -232,7 +232,7 @@ class Recorder:
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
-        self.cam.awb_gains = check_frac(self.config.cus.gains)
+        self.cam.awb_gains = checkfrac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
 
@@ -378,7 +378,7 @@ class Recorder:
 
     def set_gains(self):
 
-        (rg, bg) = getgains(startgains = check_frac(self.config.cus.gains))
+        (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains))
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
@@ -439,6 +439,6 @@ class Recorder:
 def rec():
 
     """To run pirecorder from the command line"""
-    
+
     pirec = Recorder()
     pirec.record()
