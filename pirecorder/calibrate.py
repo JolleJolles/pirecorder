@@ -60,20 +60,15 @@ class Calibrate:
                 draw.draw_cross(self.img, pt2 = self.vid.res)
 
             cv2.imshow("Image", self.img)
-            #cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
                 self.cross = not self.cross
             if k == ord("f"):
                 self.fullscreen = not self.fullscreen
-                #winval = abs(1 - cv2.getWindowProperty('Image', 0))
                 if self.fullscreen:
-                    #cv2.setWindowProperty("Image", 0, winval)
-                    print('fullscreen')
                     cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
                 else:
-                    print('normal size again')
                     cv2.setWindowProperty("Image",cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
                     cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
             if k == ord("d"):
@@ -122,11 +117,7 @@ class Calibrate:
                     while True:
                         cv2.imshow("Zoomed", zimg)
                         cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
-
                         k = cv2.waitKey(1) & 0xFF
-                        if k == ord("f"):
-                            winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
-                            cv2.setWindowProperty("Zoomed", 0, winval)
                         if k == 27:
                             break
 

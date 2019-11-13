@@ -21,3 +21,4 @@ from .videoin import VideoIn
 from .calibrate import Calibrate
 from .getgains import getgains
 from .schedule import Schedule
+from .stream import stream
