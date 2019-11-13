@@ -84,7 +84,7 @@ class Schedule:
             pythexec = sys.executable + " -c "
             pythcomm = "'import pirecorder; Rec=pirecorder.Recorder(); Rec.record()'"
             logloc = " >> " + logfolder + "/"
-            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
+            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[4:]) + ".log 2>&1"
             self.task = pythexec + pythcomm + logloc + logcom
         else:
             self.jobname = None
@@ -151,7 +151,7 @@ class Schedule:
         elif self.jobsclear == "job":
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                lineprint(self.jobname[3:]+" job removed..")
+                lineprint(self.jobname[4:]+" job removed..")
             else:
                 if(self.jobname == None):
                     lineprint("No jobname provided..")
@@ -168,10 +168,10 @@ class Schedule:
 
         if self.jobenable:
             self.job.enable(True)
-            lineprint(self.jobname[3:]+" job enabled..")
+            lineprint(self.jobname[4:]+" job enabled..")
         else:
             self.job.enable(False)
-            lineprint(self.jobname[3:]+" job disabled..")
+            lineprint(self.jobname[4:]+" job disabled..")
         self.cron.write()
         self.jobsshow = True
 
@@ -188,7 +188,7 @@ class Schedule:
         self.job.setall(self.jobtimeplan)
 
         self.cron.write()
-        lineprint(self.jobname[3:]+" job succesfully set..")
+        lineprint(self.jobname[4:]+" job succesfully set..")
         self.enable_job()
 
 
@@ -199,15 +199,15 @@ class Schedule:
         if len(self.cron)>0:
             lineprint("Current job schedule:")
             for job in self.cron:
-                lenjob = max(8, len(job.comment[3:]))
-                lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
+                lenjob = max(8, len(job.comment[4:]))
+                lenplan = max(8, len(str(job)[:str(job).find("/")-1]))
             print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
             print("="*40)
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
                 jobname = job.comment[4:]+" "*(lenjob-len(job.comment[4:]))
-                plan = str(job)[:str(job).find("/usr")-1]
+                plan = str(job)[:str(job).find("/")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-2))
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
