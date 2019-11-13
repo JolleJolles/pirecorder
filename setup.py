@@ -91,10 +91,9 @@ if __name__ == "__main__":
           long_description=readme,
           long_description_content_type="text/markdown",
           url=URL,
-          entry_points={
-                     'console_scripts': ['picalib = pirecorder.calibrate:Calibrate',
-                     'pirec = pirecorder.pirec:pirec'],
-          },
+          entry_points={'console_scripts': [
+                            'calib = pirecorder.calibrate:Calibrate',
+                            'rec = pirecorder.pirecorder:rec'],},
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,

@@ -435,3 +435,10 @@ class Recorder:
                         break
 
         self.cam.close()
+
+def rec():
+
+    """To run pirecorder from the command line"""
+    
+    pirec = Recorder()
+    pirec.record()

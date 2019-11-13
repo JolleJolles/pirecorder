@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ class Calibrate:
 
     def __init__(self, system="auto", framerate=8, vidsize=0.2, cross=False):
 
-        """Opens a video stream with user interface to calibrate camera"""
+        """Opens a video stream with user interface to calibrate the camera"""
 
         self.system = system
         self.framerate = framerate
@@ -45,6 +45,7 @@ class Calibrate:
 
 
     def draw_stream(self):
+
         lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
@@ -78,6 +79,7 @@ class Calibrate:
 
 
     def draw_frame(self):
+
         lineprint("Selecting roi..")
         self.imgbak = self.img.copy()
 
@@ -124,6 +126,7 @@ class Calibrate:
 
 
     def drawer(self):
+
         while True:
             if self.stream:
                 self.draw_stream()

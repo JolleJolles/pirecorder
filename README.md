@@ -5,7 +5,9 @@
 
 ![logo](https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg)
 
-*PiRecorder* consists of a main Recorder class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi for easy (and automated) image and video recording with optimal recording settings.
+*PiRecorder* consists of a main Recorder class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardized recordings with the simple `rec` command in terminal or via a user-set schedule of recordings.
+
+The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi and make controlled and automated image and video recordings.
 
 
 ## <a name="install"></a>Install
@@ -27,13 +29,13 @@ All dependencies (see below) will be automatically installed with *PiRecorder* e
 ## Module overview
 
 ### Recorder class
-The main functionality of *PiRecorder* is the `Recorder` class. This class initiates a Recorder instance that sets up the Raspberry Pi to record either A) a single image, b) a sequence of images, C) a video, or D) subsequent video sessions.
+The main functionality of *PiRecorder* is the `Recorder` class. This class initiates a Recorder instance that sets up the Raspberry Pi to record either A) a single image, b) a sequence of images, C) a single video, or D) sessions of video recordings.
 
 There are many custom recording parameters that can be set with the `pirecorder.Recorder` class, which are divided into 1) general user recording parameters, 2) camera settings, 3) video recording settings, 4) image recording settings, and 5) custom settings linked to the specific rpi being used. A detailed overview and description of all these settings can be found by calling `print(pirecorder.Recorder._doc_)`.
 
 When the `Recorder` is run for the first time, it creates a `setup` directory in the user's home directory to store all relevant setup files. Central is the default configuration file `pirecorder.conf`. *PiRecorder* is set up in such a way that it is very easy to set and save custom settings that are then automatically used for future use without further user input.
 
-Multiple configuration files can be created and called for specifics recording settings and the configuration file(s) can be easily edited with any text editor as well as updated from the command line with the `set_config()` method. In addition the setup directory will contain a log file *pirecorder.log* that will store all terminal output when *PiRecorder* is used to help keep a history log of your recordings.
+Multiple configuration files can be created and called for specific recording settings and the configuration file(s) can be easily edited with any text editor as well as updated from the command line with the `set_config()` method. In addition the setup directory will contain a log file *pirecorder.log* that will store all terminal output when *PiRecorder* is used to help keep a history log of your recordings.
 
 ### Recording modes
 *PiRecorder* has four recording modes (set with `rectype`):
