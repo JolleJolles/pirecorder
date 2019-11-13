@@ -204,13 +204,13 @@ class Schedule:
             for job in self.cron:
                 lenjob = max(8, len(job.comment[4:]))
                 lenplan = max(8, len(str(job)[:str(job).find("/")]))
-            header = "Job"+" "*(lenjob-2)+"Timeplan"+" "*(lenplan-7)+"Next recording"
+            header = "Job"+" "*(lenjob-1)+"Timeplan"+" "*(lenplan-7)+"Next recording"
             print(header)
             print("="*len(header))
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
-                jobname = job.comment[4:]+" "*(lenjob-len(job.comment[4:])-1)
+                jobname = job.comment[4:]+" "*(lenjob-(len(job.comment[4:])-2))
                 plan = str(job)[:str(job).find("/")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-1))
