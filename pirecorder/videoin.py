@@ -31,7 +31,7 @@ class VideoIn:
         """Opens a video stream from native camera, webcam or rpi camera"""
 
         if system == "auto":
-            self.cam = "rpi" if is_rpi() else 0
+            self.cam = "rpi" if isrpi() else 0
         elif system in ["rpi",0,1,2]:
             self.cam = system
         else:
