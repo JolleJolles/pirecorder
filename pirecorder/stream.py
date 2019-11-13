@@ -32,8 +32,8 @@ def stream():
         cv2.imshow('window', frame)
         k = cv2.waitKey(1) & 0xFF
         if k == ord("f"):
-            winval = abs(1 - cv2.getWindowProperty('window', 1))
-            cv2.setWindowProperty("window", 1, winval)
+            winval = abs(1 - cv2.getWindowProperty('window', 0))
+            cv2.setWindowProperty("window", cv2.WND_PROP_FULLSCREEN, winval)
         if k == 27:
             break
 
