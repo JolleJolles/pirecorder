@@ -76,7 +76,7 @@ class Schedule:
                 showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/setup"):
 
-        lineprint("Running scheduler.. ")
+        lineprint("Running pirecorder scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
@@ -203,9 +203,10 @@ class Schedule:
             lineprint("Current job schedule:")
             for job in self.cron:
                 lenjob = max(8, len(job.comment[4:]))
-                lenplan = max(8, len(str(job)[:str(job).find("/")-1]))
-            print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
-            print("="*40)
+                lenplan = max(8, len(str(job)[:str(job).find("/")]))
+            header = "Job"+" "*(lenjob-3)+"Timeplan"+" "*(lenplan-7)+"Next recording"
+            print(header)
+            print("="*len(header))
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
