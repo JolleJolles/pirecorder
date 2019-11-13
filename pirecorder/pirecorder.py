@@ -211,7 +211,7 @@ class Recorder:
 
     def _setup_cam(self):
 
-        """ Sets-up the raspberry pi camera based on configuration """
+        """Sets-up the raspberry pi camera based on configuration"""
 
         import picamera
         import picamera.array
@@ -367,6 +367,19 @@ class Recorder:
 
 
     def set_roi(self):
+
+        """
+        Dynamically draw a region of interest
+
+        Explanation
+        ===========
+        This function will open a video stream of the raspberry pi camera. Enter
+        'd' to start drawing the region of interest on an image taken from the
+        video stream. When happy with the region selected, press 's' to store
+        the coordinates, or 'esc' key to exit drawing on the image. To exist the
+        video stream enter 'esc' key again.
+        """
+
 
         C = Calibrate()
         if C.roi:
