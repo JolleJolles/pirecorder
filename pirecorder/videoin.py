@@ -22,7 +22,7 @@ import time
 import numpy as np
 
 from pythutils.sysutils import isrpi
-from pythutils.sysutils import *
+from pythutils.mediautils import *
 
 class VideoIn:
 
