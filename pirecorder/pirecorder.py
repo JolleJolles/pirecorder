@@ -239,8 +239,8 @@ class Recorder:
             lineprint("Long exposure, warming up camera..")
             sleep(6) if self.cam.framerate > 1.6 else sleep(10)
         else:
+            lineprint("Camera warming up..")
             sleep(2)
-            lineprint("Camera started..")
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
         self.cam.exposure_mode = 'off'
@@ -452,6 +452,7 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
+            time.sleep(2)
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
@@ -463,7 +464,7 @@ class Recorder:
                 if self.config.rec.rectype == "vid":
                     break
                 else:
-                    if input("\nn for new session, e to exit: ") == 'e':
+                    if input("\nAny key for new session, e to exit: ") == 'e':
                         break
 
         self.cam.close()
