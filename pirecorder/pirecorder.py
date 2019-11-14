@@ -230,6 +230,7 @@ class Recorder:
         sleep(0.1)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
+        print(self.cam.shutter_speed)
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = checkfrac(self.config.cus.gains)
@@ -387,7 +388,6 @@ class Recorder:
         video stream enter 'esc' key again.
         """
 
-
         C = Calibrate()
         if C.roi:
             self.set_config(roi=C.roi, internal="")
@@ -419,11 +419,13 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
+        print(self.cam.shutter_speed)
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.imgquality)
             lineprint("Captured "+self.filename)
+            print(self.cam.shutter_speed)
 
         elif self.config.rec.rectype == "imgseq":
 
@@ -442,6 +444,7 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
+            print(self.cam.shutter_speed)
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype

@@ -84,7 +84,7 @@ class Schedule:
             pythexec = sys.executable + " -c "
             pythcomm = "'import pirecorder; Rec=pirecorder.Recorder(); Rec.record()'"
             logloc = " >> " + logfolder + "/"
-            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[4:]) + ".log 2>&1"
+            logcom = "`date +\%y\%m\%d_$HOSTNAME`" + str(self.jobname[4:]) + ".log 2>&1"
             self.task = pythexec + pythcomm + logloc + logcom
         else:
             self.jobname = None
