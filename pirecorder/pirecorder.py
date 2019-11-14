@@ -419,7 +419,7 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
-        print(self.cam.shutter_speed)
+        print(self.cam.framerate)
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
