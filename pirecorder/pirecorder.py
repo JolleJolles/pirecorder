@@ -205,7 +205,7 @@ class Recorder:
         if self.config.rec.rectype == "imgseq":
             if self.config.cam.shutterspeed/1000000. <= (self.config.img.imgwait/5):
                 lineprint("imgwait is not enough for provided shutterspeed" + \
-                           "and will be overwritten..")
+                          ", will be overwritten..")
 
         if self.config.rec.recdir == "NAS":
             if not os.path.ismount(self.config.rec.recdir):
@@ -234,7 +234,7 @@ class Recorder:
             self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
-        self.longexpo = True if self.cam.framerate >= 6 else False
+        self.longexpo = False if self.cam.framerate >= 6 else True
         if self.longexpo:
             lineprint("Long exposure, warming up camera..")
             sleep(6) if self.cam.framerate > 1.6 else sleep(10)
