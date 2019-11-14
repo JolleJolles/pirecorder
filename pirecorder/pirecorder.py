@@ -222,13 +222,17 @@ class Recorder:
         if self.config.rec.rectype in ["img","imgseq"]:
             self.cam.resolution = literal_eval(self.config.img.imgdims)
             self.cam.framerate = Fraction(self.config.img.imgfps)
-            print(self.config.img.imgfps, Fraction(self.config.img.imgfps),self.cam.framerate)
         if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = literal_eval(self.config.vid.viddims)
             self.cam.framerate = Fraction(self.config.vid.vidfps)
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
-        sleep(1)
+        if self.config.img.imgfps >= 5:
+            sleep(1)
+            lineprint("Camera started..")
+        else:
+            lineprint("Long exposure, warming up camera..")
+            sleep(6) if self.config.img.imgfps > 1.6 else sleep(10)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
         print(self.cam.shutter_speed)
@@ -242,8 +246,6 @@ class Recorder:
         #self.cam.saturation = self.config.cam.saturation
         #self.cam.iso = self.config.cam.iso
         #self.cam.sharpness = self.config.cam.sharpness
-
-        lineprint("Camera started..")
 
 
     def _imgparams(self, mintime = 0.45):
@@ -420,13 +422,11 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
-        print(self.cam.framerate)
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
             self.cam.capture(self.filename, format="jpeg", quality = self.config.img.imgquality)
             lineprint("Captured "+self.filename)
-            print(self.cam.shutter_speed)
 
         elif self.config.rec.rectype == "imgseq":
 
@@ -445,7 +445,7 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
-            print(self.cam.shutter_speed)
+            print(self.cam.shutter_speed, self.cam.framerate)
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
