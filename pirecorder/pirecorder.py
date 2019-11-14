@@ -263,7 +263,7 @@ class Recorder:
 
         """Computes image fps based on shutterspeed within provided range"""
 
-        fps = int(1./(self.config.cam.shutterspeed/1000000.))
+        fps = 1./(self.config.cam.shutterspeed/1000000.)
         fps = max(fps, minfps)
         self.config.img.imgfps = min(fps, maxfps)
 
