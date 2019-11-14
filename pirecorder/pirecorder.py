@@ -114,9 +114,11 @@ class Recorder:
         The framerate for recording video.
     imgwait : float, default = 5.0
     	The delay between subsequent images in seconds. When a delay is provided
-      	that is less than ~0.5s (shutterspeed + processingtime) it will be
-      	automatically set to 0 and images thus taken immideately one after the
-        other.
+      	that is less than ~x5 the shutterspeed, the camera processing time will
+        take more time than the provided imgwait parameter and so images are
+        taken immideately one after the other. To take a sequence of images at
+        the exact right delay interval the imgwait parameter should be at least
+        5x the shutterspeed (e.g. shutterspeed of 400ms needs imgwait of 2s).
     imgnr : int, default = 12
         The number of images that should be taken. When this number is reached,
         the recorder will automatically terminate.
@@ -192,6 +194,7 @@ class Recorder:
                             imgnr=12, imgtime=60, imgquality=50, vidduration=10,
                             viddelay=10, vidquality = 11, internal="")
             lineprint("Config settings stored..")
+
         else:
             lineprint("Config file " + configfile + " loaded..")
             lineprint("Recording " + self.config.rec.rectype + " in " +\
@@ -199,6 +202,10 @@ class Recorder:
 
         self._imgparams()
         self._shuttertofps()
+        if self.config.rec.rectype == "imgseq":
+            if Rec.config.cam.shutterspeed/1000000. <= (Rec.config.img.imgwait/5):
+                lineprint("imgwait is not enough for provided shutterspeed" + \
+                           "and will be overwritten..")
 
         if self.config.rec.recdir == "NAS":
             if not os.path.ismount(self.config.rec.recdir):
@@ -221,21 +228,21 @@ class Recorder:
 
         if self.config.rec.rectype in ["img","imgseq"]:
             self.cam.resolution = literal_eval(self.config.img.imgdims)
-            self.cam.framerate = Fraction(self.config.img.imgfps)
+            self.cam.framerate = self.config.img.imgfps
         if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = literal_eval(self.config.vid.viddims)
-            self.cam.framerate = Fraction(self.config.vid.vidfps)
+            self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
-        if self.config.img.imgfps >= 5:
+        self.longexpo = True if self.cam.framerate >= 6 else False
+        if self.longexpo:
+            lineprint("Long exposure, warming up camera..")
+            sleep(6) if self.cam.framerate > 1.6 else sleep(10)
+        else:
             sleep(1)
             lineprint("Camera started..")
-        else:
-            lineprint("Long exposure, warming up camera..")
-            sleep(6) if self.config.img.imgfps > 1.6 else sleep(10)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
-        print(self.cam.shutter_speed)
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = checkfrac(self.config.cus.gains)
