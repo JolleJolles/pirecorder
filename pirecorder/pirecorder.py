@@ -239,7 +239,7 @@ class Recorder:
             lineprint("Long exposure, warming up camera..")
             sleep(6) if self.cam.framerate > 1.6 else sleep(10)
         else:
-            sleep(1)
+            sleep(2)
             lineprint("Camera started..")
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
