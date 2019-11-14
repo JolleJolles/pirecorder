@@ -222,6 +222,7 @@ class Recorder:
         if self.config.rec.rectype in ["img","imgseq"]:
             self.cam.resolution = literal_eval(self.config.img.imgdims)
             self.cam.framerate = Fraction(self.config.img.imgfps)
+            print(self.config.img.imgfps, Fraction(self.config.img.imgfps),self.cam.framerate)
         if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = literal_eval(self.config.vid.viddims)
             self.cam.framerate = Fraction(self.config.vid.vidfps)
