@@ -27,6 +27,7 @@ import yaml
 import picamera
 import numpy as np
 import picamera.array
+from io import BytesIO
 from ast import literal_eval
 from datetime import datetime
 from socket import gethostname
@@ -429,11 +430,6 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
-        self.cam.start_recording("sinterklaas.h264", quality = self.config.vid.vidquality)
-        lineprint("Recording YEAH ")
-        self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
-        self.cam.stop_recording()
-
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
@@ -457,6 +453,10 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
+            # Temporary fix for flicker at start of (first) video..
+            self.cam.start_recording(BytesIO(), format='h264')
+            self.cam.wait_recording(2)
+            self.cam.stop_recording()
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
