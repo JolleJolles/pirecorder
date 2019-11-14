@@ -452,7 +452,7 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
-            time.sleep(2)
+            sleep(2)
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
