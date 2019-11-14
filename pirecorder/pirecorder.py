@@ -203,7 +203,7 @@ class Recorder:
         self._imgparams()
         self._shuttertofps()
         if self.config.rec.rectype == "imgseq":
-            if Rec.config.cam.shutterspeed/1000000. <= (Rec.config.img.imgwait/5):
+            if self.config.cam.shutterspeed/1000000. <= (self.config.img.imgwait/5):
                 lineprint("imgwait is not enough for provided shutterspeed" + \
                            "and will be overwritten..")
 
