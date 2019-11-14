@@ -41,7 +41,7 @@ from .getgains import getgains
 from .calibrate import Calibrate
 from .schedule import Schedule
 
-class Recorder:
+class PiRecorder:
 
     """
     Recorder class for setting up the rpi for controlled image & video recording
@@ -457,6 +457,7 @@ class Recorder:
             self.cam.start_recording(BytesIO(), format='h264')
             self.cam.wait_recording(2)
             self.cam.stop_recording()
+
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
@@ -477,5 +478,5 @@ def rec():
 
     """To run pirecorder from the command line"""
 
-    Rec = Recorder()
-    Rec.record()
+    recorder = PiRecorder()
+    recorder.record()

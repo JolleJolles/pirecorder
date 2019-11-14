@@ -18,6 +18,8 @@ This function was partly based on code provided by Dave Jones in a
 reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 """
 
+from __future__ import print_function
+
 import picamera
 import picamera.array
 import numpy as np
