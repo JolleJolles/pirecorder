@@ -429,6 +429,11 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
+        self.cam.start_recording(filename, quality = self.config.vid.vidquality)
+        lineprint("Recording YEAH "+filename)
+        self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
+        self.cam.stop_recording()
+
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
@@ -452,8 +457,6 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
-            sleep(2)
-            print("more sleep")
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
