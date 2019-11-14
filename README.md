@@ -3,7 +3,7 @@
 
 *pirecorder* is a package to facilitate controlled and automated image and video recording for the Raspberry Pi (rpi), specifically developed with the Behavioural Scientist in mind.
 
-<p align="center">![logo](https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg)</p>
+<p align="center">!<img src="https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg"></p>
 
 *pirecorder* consists of a main `PiRecorder` class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardized recordings with the simple `record` command in terminal or via a user-set schedule of recordings.
 
