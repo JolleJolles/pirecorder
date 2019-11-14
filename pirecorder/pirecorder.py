@@ -429,8 +429,8 @@ class Recorder:
         self._setup_cam()
         self._namefile()
 
-        self.cam.start_recording(filename, quality = self.config.vid.vidquality)
-        lineprint("Recording YEAH "+filename)
+        self.cam.start_recording("sinterklaas", quality = self.config.vid.vidquality)
+        lineprint("Recording YEAH ")
         self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
         self.cam.stop_recording()
 
