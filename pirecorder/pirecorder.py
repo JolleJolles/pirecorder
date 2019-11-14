@@ -219,28 +219,28 @@ class Recorder:
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if self.config.rec.rectype == "img":
+        if self.config.rec.rectype in ["img","imgseq"]:
             self.cam.resolution = literal_eval(self.config.img.imgdims)
             self.cam.framerate = self.config.img.imgfps
-        if self.config.rec.rectype == "vid":
+        if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = literal_eval(self.config.vid.viddims)
             self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
-        sleep(0.1)
+        sleep(1)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
         print(self.cam.shutter_speed)
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = checkfrac(self.config.cus.gains)
-        brightness = self.config.cam.brightness + self.config.cus.brighttune
-        self.cam.brightness = brightness
+        #brightness = self.config.cam.brightness + self.config.cus.brighttune
+        #self.cam.brightness = brightness
 
-        self.cam.contrast = self.config.cam.contrast
-        self.cam.saturation = self.config.cam.saturation
-        self.cam.iso = self.config.cam.iso
-        self.cam.sharpness = self.config.cam.sharpness
+        #self.cam.contrast = self.config.cam.contrast
+        #self.cam.saturation = self.config.cam.saturation
+        #self.cam.iso = self.config.cam.iso
+        #self.cam.sharpness = self.config.cam.sharpness
 
         lineprint("Camera started..")
 
