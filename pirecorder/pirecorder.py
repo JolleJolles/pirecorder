@@ -246,13 +246,13 @@ class Recorder:
         self.cam.exposure_mode = 'off'
         self.cam.awb_mode = 'off'
         self.cam.awb_gains = checkfrac(self.config.cus.gains)
-        #brightness = self.config.cam.brightness + self.config.cus.brighttune
-        #self.cam.brightness = brightness
+        brightness = self.config.cam.brightness + self.config.cus.brighttune
+        self.cam.brightness = brightness
 
-        #self.cam.contrast = self.config.cam.contrast
-        #self.cam.saturation = self.config.cam.saturation
-        #self.cam.iso = self.config.cam.iso
-        #self.cam.sharpness = self.config.cam.sharpness
+        self.cam.contrast = self.config.cam.contrast
+        self.cam.saturation = self.config.cam.saturation
+        self.cam.iso = self.config.cam.iso
+        self.cam.sharpness = self.config.cam.sharpness
 
 
     def _imgparams(self, mintime = 0.45):
@@ -452,7 +452,6 @@ class Recorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
-            print(self.cam.shutter_speed, self.cam.framerate)
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S" )+session+self.filetype
