@@ -485,7 +485,5 @@ class PiRecorder:
 
         self.cam.close()
 
-if __name__ == '__main__':
-
-    recorder = PiRecorder()
-    recorder.record()
+    if __name__ == '__main__':
+        self.record()
