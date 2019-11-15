@@ -24,12 +24,17 @@ from pythutils.sysutils import lineprint
 import pythutils.drawutils as draw
 
 from .videoin import VideoIn
+from .schedule import Schedule
 
 class Calibrate:
 
     def __init__(self, system="auto", framerate=8, vidsize=0.2):
 
         """Opens a video stream with user interface to calibrate the camera"""
+
+        lineprint("pirecorder "+__version__+" started!")
+        lineprint("="*47, False)
+        lineprint("Running calibrate function.. ")
 
         self.system = system
         self.framerate = framerate
@@ -160,4 +165,4 @@ def cal():
                         action="store",
                         help="Video size of the calibrate video window")
     args = parser.parse_args()
-    calibrate = Calibrate(args.vidsize)
+    calibrate = Calibrate()

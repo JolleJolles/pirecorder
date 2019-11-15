@@ -27,6 +27,8 @@ import datetime
 from pythutils.sysutils import lineprint
 from cron_descriptor import get_description
 
+from .schedule import Schedule
+
 class Schedule:
 
     """
@@ -77,7 +79,10 @@ class Schedule:
                 showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/pirecorder"):
 
-        lineprint("Running pirecorder scheduler.. ")
+        lineprint("pirecorder "+__version__+" started!")
+        lineprint("="*47, False)
+        lineprint("Running schedule function.. ")
+
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:

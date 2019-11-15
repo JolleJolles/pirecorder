@@ -18,8 +18,6 @@ limitations under the License.
 from __future__ import print_function
 from builtins import input
 
-from .__version__ import __version__
-
 import os
 import sys
 import yaml
@@ -36,9 +34,10 @@ from localconfig import LocalConfig
 from pythutils.sysutils import Logger, lineprint, homedir, checkfrac
 from pythutils.fileutils import name
 
+from .schedule import Schedule
 from .getgains import getgains
 from .calibrate import Calibrate
-from .schedule import Schedule
+from .__version__ import __version__
 
 class PiRecorder:
 
@@ -157,10 +156,8 @@ class PiRecorder:
 
     def __init__(self, configfile = "pirecorder.conf"):
 
-        lineprint("============================================", False)
-        txt = strftime("%d/%m/%y %H:%M:%S - pirecorder "+__version__+" started")
-        lineprint(txt, False)
-        lineprint("============================================", False)
+        lineprint("pirecorder "+__version__+" started!")
+        lineprint("="*47, False)
 
         self.system = "auto"
         self.host = gethostname()
