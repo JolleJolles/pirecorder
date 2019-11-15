@@ -484,12 +484,12 @@ def rec():
     parser = argparse.ArgumentParser(prog="recorder",
              description="Runs an instance of the PiRecorder record function")
 
-	parser.add_argument("-c",
-    			        "--configfile",
-			            default="pirecorder.conf",
+    parser.add_argument("-c",
+                        "--configfile",
+                        default="pirecorder.conf",
                         action="store",
-			            help='pirecorder configuration file')
+                        help='pirecorder configuration file')
 
-	args = parser.parse_args()
+    args = parser.parse_args()
     recorder = PiRecorder(configfile=args.configfile)
     recorder.record()

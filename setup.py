@@ -65,10 +65,6 @@ def check_dependencies():
     except ImportError:
         install_requires.append('pyyaml')
     try:
-        import click
-    except ImportError:
-        install_requires.append('click')
-    try:
         import future
     except ImportError:
         install_requires.append('future')

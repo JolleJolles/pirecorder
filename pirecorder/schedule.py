@@ -227,13 +227,13 @@ def sch():
     parser = argparse.ArgumentParser(prog="schedule",
              description='Runs an instance of the PiRecorder schedule function')
 
-	parser.add_argument("-c",
-    			        "--clear",
-			            default=None,
+    parser.add_argument("-c",
+                        "--clear",
+                        default=None,
                         action="store",
                         choices=[None, "job", "all"],
                         help="If a specific job, all jobs, or no jobs"+\
                              "should be removed from the schedule.")
 
-	args = parser.parse_args()
-	S = Schedule(showjobs=True, clear=args.clear)
+    args = parser.parse_args()
+    Schedule(showjobs=True, clear=args.clear)
