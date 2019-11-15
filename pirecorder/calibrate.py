@@ -25,14 +25,14 @@ from .videoin import VideoIn
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.2, cross=False):
+    def __init__(self, system="auto", framerate=8, vidsize=0.2):
 
         """Opens a video stream with user interface to calibrate the camera"""
 
         self.system = system
         self.framerate = framerate
         self.vidsize = vidsize
-        self.cross = cross
+        self.cross = False
         self.stream = True
         self.exit = False
         self.roi = False
@@ -144,5 +144,17 @@ class Calibrate:
                     cv2.waitKey(1)
                 break
 
-if __name__ == "__main__":
-    Calibrate()
+def cal():
+
+    """To run calibrate from the command line"""
+
+    parser = argparse.ArgumentParser(prog="calibrate",
+             description="Runs pirecorder's Calibrate function")
+    parser.add_argument("-v",
+                        "--vidsize",
+                        default=0.2,
+                        type=int,
+                        action="store",
+                        help="Video size of the calibrate video window")
+    args = parser.parse_args()
+    Calibrate(args.vidsize)
