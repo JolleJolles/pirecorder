@@ -43,6 +43,7 @@ class Calibrate:
         cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
         self.m = draw.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
+        time.sleep(1)
 
         self.drawer()
 
@@ -159,4 +160,4 @@ def cal():
                         action="store",
                         help="Video size of the calibrate video window")
     args = parser.parse_args()
-    Calibrate(args.vidsize)
+    calibrate = Calibrate(args.vidsize)
