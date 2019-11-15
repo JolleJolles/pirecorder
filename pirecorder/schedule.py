@@ -74,18 +74,18 @@ class Schedule:
 
     def __init__(self, jobname = None, timeplan = None, enable = True,
                 showjobs = False, clear = None, test = False,
-                logfolder = "/home/pi/setup"):
+                logfolder = "/home/pi/pirecorder"):
 
         lineprint("Running pirecorder scheduler.. ")
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
             self.jobname = "REC_" + jobname
-            pythexec = sys.executable + " -c "
-            pythcomm = "'rec'"
-            logloc = " >> " + logfolder + "/"
-            logcom = "`date +\%y\%m\%d_$HOSTNAME`" + str(self.jobname[4:]) + ".log 2>&1"
-            self.task = pythexec + pythcomm + logloc + logcom
+            pexec = sys.executable + " -c "
+            pcomm = "'import pirecorder; R=pirecorder.PiRecorder(); R.record()'"
+            logloc = " >> "+logfolder+"/"
+            logcom = "`date +\%y\%m\%d_$HOSTNAME`"+str(self.jobname[4:])+".log 2>&1"
+            self.task = pexec + pcomm + logloc + logcom
         else:
             self.jobname = None
 
@@ -218,3 +218,22 @@ class Schedule:
                 print(jobname + plan + next)
         else:
             lineprint("Currently no jobs scheduled..")
+
+
+def sch():
+
+    """To run the schedule function from the command line"""
+
+    parser = argparse.ArgumentParser(prog="schedule",
+             description='Runs an instance of the PiRecorder schedule function')
+
+	parser.add_argument("-c",
+    			        "--clear",
+			            default=None,
+                        action="store",
+                        choices=[None, "job", "all"],
+                        help="If a specific job, all jobs, or no jobs"+\
+                             "should be removed from the schedule.")
+
+	args = parser.parse_args()
+	S = Schedule(showjobs=True, clear=args.clear)

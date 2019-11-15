@@ -45,10 +45,6 @@ def check_dependencies():
     except:
         install_requires.append('python-crontab')
     try:
-        import picamera
-    except ImportError:
-        install_requires.append('picamera')
-    try:
         import numpy
     except ImportError:
         install_requires.append('numpy')
@@ -68,6 +64,10 @@ def check_dependencies():
         import yaml
     except ImportError:
         install_requires.append('pyyaml')
+    try:
+        import click
+    except ImportError:
+        install_requires.append('click')
     try:
         import future
     except ImportError:
@@ -98,7 +98,8 @@ if __name__ == "__main__":
           url=URL,
           entry_points={'console_scripts': [
                             'calibrate = pirecorder.calibrate:Calibrate',
-                            'record = pirecorder.pirecorder:rec'],},
+                            'record = pirecorder.pirecorder:rec',
+                            'schedule = pirecorder.schedule:'],},
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,

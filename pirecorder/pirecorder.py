@@ -24,9 +24,8 @@ import os
 import sys
 import yaml
 
-import picamera
+import argparse
 import numpy as np
-import picamera.array
 from io import BytesIO
 from ast import literal_eval
 from datetime import datetime
@@ -48,7 +47,7 @@ class PiRecorder:
 
     Parameters
     ----------
-    recdir : str, default = "recordings"
+    recdir : str, default = "pirecorder/recordings"
         The directory where media will be stored. Default is "recordings". If
         different, a folder with name corresponding to location will be created
         inside the home directory. If no name is provided (""), the files are
@@ -166,7 +165,7 @@ class PiRecorder:
         self.system = system
         self.host = gethostname()
         self.home = homedir()
-        self.setupdir = self.home + "setup"
+        self.setupdir = self.home + "pirecorder"
         self.logfolder = self.setupdir+"/logs"
         if not os.path.exists(self.logfolder):
             os.makedirs(self.setupdir)
@@ -186,7 +185,7 @@ class PiRecorder:
             for section in ['rec','cam','cus', 'img','vid']:
                 if section not in list(self.config):
                     self.config.add_section(section)
-            self.set_config(recdir="recordings", subdirs=False, label="test",
+            self.set_config(recdir="pirecorder/recordings", subdirs=False, label="test",
                             rectype="vid", rotation=0, brighttune=0, roi=None,
                             gains=(1.0,2.5), brightness=45, contrast=10,
                             saturation=-100, iso=200, sharpness=0, compensation=0,
@@ -222,6 +221,10 @@ class PiRecorder:
     def _setup_cam(self):
 
         """Sets-up the raspberry pi camera based on configuration"""
+
+        # Load picamera module here so pirecorder is installable on non-rpi OS
+        import picamera
+        import picamera.array
 
         self.cam = picamera.PiCamera()
         self.cam.rotation = self.config.cus.rotation
@@ -478,5 +481,15 @@ def rec():
 
     """To run pirecorder from the command line"""
 
-    recorder = PiRecorder()
+    parser = argparse.ArgumentParser(prog="recorder",
+             description="Runs an instance of the PiRecorder record function")
+
+	parser.add_argument("-c",
+    			        "--configfile",
+			            default="pirecorder.conf",
+                        action="store",
+			            help='pirecorder configuration file')
+
+	args = parser.parse_args()
+    recorder = PiRecorder(configfile=args.configfile)
     recorder.record()
