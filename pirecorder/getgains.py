@@ -20,13 +20,15 @@ reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 
 from __future__ import print_function
 
-import picamera
-import picamera.array
 import numpy as np
 
 def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
     """Automatically finds the best gains for the raspberry pi camera"""
+
+    # Load picamera module here so pirecorder is installable on non-rpi OS
+    import picamera
+    import picamera.array
 
     cam = picamera.PiCamera()
     cam.resolution = (1280, 720)

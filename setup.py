@@ -99,7 +99,7 @@ if __name__ == "__main__":
           entry_points={'console_scripts': [
                             'calibrate = pirecorder.calibrate:Calibrate',
                             'record = pirecorder.pirecorder:rec',
-                            'schedule = pirecorder.schedule:'],},
+                            'schedule = pirecorder.schedule:sch'],},
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,
