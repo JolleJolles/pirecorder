@@ -94,7 +94,7 @@ if __name__ == "__main__":
           url=URL,
           entry_points={'console_scripts': [
                             'calibrate = pirecorder.calibrate:Calibrate',
-                            'record = pirecorder.pirecorder:rec',
+                            'record = pirecorder.pirecorder',
                             'schedule = pirecorder.schedule:sch'],},
           download_url=DOWNLOAD_URL,
           version=__version__,
