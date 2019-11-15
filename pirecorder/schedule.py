@@ -27,7 +27,7 @@ import datetime
 from pythutils.sysutils import lineprint
 from cron_descriptor import get_description
 
-from .schedule import Schedule
+from .__version__ import __version__
 
 class Schedule:
 
