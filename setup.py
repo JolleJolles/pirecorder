@@ -35,7 +35,6 @@ with open('README.md') as f:
 def check_dependencies():
     install_requires = []
 
-    # Make sure dependencies exist
     try:
         import pythutils
     except ImportError:
@@ -98,8 +97,8 @@ if __name__ == "__main__":
           long_description_content_type="text/markdown",
           url=URL,
           entry_points={'console_scripts': [
-                            'calib = pirecorder.calibrate:Calibrate',
-                            'rec = pirecorder.pirecorder:rec'],},
+                            'calibrate = pirecorder.calibrate:Calibrate',
+                            'record = pirecorder.pirecorder:rec'],},
           download_url=DOWNLOAD_URL,
           version=__version__,
           install_requires=install_requires,
