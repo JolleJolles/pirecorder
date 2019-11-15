@@ -155,14 +155,22 @@ class PiRecorder:
         Recorder class instance
     """
 
-    def __init__(self, system="auto", configfile = "pirecorder.conf"):
+    def __init__(self):
+
+        parser = argparse.ArgumentParser(usage=__doc__)
+        parser.add_argument("-c",
+                            "--configfile",
+                            default="pirecorder.conf",
+                            action="store",
+                            help='pirecorder configuration file')
+        args = parser.parse_args()
 
         lineprint("============================================", False)
         txt = strftime("%d/%m/%y %H:%M:%S - pirecorder "+__version__+" started")
         lineprint(txt, False)
         lineprint("============================================", False)
 
-        self.system = system
+        self.system = "auto"
         self.host = gethostname()
         self.home = homedir()
         self.setupdir = self.home + "pirecorder"
@@ -177,7 +185,7 @@ class PiRecorder:
         sys.stdout = Logger(self.logfolder+"/pirecorder.log")
 
         self.brightfile = self.setupdir+"/cusbright.yml"
-        self.configfile = self.setupdir+"/"+configfile
+        self.configfile = self.setupdir+"/"+args.configfile
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
@@ -196,7 +204,7 @@ class PiRecorder:
             lineprint("Config settings stored..")
 
         else:
-            lineprint("Config file " + configfile + " loaded..")
+            lineprint("Config file " + args.configfile + " loaded..")
             lineprint("Recording " + self.config.rec.rectype + " in " +\
                           self.home + self.config.rec.recdir)
 
@@ -477,19 +485,7 @@ class PiRecorder:
 
         self.cam.close()
 
-def rec():
+if __name__ == '__main__':
 
-    """To run pirecorder from the command line"""
-
-    parser = argparse.ArgumentParser(prog="recorder",
-             description="Runs an instance of the PiRecorder record function")
-
-    parser.add_argument("-c",
-                        "--configfile",
-                        default="pirecorder.conf",
-                        action="store",
-                        help='pirecorder configuration file')
-
-    args = parser.parse_args()
-    recorder = PiRecorder(configfile=args.configfile)
+    recorder = PiRecorder()
     recorder.record()
