@@ -24,7 +24,7 @@ from pythutils.sysutils import lineprint
 import pythutils.drawutils as draw
 
 from .videoin import VideoIn
-from .schedule import Schedule
+from .__version__ import __version__
 
 class Calibrate:
 
