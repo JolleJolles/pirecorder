@@ -100,9 +100,11 @@ class Schedule:
         self.jobsclear = clear
         if self.jobsclear not in [None, "all"] and self.jobname == None:
             self.jobname = self.jobsclear
+        print("self.jobname is ",self.jobname)
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
+        print("self.jobfits is ", self.jobfits)
 
         if self.jobsclear is not None:
             self.clear_jobs()
@@ -128,6 +130,7 @@ class Schedule:
             return [job for job in self.cron if job.comment[:3]=="REC"]
         else:
             return [job for job in self.cron if job.comment == name]
+        print("croning",self.cron[0].comment)
 
 
     def checktimeplan(self):
