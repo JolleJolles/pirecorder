@@ -28,7 +28,7 @@ from .__version__ import __version__
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.2z):
+    def __init__(self, system="auto", framerate=8, vidsize=0.2, internal=False):
 
         """Opens a video stream with user interface to calibrate the camera"""
 
