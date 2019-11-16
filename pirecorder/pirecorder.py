@@ -189,7 +189,7 @@ class PiRecorder:
                             shutterspeed=8000, imgdims=(2592,1944),
                             viddims=(1640,1232), imgfps=1, vidfps=24, imgwait=5.0,
                             imgnr=12, imgtime=60, imgquality=50, vidduration=10,
-                            viddelay=10, vidquality = 11, internal="")
+                            viddelay=10, vidquality=11, internal="")
             lineprint("Config settings stored..")
 
         else:
@@ -399,7 +399,7 @@ class PiRecorder:
         video stream enter 'esc' key again.
         """
 
-        C = Calibrate()
+        C = Calibrate(internal=True)
         if C.roi:
             self.set_config(roi=C.roi, internal="")
             lineprint("Roi stored..")
@@ -420,7 +420,7 @@ class PiRecorder:
                 showjobs = False, clear = None, test = False):
 
         S = Schedule(jobname, timeplan, enable, showjobs, clear, test,
-                     logfolder = self.logfolder)
+                     logfolder = self.logfolder, internal=True)
 
 
     def record(self):
@@ -465,7 +465,7 @@ class PiRecorder:
                 lineprint("Recording "+filename)
                 self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
                 self.cam.stop_recording()
-                lineprint("Finished")
+                lineprint("Recording finished!")
                 if self.config.rec.rectype == "vid":
                     break
                 else:

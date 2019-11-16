@@ -5,9 +5,15 @@
 
 <p align="center">!<img src="https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg"></p>
 
-*pirecorder* consists of a main `PiRecorder` class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardized recordings with the simple `record` command in terminal or via a user-set schedule of recordings.
+*pirecorder* consists of a main `PiRecorder` class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardised recordings by user command or via a user-set schedule of recordings.
 
-The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi and make controlled and automated image and video recordings.
+*pirecorder* is build to make controlled and automated recordings as simple as possible. It is fully usable by three simple terminal commands without needing to go into python:
+
+- `record`: Start a recording using the stored configuration settings. If initiated for the first time, the default configuration file will be created (`pirecorder/pirecorder.conf`). This file can be simply updated with a text editor (e.g. via `sudo nano`).
+- `calibrate`: Opens a live stream to the video camera that can be dynamically updated by user commands.
+- `schedule`: Shows all currently scheduled recording jobs and enables user to delete them.
+
+The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi and make controlled and automated image and video recordings. See the detailed [wiki](https://github.com/JolleJolles/pirecorder/wiki).
 
 
 ## <a name="install"></a>Install

@@ -77,10 +77,11 @@ class Schedule:
 
     def __init__(self, jobname = None, timeplan = None, enable = True,
                 showjobs = False, clear = None, test = False,
-                logfolder = "/home/pi/pirecorder"):
+                logfolder = "/home/pi/pirecorder", internal = False):
 
-        lineprint("pirecorder "+__version__+" started!")
-        lineprint("="*47, False)
+        if not internal:
+            lineprint("pirecorder "+__version__+" started!")
+            lineprint("="*47, False)
         lineprint("Running schedule function.. ")
 
         self.cron = crontab.CronTab(user = getpass.getuser())
@@ -236,8 +237,9 @@ def sch():
                         "--clear",
                         default=None,
                         action="store",
-                        choices=[None, "job", "all"],
-                        help="If a specific job, all jobs, or no jobs"+\
-                             "should be removed from the schedule.")
+                        choices=["job", "all"],
+                        help="If a specific job or all jobs should be removed"+\
+                             "from the schedule. Leave emtpy to just show jobs")
+    args = parser.parse_args()
     args = parser.parse_args()
     Schedule(showjobs=True, clear=args.clear)
