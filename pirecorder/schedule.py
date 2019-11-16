@@ -79,10 +79,12 @@ class Schedule:
                 showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/pirecorder", internal = False):
 
-        if not internal:
+        print(clear)
+        if internal:
+                    lineprint("Running schedule function.. ")
+        else:
             lineprint("pirecorder "+__version__+" started!")
             lineprint("="*47, False)
-        lineprint("Running schedule function.. ")
 
         self.cron = crontab.CronTab(user = getpass.getuser())
 
@@ -100,6 +102,9 @@ class Schedule:
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
+        if self.jobsclear not in [None, "all"] and self.jobname = None:
+            self.jobname = self.jobsclear
+            print("set jobname to "+self.jobname)
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
@@ -158,15 +163,12 @@ class Schedule:
                 if job.comment[:3]=="REC":
                     self.cron.remove(job)
             lineprint("All scheduled jobs removed..")
-        elif self.jobsclear == "job":
+        else:
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
                 lineprint(self.jobname[4:]+" job removed..")
             else:
-                if(self.jobname == None):
-                    lineprint("No jobname provided..")
-                else:
-                    lineprint("No fitting job found to remove..")
+                lineprint("No fitting job found to remove..")
         else:
             lineprint("No correct clear command provided..")
         self.cron.write()
@@ -213,7 +215,7 @@ class Schedule:
                 lenplan = max(8, len(str(job)[:str(job).find("/")]))
             header = "Job"+" "*(lenjob-1)+"Timeplan"+" "*(lenplan-7)+"Next recording"
             print(header)
-            print("="*len(header))
+            print("-"*len(header))
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
@@ -241,5 +243,5 @@ def sch():
                         help="If a specific job or all jobs should be removed"+\
                              "from the schedule. Leave emtpy to just show jobs")
     args = parser.parse_args()
-    args = parser.parse_args()
+    print(args.clear)
     Schedule(showjobs=True, clear=args.clear)
