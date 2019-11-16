@@ -34,9 +34,6 @@ class Calibrate:
 
         if internal:
             lineprint("Running calibrate function.. ")
-        else:
-            lineprint("pirecorder "+__version__+" started!")
-            lineprint("="*47, False)
 
         self.system = system
         self.framerate = framerate

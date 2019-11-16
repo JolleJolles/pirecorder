@@ -81,10 +81,7 @@ class Schedule:
 
         print(clear)
         if internal:
-                    lineprint("Running schedule function.. ")
-        else:
-            lineprint("pirecorder "+__version__+" started!")
-            lineprint("="*47, False)
+            lineprint("Running schedule function.. ")
 
         self.cron = crontab.CronTab(user = getpass.getuser())
 
@@ -102,6 +99,7 @@ class Schedule:
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
+        print("self.jobsclear is"+self.jobsclear)
         if self.jobsclear not in [None, "all"] and self.jobname == None:
             self.jobname = self.jobsclear
             print("set jobname to "+self.jobname)
@@ -156,6 +154,7 @@ class Schedule:
 
         """Clears a specific or all jobs currently scheduled"""
 
+        print("running clear jobs")
         if self.jobsclear == None:
             pass
         elif self.jobsclear == "all":
