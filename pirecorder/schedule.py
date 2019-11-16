@@ -233,7 +233,6 @@ def sch():
                         "--clear",
                         default=None,
                         action="store",
-                        choices=["job", "all"],
                         help="If a specific job or all jobs should be removed"+\
                              "from the schedule. Leave emtpy to just show jobs")
     args = parser.parse_args()
