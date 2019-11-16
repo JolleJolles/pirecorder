@@ -129,9 +129,8 @@ class Schedule:
         if name == None:
             return [job for job in self.cron if job.comment[:3]=="REC"]
         else:
+            print("croning name",name,"sint",self.cron[0], self.cron[0].comment)
             return [job for job in self.cron if job.comment == name]
-        print("croning",self.cron[0].comment)
-
 
     def checktimeplan(self):
 
