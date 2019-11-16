@@ -28,12 +28,13 @@ from .__version__ import __version__
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.2):
+    def __init__(self, system="auto", framerate=8, vidsize=0.2z):
 
         """Opens a video stream with user interface to calibrate the camera"""
 
-        lineprint("pirecorder "+__version__+" started!")
-        lineprint("="*47, False)
+        if not internal:
+            lineprint("pirecorder "+__version__+" started!")
+            lineprint("="*47, False)
         lineprint("Running calibrate function.. ")
 
         self.system = system
@@ -151,18 +152,3 @@ class Calibrate:
                 for i in range(5):
                     cv2.waitKey(1)
                 break
-
-def cal():
-
-    """To run calibrate from the command line"""
-
-    parser = argparse.ArgumentParser(prog="calibrate",
-             description="Runs pirecorder's Calibrate function")
-    parser.add_argument("-v",
-                        "--vidsize",
-                        default=0.2,
-                        type=int,
-                        action="store",
-                        help="Video size of the calibrate video window")
-    args = parser.parse_args()
-    calibrate = Calibrate()

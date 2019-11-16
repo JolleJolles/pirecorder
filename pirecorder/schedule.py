@@ -169,8 +169,6 @@ class Schedule:
                 lineprint(self.jobname[4:]+" job removed..")
             else:
                 lineprint("No fitting job found to remove..")
-        else:
-            lineprint("No correct clear command provided..")
         self.cron.write()
 
 

@@ -53,7 +53,7 @@ if __name__ == "__main__":
                             "localconfig==0.4.2; python_version>='2' and python_version<'3'",
                             "localconfig==1.1.1; python_version>='3'"],
           entry_points={"console_scripts": [
-                            "calibrate = pirecorder.calibrate:cal",
+                            "calibrate = pirecorder.calibrate:Calibrate",
                             "record = pirecorder.pirecorder:rec",
                             "schedule = pirecorder.schedule:sch"],},
           download_url=DOWNLOAD_URL,
