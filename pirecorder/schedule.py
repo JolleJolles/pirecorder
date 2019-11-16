@@ -99,7 +99,7 @@ class Schedule:
         self.jobsshow = showjobs
         self.jobsclear = clear
         if self.jobsclear not in [None, "all"] and self.jobname == None:
-            self.jobname = self.jobsclear
+            self.jobname = "REC_" + self.jobsclear
         print("self.jobname is ",self.jobname)
 
         self.jobs = self.get_jobs()
