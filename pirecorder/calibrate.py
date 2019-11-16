@@ -32,10 +32,11 @@ class Calibrate:
 
         """Opens a video stream with user interface to calibrate the camera"""
 
-        if not internal:
+        if internal:
+            lineprint("Running calibrate function.. ")
+        else:
             lineprint("pirecorder "+__version__+" started!")
             lineprint("="*47, False)
-        lineprint("Running calibrate function.. ")
 
         self.system = system
         self.framerate = framerate
