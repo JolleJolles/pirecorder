@@ -79,7 +79,6 @@ class Schedule:
                 showjobs = False, clear = None, test = False,
                 logfolder = "/home/pi/pirecorder", internal = False):
 
-        print(clear)
         if internal:
             lineprint("Running schedule function.. ")
 
@@ -99,31 +98,29 @@ class Schedule:
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
-        print("self.jobsclear is"+self.jobsclear)
         if self.jobsclear not in [None, "all"] and self.jobname == None:
             self.jobname = self.jobsclear
-            print("set jobname to "+self.jobname)
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
 
         if self.jobsshow:
             self.show_jobs()
+
+        if self.jobsclear is not None:
+            self.clear_jobs()
         else:
-            if self.jobsclear is not None:
-                self.clear_jobs()
+            if self.jobtimeplan is None:
+                lineprint("No timeplan provided..")
+            elif test:
+                self.checktimeplan()
+            elif self.jobname is None:
+                lineprint("No jobname provided..")
             else:
-                if self.jobtimeplan is None:
-                    lineprint("No timeplan provided..")
-                elif test:
-                    self.checktimeplan()
-                elif self.jobname is None:
-                    lineprint("No jobname provided..")
-                else:
-                    if self.checktimeplan():
-                        self.set_job()
-            if self.jobsshow:
-                self.show_jobs()
+                if self.checktimeplan():
+                    self.set_job()
+        if self.jobsshow:
+            self.show_jobs()
 
 
     def get_jobs(self, name = None):
