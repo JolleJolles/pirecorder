@@ -104,12 +104,9 @@ class Schedule:
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
 
-        if self.jobsshow:
-            self.show_jobs()
-
         if self.jobsclear is not None:
             self.clear_jobs()
-        else:
+        elif not self.jobsshow:
             if self.jobtimeplan is None:
                 lineprint("No timeplan provided..")
             elif test:
@@ -236,5 +233,4 @@ def sch():
                         help="If a specific job or all jobs should be removed"+\
                              "from the schedule. Leave emtpy to just show jobs")
     args = parser.parse_args()
-    print(args.clear)
     Schedule(showjobs=True, clear=args.clear)
