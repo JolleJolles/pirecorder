@@ -102,7 +102,7 @@ class Schedule:
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
-        if self.jobsclear not in [None, "all"] and self.jobname = None:
+        if self.jobsclear not in [None, "all"] and self.jobname == None:
             self.jobname = self.jobsclear
             print("set jobname to "+self.jobname)
 
