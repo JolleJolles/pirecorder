@@ -115,7 +115,7 @@ class Schedule:
                 lineprint("No jobname provided..")
             else:
                 if self.jobenable is None:
-                    self.checktimeplan():
+                    self.checktimeplan()
                 self.set_job()
         if self.jobsshow:
             self.show_jobs()
