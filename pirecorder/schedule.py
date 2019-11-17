@@ -222,7 +222,7 @@ def sch():
     """To run the schedule function from the command line"""
 
     parser = argparse.ArgumentParser(prog="schedule",
-             description=pirecorder.Schedule.__doc__,
+             description=Schedule.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument("--jobname", help="default is None")
@@ -231,7 +231,7 @@ def sch():
     parser.add_argument("--showjobs", default=False, help="default is False")
     parser.add_argument("--clear", default=None, help="default is None")
     parser.add_argument("--test", default=False, help="default is False")
-    
+
     args = parser.parse_args()
     params = [getattr(args, arg) for arg in vars(args)]+[False]
     Schedule(*params)
