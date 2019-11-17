@@ -106,7 +106,7 @@ class Schedule:
         if self.jobsclear is not None:
             self.clear_jobs()
         elif not self.jobsshow:
-            if self.jobtimeplan is None and self.enable:
+            if self.jobtimeplan is None and self.jobenable:
                 lineprint("No timeplan provided..")
             elif test:
                 self.checktimeplan()
