@@ -32,13 +32,13 @@ from .__version__ import __version__
 class Schedule:
 
     """
-    Class for scheduling future recordings configured with a Recorder instance
+    Class for scheduling future recordings configured with a PiRecorder instance
 
-    !Make sure Recorder configuration timing settings are within the timespan
-    between subsequent scheduled recordings based on the provided timeplan. For
-    example, a video duration of 20 min and a scheduled recording every 15 min
-    between 13:00-16:00 (*/15 13-16 * * *) will fail. This will be checked
-    automatically.
+    Note: Make sure Recorder configuration timing settings are within the
+    timespan between subsequent scheduled recordings based on the provided
+    timeplan. For example, a video duration of 20 min and a scheduled recording
+    every 15 min between 13:00-16:00 (*/15 13-16 * * *) will fail. This will be
+    checked automatically.
 
     Parameters
     ----------
@@ -76,8 +76,7 @@ class Schedule:
     """
 
     def __init__(self, jobname = None, timeplan = None, enable = True,
-                showjobs = False, clear = None, test = False,
-                logfolder = "/home/pi/pirecorder", internal = False):
+                showjobs = False, clear = None, test = False, internal = False):
 
         if internal:
             lineprint("Running schedule function.. ")
@@ -88,7 +87,7 @@ class Schedule:
             self.jobname = "REC_" + jobname
             pexec = sys.executable + " -c "
             pcomm = "'import pirecorder; R=pirecorder.PiRecorder(); R.record()'"
-            logloc = " >> "+logfolder+"/"
+            logloc = " >> /home/pi/pirecorder/"
             logcom = "`date +\%y\%m\%d_$HOSTNAME`"+str(self.jobname[4:])+".log 2>&1"
             self.task = pexec + pcomm + logloc + logcom
         else:
@@ -100,11 +99,9 @@ class Schedule:
         self.jobsclear = clear
         if self.jobsclear not in [None, "all"] and self.jobname == None:
             self.jobname = "REC_" + self.jobsclear
-        print("self.jobname is ",self.jobname)
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
-        print("self.jobfits is ", self.jobfits)
 
         if self.jobsclear is not None:
             self.clear_jobs()
@@ -129,7 +126,6 @@ class Schedule:
         if name == None:
             return [job for job in self.cron if job.comment[:3]=="REC"]
         else:
-            print("croning name",name,"sint",self.cron[0], self.cron[0].comment)
             return [job for job in self.cron if job.comment == name]
 
     def checktimeplan(self):
@@ -139,7 +135,7 @@ class Schedule:
         valid = crontab.CronSlices.is_valid(self.jobtimeplan)
         if valid:
             timedesc = get_description(self.jobtimeplan)
-            print("Your timeplan will run " + timedesc)
+            lineprint("Your timeplan will run " + timedesc)
         else:
             lineprint("Timeplan is not valid..")
 
@@ -150,7 +146,6 @@ class Schedule:
 
         """Clears a specific or all jobs currently scheduled"""
 
-        print("running clear jobs")
         if self.jobsclear == None:
             pass
         elif self.jobsclear == "all":
@@ -227,12 +222,16 @@ def sch():
     """To run the schedule function from the command line"""
 
     parser = argparse.ArgumentParser(prog="schedule",
-             description="Runs an instance of the PiRecorder schedule function")
-    parser.add_argument("-c",
-                        "--clear",
-                        default=None,
-                        action="store",
-                        help="If a specific job or all jobs should be removed"+\
-                             "from the schedule. Leave emtpy to just show jobs")
+             description=pirecorder.Schedule.__doc__,
+             formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    parser.add_argument("--jobname", help="default is None")
+    parser.add_argument("--timeplan", help="default is None")
+    parser.add_argument("--enable", default=True, help="default is True")
+    parser.add_argument("--showjobs", default=False, help="default is False")
+    parser.add_argument("--clear", default=None, help="default is None")
+    parser.add_argument("--test", default=False, help="default is False")
+    
     args = parser.parse_args()
-    Schedule(showjobs=True, clear=args.clear)
+    params = [getattr(args, arg) for arg in vars(args)]+[False]
+    Schedule(*params)
