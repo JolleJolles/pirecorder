@@ -75,7 +75,7 @@ class Schedule:
         record command.
     """
 
-    def __init__(self, jobname = None, timeplan = None, enable = True,
+    def __init__(self, jobname = None, timeplan = None, enable = None,
                 showjobs = False, clear = None, test = False, internal = False):
 
         if internal:
@@ -107,15 +107,16 @@ class Schedule:
         if self.jobsclear is not None:
             self.clear_jobs()
         elif not self.jobsshow:
-            if self.jobtimeplan is None and self.jobenable is True:
-                print(self.jobenable is True)
+            if self.jobtimeplan is None and self.jobenable is None:
                 lineprint("No timeplan provided..")
             elif test:
                 self.checktimeplan()
             elif self.jobname is None:
                 lineprint("No jobname provided..")
             else:
-                if self.checktimeplan():
+                if self.jobenable is not None:
+                    self.enable_job()
+                elif self.checktimeplan():
                     self.set_job()
         if self.jobsshow:
             self.show_jobs()
@@ -191,6 +192,7 @@ class Schedule:
 
         self.cron.write()
         lineprint(self.jobname[4:]+" job succesfully set..")
+        self.jobenable=True
         self.enable_job()
 
 
