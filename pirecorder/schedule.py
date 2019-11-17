@@ -95,7 +95,6 @@ class Schedule:
 
         self.jobtimeplan = timeplan
         self.jobenable = enable
-        print(self.jobenable)
         self.jobsshow = showjobs
         self.jobsclear = clear
         if self.jobsclear not in [None, "all"] and self.jobname == None:
@@ -162,6 +161,7 @@ class Schedule:
             else:
                 lineprint("No fitting job found to remove..")
         self.cron.write()
+        self.jobsshow = True
 
 
     def enable_job(self):
