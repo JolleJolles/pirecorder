@@ -19,14 +19,14 @@ import sys
 
 exec(open("pirecorder/__version__.py").read())
 
-DESCRIPTION = """A python module for controlled and automated image and video \
+DESCRIPTION="""A python module for controlled and automated image and video \
 recording with the raspberry pi"""
 
-DISTNAME = "pirecorder"
-MAINTAINER = "Jolle Jolles"
-MAINTAINER_EMAIL = "j.w.jolles@gmail.com"
-URL = "https://github.com/JolleJolles"
-DOWNLOAD_URL = "https://github.com/JolleJolles/pirecorder/archive/v1.0.0.tar.gz"
+DISTNAME="pirecorder"
+MAINTAINER="Jolle Jolles"
+MAINTAINER_EMAIL="j.w.jolles@gmail.com"
+URL="https://github.com/JolleJolles"
+DOWNLOAD_URL="https://github.com/JolleJolles/pirecorder/archive/v1.0.0.tar.gz"
 
 with open("README.md") as f:
     readme = f.read()

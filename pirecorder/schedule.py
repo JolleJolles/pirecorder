@@ -89,7 +89,7 @@ class Schedule:
             pcomm = "'import pirecorder; R=pirecorder.PiRecorder(); R.record()'"
             logloc = " >> /home/pi/pirecorder/"
             logcom = "`date +\%y\%m\%d_$HOSTNAME`"+str(self.jobname[4:])+".log 2>&1"
-            self.task = pexec + pcomm + logloc + logcom
+            self.task = pexec+pcomm+logloc+logcom
         else:
             self.jobname = None
 
@@ -229,13 +229,13 @@ def sch():
              description=Schedule.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("-j","--jobname",help="default=None",metavar="")
-    parser.add_argument("-p","--timeplan",help="default=tNone",metavar="")
-    parser.add_argument("-e","--enable",default=None,help="default=True",metavar="")
-    parser.add_argument("-s","--showjobs",default=False,help="default=False",metavar="")
-    parser.add_argument("-c","--clear",default=None,help="default=None",metavar="")
-    parser.add_argument("-t","--test",default=False,help="default=False",metavar="")
+    parser.add_argument("-j","--jobname",metavar="")
+    parser.add_argument("-p","--timeplan",metavar="")
+    parser.add_argument("-e","--enable",default=None,metavar="")
+    parser.add_argument("-s","--showjobs",default=False,metavar="")
+    parser.add_argument("-c","--clear",metavar="")
+    parser.add_argument("-t","--test",default=False,metavar="")
 
     args = parser.parse_args()
-    params = [getattr(args, arg) for arg in vars(args)]+[False]
-    Schedule(*params)
+    Schedule(jobname=args.jobname, timeplan=args.timeplan, enable=args.enable,
+             showjobs=args.showjobs, clear=args.clear, test=args.test)

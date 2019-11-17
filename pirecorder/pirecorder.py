@@ -179,7 +179,7 @@ class PiRecorder:
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
             lineprint("Config file not found, new file created..")
-            for section in ['rec','cam','cus', 'img','vid']:
+            for section in ["rec","cam","cus", "img","vid"]:
                 if section not in list(self.config):
                     self.config.add_section(section)
             self.set_config(recdir="pirecorder/recordings", subdirs=False, label="test",
@@ -244,8 +244,8 @@ class PiRecorder:
             sleep(2)
 
         self.cam.shutter_speed = self.config.cam.shutterspeed
-        self.cam.exposure_mode = 'off'
-        self.cam.awb_mode = 'off'
+        self.cam.exposure_mode = "off"
+        self.cam.awb_mode = "off"
         self.cam.awb_gains = checkfrac(self.config.cus.gains)
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
@@ -454,7 +454,7 @@ class PiRecorder:
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
             # Temporary fix for flicker at start of (first) video..
-            self.cam.start_recording(BytesIO(), format='h264')
+            self.cam.start_recording(BytesIO(), format="h264")
             self.cam.wait_recording(2)
             self.cam.stop_recording()
 
@@ -469,7 +469,7 @@ class PiRecorder:
                 if self.config.rec.rectype == "vid":
                     break
                 else:
-                    if input("\nAny key for new session, e to exit: ") == 'e':
+                    if input("\nAny key for new session, e to exit: ") == "e":
                         break
 
         self.cam.close()

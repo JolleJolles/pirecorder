@@ -40,7 +40,7 @@ def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
         for i in range(attempts):
 
-            cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+            cam.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
             r, g, b = (np.mean(output.array[..., i]) for i in range(3))
             print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 

@@ -62,15 +62,14 @@ class Calibrate:
 
         while True:
             self.img = self.vid.read()
-
             if self.cross:
                 draw.draw_cross(self.img, pt2 = self.vid.res)
-
             cv2.imshow("Image", self.img)
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
                 self.cross = not self.cross
+
             if k == ord("f"):
                 self.fullscreen = not self.fullscreen
                 if self.fullscreen:
@@ -78,6 +77,7 @@ class Calibrate:
                 else:
                     cv2.setWindowProperty("Image",cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
                     cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
+
             if k == ord("d"):
                 self.stream = False
                 break
