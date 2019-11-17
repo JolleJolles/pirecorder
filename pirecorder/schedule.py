@@ -168,6 +168,7 @@ class Schedule:
 
         """Enables/disables a specific job"""
 
+        print(self.jobenable), self.jobenable==True,self.jobenable is True)
         if self.jobenable:
             self.job.enable(True)
             lineprint(self.jobname[4:]+" job enabled..")
