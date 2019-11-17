@@ -94,8 +94,7 @@ class Schedule:
             self.jobname = None
 
         self.jobtimeplan = timeplan
-        self.jobenable = True if enable is None else enable
-        print(self.jobenable)
+        self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
         if self.jobsclear not in [None, "all"] and self.jobname == None:
@@ -168,8 +167,7 @@ class Schedule:
 
         """Enables/disables a specific job"""
 
-        print("again",self.jobenable)
-        if self.jobenable:
+        if self.jobenable is True:
             self.job.enable(True)
             lineprint(self.jobname[4:]+" job enabled..")
         else:
@@ -193,7 +191,8 @@ class Schedule:
             self.cron.write()
             lineprint(self.jobname[4:]+" job succesfully set..")
 
-        self.enable_job()
+        if self.jobenable is not None:
+            self.enable_job()
 
 
     def show_jobs(self):
