@@ -106,7 +106,7 @@ class Schedule:
         if self.jobsclear is not None:
             self.clear_jobs()
         elif not self.jobsshow:
-            if self.jobtimeplan is None:
+            if self.jobtimeplan is None and self.enable:
                 lineprint("No timeplan provided..")
             elif test:
                 self.checktimeplan()
@@ -225,8 +225,8 @@ def sch():
              description=Schedule.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("-j","--jobname",help="default is None",metavar="")
-    parser.add_argument("-p","--timeplan",help="default is None",metavar="")
+    parser.add_argument("-j","--jobname",help="default=None",metavar="")
+    parser.add_argument("-p","--timeplan",help="default=tNone",metavar="")
     parser.add_argument("-e","--enable",default=True,help="default=True",metavar="")
     parser.add_argument("-s","--showjobs",default=False,help="default=False",metavar="")
     parser.add_argument("-c","--clear",default=None,help="default=None",metavar="")
