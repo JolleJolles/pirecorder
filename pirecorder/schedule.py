@@ -182,6 +182,7 @@ class Schedule:
 
         """Creates/modifies a specific job"""
 
+        print("here", self.jobfits[0])
         if len(self.jobfits)>0:
             self.job = self.jobfits[0]
             self.job.command = self.task
