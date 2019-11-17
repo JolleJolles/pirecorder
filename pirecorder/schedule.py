@@ -225,12 +225,12 @@ def sch():
              description=Schedule.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("--jobname", help="default is None")
-    parser.add_argument("--timeplan", help="default is None")
-    parser.add_argument("--enable", default=True, help="default is True")
-    parser.add_argument("--showjobs", default=False, help="default is False")
-    parser.add_argument("--clear", default=None, help="default is None")
-    parser.add_argument("--test", default=False, help="default is False")
+    parser.add_argument("-j","--jobname",help="default is None",metavar="")
+    parser.add_argument("-p","--timeplan",help="default is None",metavar="")
+    parser.add_argument("-e","--enable",default=True,help="default=True",metavar="")
+    parser.add_argument("-s","--showjobs",default=False,help="default=False",metavar="")
+    parser.add_argument("-c","--clear",default=None,help="default=None",metavar="")
+    parser.add_argument("-t","--test",default=False,help="default=False",metavar="")
 
     args = parser.parse_args()
     params = [getattr(args, arg) for arg in vars(args)]+[False]
