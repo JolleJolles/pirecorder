@@ -168,8 +168,8 @@ class Schedule:
 
         """Enables/disables a specific job"""
 
-        print(self.jobenable, self.jobenable==True,self.jobenable is True)
-        if self.jobenable:
+        print(self.jobenable, self.jobenable=="True",self.jobenable is True)
+        if self.jobenable :
             self.job.enable(True)
             lineprint(self.jobname[4:]+" job enabled..")
         else:
@@ -232,7 +232,7 @@ def sch():
 
     parser.add_argument("-j","--jobname",help="default=None",metavar="")
     parser.add_argument("-p","--timeplan",help="default=tNone",metavar="")
-    parser.add_argument("-e","--enable",default=True,help="default=True",metavar="")
+    parser.add_argument("-e","--enable",default=None,help="default=True",metavar="")
     parser.add_argument("-s","--showjobs",default=False,help="default=False",metavar="")
     parser.add_argument("-c","--clear",default=None,help="default=None",metavar="")
     parser.add_argument("-t","--test",default=False,help="default=False",metavar="")
