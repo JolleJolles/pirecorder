@@ -18,23 +18,27 @@ limitations under the License.
 from __future__ import print_function
 from builtins import input
 
-import datetime
 import sys
 import crontab
 import getpass
+import argparse
+import datetime
 
 from pythutils.sysutils import lineprint
 from cron_descriptor import get_description
 
+from .__version__ import __version__
+
 class Schedule:
 
     """
-    Class for scheduling future recordings configured with a Recorder instance
+    Class for scheduling future recordings configured with a PiRecorder instance
 
-    !Make sure Recorder configuration timing settings are within the timespan
-    between subsequent scheduled recordings based on the provided timeplan. For
-    example, a video duration of 20 min and a scheduled recording every 15 min
-    between 13:00-16:00 (*/15 13-16 * * *) will fail.
+    Note: Make sure Recorder configuration timing settings are within the
+    timespan between subsequent scheduled recordings based on the provided
+    timeplan. For example, a video duration of 20 min and a scheduled recording
+    every 15 min between 13:00-16:00 (*/15 13-16 * * *) will fail. This will be
+    checked automatically.
 
     Parameters
     ----------
@@ -71,20 +75,21 @@ class Schedule:
         record command.
     """
 
-    def __init__(self, jobname = None, timeplan = None, enable = True,
-                showjobs = False, clear = None, test = False,
-                logfolder = "/home/pi/setup"):
+    def __init__(self, jobname = None, timeplan = None, enable = None,
+                showjobs = False, clear = None, test = False, internal = False):
 
-        lineprint("Running scheduler.. ")
+        if internal:
+            lineprint("Running schedule function.. ")
+
         self.cron = crontab.CronTab(user = getpass.getuser())
 
         if jobname is not None:
-            self.jobname = "PiRec_" + jobname
-            pythexec = sys.executable + " -c "
-            pythcomm = "'import pirecorder; PiRec=pirecorder.Recorder(); PiRec.record()'"
-            logloc = " >> " + logfolder + "/"
-            logcom = "`date +\%y\%m\%d_$HOSTNAME`_" + str(self.jobname[3:]) + ".log 2>&1"
-            self.task = pythexec + pythcomm + logloc + logcom
+            self.jobname = "REC_" + jobname
+            pexec = sys.executable + " -c "
+            pcomm = "'import pirecorder; R=pirecorder.PiRecorder(); R.record()'"
+            logloc = " >> /home/pi/pirecorder/"
+            logcom = "`date +\%y\%m\%d_$HOSTNAME`"+str(self.jobname[4:])+".log 2>&1"
+            self.task = pexec+pcomm+logloc+logcom
         else:
             self.jobname = None
 
@@ -92,22 +97,25 @@ class Schedule:
         self.jobenable = enable
         self.jobsshow = showjobs
         self.jobsclear = clear
+        if self.jobsclear not in [None, "all"] and self.jobname == None:
+            self.jobname = "REC_" + self.jobsclear
 
         self.jobs = self.get_jobs()
         self.jobfits = self.get_jobs(name = self.jobname)
 
         if self.jobsclear is not None:
             self.clear_jobs()
-        else:
-            if self.jobtimeplan is None:
+        elif not self.jobsshow:
+            if self.jobtimeplan is None and self.jobenable is None:
                 lineprint("No timeplan provided..")
             elif test:
                 self.checktimeplan()
             elif self.jobname is None:
                 lineprint("No jobname provided..")
             else:
-                if self.checktimeplan():
-                    self.set_job()
+                if enable is None:
+                    self.checktimeplan()
+                self.set_job()
         if self.jobsshow:
             self.show_jobs()
 
@@ -117,10 +125,9 @@ class Schedule:
         """Returns a list of jobs or specific jobs fitting a specific name"""
 
         if name == None:
-            return [job for job in self.cron if job.comment[:3]=="AR_"]
+            return [job for job in self.cron if job.comment[:3]=="REC"]
         else:
             return [job for job in self.cron if job.comment == name]
-
 
     def checktimeplan(self):
 
@@ -129,7 +136,7 @@ class Schedule:
         valid = crontab.CronSlices.is_valid(self.jobtimeplan)
         if valid:
             timedesc = get_description(self.jobtimeplan)
-            print("Your timeplan will run " + timedesc)
+            lineprint("Your timeplan will run " + timedesc)
         else:
             lineprint("Timeplan is not valid..")
 
@@ -144,33 +151,29 @@ class Schedule:
             pass
         elif self.jobsclear == "all":
             for job in self.jobs:
-                if job.comment[:3]=="AR_":
+                if job.comment[:3]=="REC":
                     self.cron.remove(job)
             lineprint("All scheduled jobs removed..")
-        elif self.jobsclear == "job":
+        else:
             if len(self.jobfits)>0:
                 self.cron.remove(self.jobfits[0])
-                lineprint(self.jobname[3:]+" job removed..")
+                lineprint(self.jobname[4:]+" job removed..")
             else:
-                if(self.jobname == None):
-                    lineprint("No jobname provided..")
-                else:
-                    lineprint("No fitting job found to remove..")
-        else:
-            lineprint("No correct clear command provided..")
+                lineprint("No fitting job found to remove..")
         self.cron.write()
+        self.jobsshow = True
 
 
     def enable_job(self):
 
         """Enables/disables a specific job"""
 
-        if self.jobenable:
+        if self.jobenable == "True":
             self.job.enable(True)
-            lineprint(self.jobname[3:]+" job enabled..")
+            lineprint(self.jobname[4:]+" job enabled..")
         else:
             self.job.enable(False)
-            lineprint(self.jobname[3:]+" job disabled..")
+            lineprint(self.jobname[4:]+" job disabled..")
         self.cron.write()
         self.jobsshow = True
 
@@ -184,11 +187,13 @@ class Schedule:
             self.job.command = self.task
         else:
             self.job = self.cron.new(command = self.task, comment = self.jobname)
-        self.job.setall(self.jobtimeplan)
+        if self.jobtimeplan is not None:
+            self.job.setall(self.jobtimeplan)
+            self.cron.write()
+            lineprint(self.jobname[4:]+" job succesfully set..")
 
-        self.cron.write()
-        lineprint(self.jobname[3:]+" job succesfully set..")
-        self.enable_job()
+        if self.jobenable is not None:
+            self.enable_job()
 
 
     def show_jobs(self):
@@ -198,18 +203,39 @@ class Schedule:
         if len(self.cron)>0:
             lineprint("Current job schedule:")
             for job in self.cron:
-                lenjob = max(8, len(job.comment[3:]))
-                lenplan = max(8, len(str(job)[:str(job).find("/usr")-1]))
-            print("Job"+" "*(lenjob-3)+"Time plan"+" "*(lenplan-7)+"Next recording")
-            print("="*40)
+                lenjob = max(8, len(job.comment[4:]))
+                lenplan = max(8, len(str(job)[:str(job).find("/")]))
+            header = "Job"+" "*(lenjob-1)+"Timeplan"+" "*(lenplan-7)+"Next recording"
+            print(header)
+            print("-"*len(header))
             self.jobs = self.get_jobs()
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
-                jobname = job.comment[3:]+" "*(lenjob-len(job.comment[3:]))
-                plan = str(job)[:str(job).find("/usr")-1]
+                jobname = job.comment[4:]+" "*(lenjob-(len(job.comment[4:])-2))
+                plan = str(job)[:str(job).find("/")-1]
                 plan = plan[2:] if plan[0] == "#" else plan
-                plan = plan + " "*(lenplan-(len(plan)-2))
+                plan = plan + " "*(lenplan-(len(plan)-1))
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
                 print(jobname + plan + next)
         else:
             lineprint("Currently no jobs scheduled..")
+
+
+def sch():
+
+    """To run the schedule function from the command line"""
+
+    parser = argparse.ArgumentParser(prog="schedule",
+             description=Schedule.__doc__,
+             formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    parser.add_argument("-j","--jobname",metavar="")
+    parser.add_argument("-p","--timeplan",metavar="")
+    parser.add_argument("-e","--enable",default=None,metavar="")
+    parser.add_argument("-s","--showjobs",default=False,metavar="")
+    parser.add_argument("-c","--clear",metavar="")
+    parser.add_argument("-t","--test",default=False,metavar="")
+
+    args = parser.parse_args()
+    Schedule(jobname=args.jobname, timeplan=args.timeplan, enable=args.enable,
+             showjobs=args.showjobs, clear=args.clear, test=args.test)

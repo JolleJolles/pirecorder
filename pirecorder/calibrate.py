@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,34 +17,43 @@ limitations under the License.
 
 import cv2
 import time
+import argparse
 import numpy as np
+
 from pythutils.sysutils import lineprint
 import pythutils.drawutils as draw
 
 from .videoin import VideoIn
+from .__version__ import __version__
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.2, cross=False):
+    def __init__(self, system="auto", framerate=8, vidsize=0.2, internal=False):
 
-        """Opens a video stream with user interface to calibrate camera"""
+        """Opens a video stream with user interface to calibrate the camera"""
+
+        if internal:
+            lineprint("Running calibrate function.. ")
 
         self.system = system
         self.framerate = framerate
         self.vidsize = vidsize
-        self.cross = cross
+        self.cross = False
         self.stream = True
         self.exit = False
         self.roi = False
+        self.fullscreen = False
 
-        cv2.namedWindow("Image", cv2.WINDOW_NORMAL)
+        cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
         self.m = draw.mouse_events()
         cv2.setMouseCallback('Image', self.m.draw)
+        time.sleep(1)
 
         self.drawer()
 
 
     def draw_stream(self):
+
         lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
@@ -53,19 +62,22 @@ class Calibrate:
 
         while True:
             self.img = self.vid.read()
-
             if self.cross:
-                draw.draw_cross(self.img, self.vid.res)
-
+                draw.draw_cross(self.img, pt2 = self.vid.res)
             cv2.imshow("Image", self.img)
-            cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("c"):
                 self.cross = not self.cross
+
             if k == ord("f"):
-                winval = abs(1 - cv2.getWindowProperty('Image', 0))
-                cv2.setWindowProperty("Image", 0, winval)
+                self.fullscreen = not self.fullscreen
+                if self.fullscreen:
+                    cv2.setWindowProperty("Image",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+                else:
+                    cv2.setWindowProperty("Image",cv2.WND_PROP_AUTOSIZE, cv2.WINDOW_NORMAL)
+                    cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
+
             if k == ord("d"):
                 self.stream = False
                 break
@@ -78,13 +90,15 @@ class Calibrate:
 
 
     def draw_frame(self):
+
         lineprint("Selecting roi..")
         self.imgbak = self.img.copy()
 
         while True:
             img = self.imgbak.copy()
             draw.draw_crosshair(img, self.m.pointer)
-            draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
+            if self.m.rect != ():
+                draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
             cv2.imshow("Image", img)
 
             k = cv2.waitKey(1) & 0xFF
@@ -96,6 +110,10 @@ class Calibrate:
                 else:
                     lineprint("Nothing to store..")
 
+            if k == ord("e"):
+                self.roi = False
+                lineprint("new roi erased..")
+
             if k == ord("z"):
                 if self.m.rect and len(self.m.rect) == 2:
                     lineprint("Creating zoomed image..")
@@ -106,11 +124,7 @@ class Calibrate:
                     while True:
                         cv2.imshow("Zoomed", zimg)
                         cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
-
                         k = cv2.waitKey(1) & 0xFF
-                        if k == ord("f"):
-                            winval = abs(1 - cv2.getWindowProperty('Zoomed', 0))
-                            cv2.setWindowProperty("Zoomed", 0, winval)
                         if k == 27:
                             break
 
@@ -124,6 +138,7 @@ class Calibrate:
 
 
     def drawer(self):
+
         while True:
             if self.stream:
                 self.draw_stream()
@@ -135,6 +150,3 @@ class Calibrate:
                 for i in range(5):
                     cv2.waitKey(1)
                 break
-
-if __name__ == "__main__":
-    Calibrate()

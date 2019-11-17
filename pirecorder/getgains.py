@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019 - 2019 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,13 +18,17 @@ This function was partly based on code provided by Dave Jones in a
 reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 """
 
-import picamera
-import picamera.array
+from __future__ import print_function
+
 import numpy as np
 
 def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
     """Automatically finds the best gains for the raspberry pi camera"""
+
+    # Load picamera module here so pirecorder is installable on non-rpi OS
+    import picamera
+    import picamera.array
 
     cam = picamera.PiCamera()
     cam.resolution = (1280, 720)
@@ -36,7 +40,7 @@ def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5)):
 
         for i in range(attempts):
 
-            cam.capture(output, format='rgb', resize=(128, 80), use_video_port=True)
+            cam.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
             r, g, b = (np.mean(output.array[..., i]) for i in range(3))
             print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
 

@@ -26,14 +26,23 @@ def stream():
     the videostream fullscreen and with the 'ESC' key the window is closed.
     """
 
+    fullscreen = False
     vid = VideoIn(vidsize=0.25).start()
+    cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
     while True:
         frame = vid.read()
-        cv2.imshow('window', frame)
+        cv2.imshow('Stream', frame)
         k = cv2.waitKey(1) & 0xFF
         if k == ord("f"):
-            winval = abs(1 - cv2.getWindowProperty('window', 0))
-            cv2.setWindowProperty("window", 0, winval)
+            fullscreen = not fullscreen
+            if fullscreen:
+                cv2.setWindowProperty("Stream", cv2.WND_PROP_FULLSCREEN,
+                                      cv2.WINDOW_FULLSCREEN)
+            else:
+                cv2.setWindowProperty("Stream",cv2.WND_PROP_AUTOSIZE,
+                                               cv2.WINDOW_NORMAL)
+                cv2.resizeWindow("Stream", vid.res[0], vid.res[1])
+
         if k == 27:
             break
 
