@@ -154,11 +154,7 @@ class Convert:
             elif self.type in [".jpg",".jpeg",".png"]:
 
                 vidname = commonpref(self.conv_files)
-<<<<<<< HEAD
-                lineprint("Start converting "+str(len(self.conv_files))" images")
-=======
-                lineprint("Start converting",len(self.conv_files),"images")
->>>>>>> 51365c5cfca9f6415f7738c7393f3cccdf2d0001
+                lineprint("Start converting "+str(len(self.conv_files))+" images")
 
                 frame_array = []
                 for filename in self.conv_files:
