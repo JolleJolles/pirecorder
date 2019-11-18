@@ -430,11 +430,6 @@ class PiRecorder:
         self._setup_cam()
         self._namefile()
 
-        # Temporary fix for flicker at start of (first) video..
-        self.cam.start_recording(BytesIO(), format="h264")
-        self.cam.wait_recording(2)
-        self.cam.stop_recording()
-
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
@@ -457,6 +452,11 @@ class PiRecorder:
                     break
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
+
+            # Temporary fix for flicker at start of (first) video..
+            self.cam.start_recording(BytesIO(), format="h264")
+            self.cam.wait_recording(2)
+            self.cam.stop_recording()
 
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
