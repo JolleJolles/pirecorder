@@ -20,10 +20,11 @@ pip install pirecorder
 
 All dependencies (see below) will be automatically installed with *pirecorder* except for:
 
-- *picamera*:to enable *pirecorder* to be installable on non-rpi systems such as to use the convert functionality
-- *opencv*: has to be manually installed due to various dependencies. Click [here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my opencv installation guide.
+- *picamera*: To enable *pirecorder* to be installable on non-rpi systems such as to use the convert functionality
+- *opencv*: Opencv has to be manually installed due to various dependencies. Click [here](https://github.com/JolleJolles/pirecorder/wiki/Install-OpenCV-for-Python-on-Mac,-Ubuntu,-Raspberry-Pi) for my opencv installation guide.
+- *ffmpeg*: ffmpeg is needed only for using the convert functionality of *pirecorder* and needs to be installed manually. Click [here](https://github.com/JolleJolles/pirecorder/wiki/Installing-ffmpeg-on-Mac-OS-X) for my guide to install on OS X and [here](https://github.com/JolleJolles/pirecorder/wiki/Installing-ffmpeg-on-Raspberry-Pi-with-h264-support) for my guide to install on raspberry pi.
 
-**See the PiRecorder [wiki](https://github.com/JolleJolles/pirecorder/wiki) for a detailed guide for setting up your raspberry pi and installing and working with pirecorder.**
+**See the [pirecorder wiki](https://github.com/JolleJolles/pirecorder/wiki) for a detailed guide for setting up your raspberry pi and installing and working with pirecorder.**
 
 ## Dependencies
 *pirecorder* is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package, uses [numpy](http://www.numpy.org/), [pyyaml](https://pyyaml.org), and [opencv](http://opencv.org) for some of its core functionality, and relies on various utility functions of my [pythutils](https://github.com/JolleJolles/pythutils) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package.
