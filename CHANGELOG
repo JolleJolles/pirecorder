@@ -1,14 +1,23 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
-
 Updates not yet in latest release:
-  * Changed package name to PiRecorder, added new logo, and updated setup file,
-    readme file, and changelog file accordingly
+    *
 
 
-Updates to package before name change from Animrec to PiRecorder:
-2019-06-19 - Animrec v1.7.0
+2019-11-18 - version 2.0.0
+    Major update with large number of small and large improvements and fixes and
+    the module is now available on PyPi. The most major changes are listed.
+
+    * Renamed animrec to pirecorder
+    * Fixed number of issues to do with camera shutter speed
+    * Improved schedule function to be fully usable from the command line
+    * Improved calibrate function to work on non-rasbian systems as well
+    * All major functionalities from pirecorder can now be run from the command
+      line, thereby limiting the knowledge of python required to use pirecorder
+    * Included new convert functionality for image and video conversion
+
+2019-06-19 - version 1.7.0
     * Moved getgains function to its own file and updated integrated function
     * Moved scheduling functionality to its own class in a separate file
     * Fixed stream class parameters
@@ -20,7 +29,7 @@ Updates to package before name change from Animrec to PiRecorder:
     * Fixed set_gains function to update based on custom gains
     * Included console script in setup file for running from terminal
 
-2019-06-19 - Animrec v1.6.0
+2019-06-19 - version 1.6.0
     * Added time delay to get right video resolution for VideoIn class
     * Temporary image for rpi zooming is now automatically deleted
     * Considerably fixed and improved calibrate function throughout
@@ -30,55 +39,55 @@ Updates to package before name change from Animrec to PiRecorder:
     * Renamed stream_video demo file to streamf
     * Changed copyright statement for all files
     * Moved demo files to main animrec directory and renamed for easier
-      execution from the terminal
+       execution from the terminal
     * Integrated fix for videoin function when max resolution and resolution
-      differ so the roi is not displayed correctly.
+       differ so the roi is not displayed correctly.
 
-=2019-06-17 - Animrec v1.5.2
+2019-06-17 - version 1.5.2
     * Updated stream_video script to reflect VideoIn class change
     * Created new sub folder with demo scrips that can be executed from command
-      line
+       line
 
-2019-06-17 - Animrec v1.5.1
+2019-06-17 - version 1.5.1
     * Incorporated and improved roi functionality in the calibrate class
     * Incorporated some utility functions to improve calibration functionality
     * Integrated roi functionality into the animrec function
 
-2019-06-17 - Animrec v1.5.0
+2019-06-17 - version 1.5.0
     * Incorprated a new VideoStream class to facilitate the easy opening
-      of a video stream either being a native camera or a webcam in addition
-      to the raspberry pi camera.
+       of a video stream either being a native camera or a webcam in addition
+       to the raspberry pi camera.
     * Added stream_video demo script to showcase VideoStream class
 
-2019-06-14 - Animrec v1.4.0
+2019-06-14 - version 1.4.0
     * Integrated zoom and stream function in showcam function
 
-2019-06-14 - Animrec v1.3.2
+2019-06-14 - version 1.3.2
     * Enabled fullscreen mode of showcam function
 
-2019-06-14 - Animrec v1.3.1
+2019-06-14 - version 1.3.1
     * Fixed init file not loading new function files
 
-2019-06-14 - Animrec v1.3.0
+2019-06-14 - version 1.3.0
     * Improved draw_rectangle functionality and moved to animlab package
     * Added video positioning function
     * Added image undistort calibration functionality
 
-2019-06-07 - Animrec v1.2.1
+2019-06-07 - version 1.2.1
     * Moved the convert functionality and tutorial to the AnimLab package
 
-2018-03-09 - Animrec v1.2.0
+2018-03-09 - version 1.2.0
     * Completely rewritten the AnimRec Readme
     * Added a very detailed guide for setting-up the rpi and installing and
-      working with AnimRec
+        working with AnimRec
     * Fixed a number of wrong commands and links in the guides and notebooks
 
-2018-01-31 - Animrec v1.1.0
+2018-01-31 - version 1.1.0
     * Scheduler now only shows/deletes animrec related crontab entries
     * Number of improvements to setup file for different versions and dependencies
     * Large number of smaller fixes to record and schedule functions
     * Improved the documentation regarding dependencies
 
-2019-01-01 - Animrec v1.0.0
+2019-01-01 - version 1.0.0
     * Initial release AnimRec, created the package, made publicly available on
       Github
