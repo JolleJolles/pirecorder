@@ -370,7 +370,7 @@ class PiRecorder:
         brightchange = False
         if os.path.exists(self.brightfile):
             with open(self.brightfile) as f:
-                brighttune = yaml.load(f)
+                brighttune = yaml.load(f, Loader=yaml.FullLoader)
                 if brighttune != self.config.cus.brighttune:
                     self.config.cus.brighttune = brighttune
                     brightchange = True
