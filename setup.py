@@ -43,6 +43,7 @@ if __name__ == "__main__":
           long_description_content_type="text/markdown",
           url=URL,
           install_requires=["pythutils",
+                            "multiprocess",
                             "python-crontab",
                             "croniter",
                             "cron-descriptor",
@@ -55,7 +56,8 @@ if __name__ == "__main__":
           entry_points={"console_scripts": [
                             "calibrate = pirecorder.calibrate:Calibrate",
                             "record = pirecorder.pirecorder:rec",
-                            "schedule = pirecorder.schedule:sch"],},
+                            "schedule = pirecorder.schedule:sch",
+                            "convert = pirecorder.convert:conv"],},
           download_url=DOWNLOAD_URL,
           version=__version__,
           license="License :: OSI Approved :: Apache Software License",
