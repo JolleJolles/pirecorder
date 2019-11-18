@@ -43,6 +43,7 @@ if __name__ == "__main__":
           long_description_content_type="text/markdown",
           url=URL,
           install_requires=["pythutils",
+                            "multiprocess",
                             "python-crontab",
                             "croniter",
                             "cron-descriptor",
