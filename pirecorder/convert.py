@@ -153,18 +153,21 @@ class Convert:
 
             elif self.type in [".jpg",".jpeg",".png"]:
 
+                vidname = commonpref(self.conv_files)
+                lineprint("Start converting "+len(self.conv_files)" imgaes")
+
                 frame_array = []
                 for filename in self.conv_files:
                     frame = cv2.imread(filename)
                     frame_array.append(frame)
                 h, w, _ = frame_array[0].shape
-                vidname = commonpref(self.conv_files)
                 if self.outdir != "":
                     vidname = self.outdir+"/"+os.path.basename(vidname)
                 vidout = videowriter(vidname, w, h, self.imgfps, self.resizeval)
                 for i in range(len(frame_array)):
                     vidout.write(frame_array[i])
                 vidout.release()
+                lineprint("Finished converting "+os.path.basename(vidname))
 
             else:
                 lineprint("No video or image files found..")
@@ -194,4 +197,3 @@ def conv():
     Convert(indir=args.indir, outdir=args.outdir, type=args.type,
             withframe=args.withframe, delete=args.delete, pools=args.pools,
             resizeval=args.resizeval, imgfps=args.imgfps)
-            
