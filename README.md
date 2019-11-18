@@ -3,7 +3,7 @@
 
 *pirecorder* is a package to facilitate controlled and automated image and video recording for the Raspberry Pi (rpi), specifically developed with the Behavioural Scientist in mind.
 
-<p align="center">!<img src="https://github.com/JolleJolles/pirecorder/blob/master/pirecorder-logo.jpg"></p>
+<p align="center"><img src="https://github.com/JolleJolles/pirecorder/blob/master/images/pirecorder-logo.jpg"></p>
 
 *pirecorder* consists of a main `PiRecorder` class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardised recordings by user command or via a user-set schedule of recordings.
 
@@ -67,9 +67,7 @@ In addition to the main recording module, *pirecorder* contains a number of othe
 ## Development
 *pirecorder* is developed by [Dr Jolle Jolles](http://jollejolles.com) at the Max Planck Institute of Animal Behavior, Konstanz, Germany.
 
-For an overview of version changes see the [CHANGELOG](https://github.com/JolleJolles/pirecorder/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/JolleJolles/pirecorder/commits/).
-
-Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/JolleJolles/pirecorder/issues).
+For an overview of version changes see the [CHANGELOG](https://github.com/JolleJolles/pirecorder/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/JolleJolles/pirecorder/commits/). Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/JolleJolles/pirecorder/issues).
 
 ## License
 Released under a Apache 2.0 License. See [LICENSE](https://github.com/JolleJolles/pirecorder/blob/master/LICENSE) for details.
