@@ -488,4 +488,5 @@ def rec():
                         help="pirecorder configuration file")
     args = parser.parse_args()
     recorder = PiRecorder(args.configfile)
+    recorder.set_config(internal=True)
     recorder.record()
