@@ -7,13 +7,7 @@
 
 *pirecorder* consists of a main `PiRecorder` class and a number of additional [submodules](#submodules) that facilitate setting up the Raspberry Pi camera, configuring the camera, scheduling future recordings, and converting recorded media. It helps get optimal recording settings and stores these such that they can be easily updated by the user via python or a text file. Subsequently, these settings can be used to make standardised recordings by user command or via a user-set schedule of recordings.
 
-*pirecorder* is build to make controlled and automated recordings as simple as possible. It is fully usable by three simple terminal commands without needing to go into python:
-
-- `record`: Start a recording using the stored configuration settings. If initiated for the first time, the default configuration file will be created (`pirecorder/pirecorder.conf`). This file can be simply updated with a text editor (e.g. via `sudo nano`).
-- `calibrate`: Opens a live stream to the video camera that can be dynamically updated by user commands.
-- `schedule`: Shows all currently scheduled recording jobs and enables user to delete them.
-
-The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi and make controlled and automated image and video recordings. See the detailed [wiki](https://github.com/JolleJolles/pirecorder/wiki).
+*pirecorder* is build to make controlled and automated recordings as simple as possible. It is fully usable by simple terminal commands without needing to go into python (via `calibrate`,`record`, `schedule`, and `convert`). The package also comes with detailed documentation and tutorials that are continuously updated with the aim to help people with limited coding knowledge to set up their rpi and make controlled and automated image and video recordings. See the detailed [wiki](https://github.com/JolleJolles/pirecorder/wiki).
 
 
 ## <a name="install"></a>Install
@@ -57,12 +51,12 @@ Multiple configuration files can be created and called for specific recording se
 Files are automatically stored in the configured directory (`recdir`), by default a directory called `recordings` in the pirecorder directory, and are automatically named according to the provided `label`, the computer name, the date and time, and potentially the session number or image sequence nr.
 
 ### <a name="submodules"></a>Submodules
-In addition to the main recording module, *pirecorder* contains a number of other modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, and schedule future recordings, with more functionalities to be integrated in the future, see the planned enhancements [here](https://github.com/JolleJolles/pirecorder/labels/enhancement).
+In addition to the main recording module, *pirecorder* contains a number of modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, and schedule future recordings, with more functionalities to be integrated in the future, see the planned enhancements [here](https://github.com/JolleJolles/pirecorder/labels/enhancement).
 
-1. `Calibrate()`: Opens a video stream with user interface to calibrate the raspberry pi camera in terms of its position, focus, and region of interest (roi).
-2. `getgains()`: Automatically determines the optimal white balance for the current camera position and lighting conditions. Stores details of the white balance with the configuration so it is loaded automatically.
-3. `schedule()`: Automatically start image and video recording in the future according to custom recording schedules.
-
+- `calibrate()`: Opens a live video stream with user interface to calibrate the raspberry pi camera in terms of its position, focus, and region of interest (roi).
+- `record`: Start a recording using the stored configuration settings. If initiated for the first time, the default configuration file will be created (`pirecorder/pirecorder.conf`). This file can be simply updated with a text editor (e.g. via `sudo nano`).
+- `schedule()`: Automatically start image and video recording in the future according to custom recording schedules.
+- `convert`: Convert images or videos to (resized) videos (with timestamps)
 
 ## Development
 *pirecorder* is developed by [Dr Jolle Jolles](http://jollejolles.com) at the Max Planck Institute of Animal Behavior, Konstanz, Germany.
