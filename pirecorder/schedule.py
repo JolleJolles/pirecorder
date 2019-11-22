@@ -63,7 +63,7 @@ class Schedule:
         code. Note that the minimum time between subsequent scheduled
         recordings is 1 minute. Smaller intervals between recordings is
         possible for images with the imgseq command with the Record method.
-    enable : bool, default = True
+    enable : bool, default = None
         If the scheduled job should be enabled or not.
     showjobs : bool, default = False
         If the differently timed tasks should be shown or not.
@@ -106,12 +106,14 @@ class Schedule:
         if self.jobsclear is not None:
             self.clear_jobs()
         elif not self.jobsshow:
-            if self.jobtimeplan is None and self.jobenable is None:
+            if self.jobtimeplan is None and self.jobname is None and not test:
+                self.jobsshow = True
+            elif self.jobtimeplan is None and self.jobname is not None not test:
                 lineprint("No timeplan provided..")
-            elif test:
-                self.checktimeplan()
-            elif self.jobname is None:
+            elif self.jobtimeplan is not None self.jobname is None:
                 lineprint("No jobname provided..")
+            elif test and self.jobtimeplan is not None:
+                self.checktimeplan()
             else:
                 if enable is None:
                     self.checktimeplan()
@@ -204,7 +206,7 @@ class Schedule:
             lineprint("Current job schedule:")
             for job in self.cron:
                 lenjob = max(8, len(job.comment[4:]))
-                lenplan = max(8, len(str(job)[:str(job).find("/")]))
+                lenplan = max(8, len(str(job)[:str(job).find(" /")]))
             header = "Job"+" "*(lenjob-1)+"Timeplan"+" "*(lenplan-7)+"Next recording"
             print(header)
             print("-"*len(header))
@@ -212,7 +214,7 @@ class Schedule:
             for job in self.jobs:
                 sch = job.schedule(date_from = datetime.datetime.now())
                 jobname = job.comment[4:]+" "*(lenjob-(len(job.comment[4:])-2))
-                plan = str(job)[:str(job).find("/")-1]
+                plan = str(job)[:str(job).find(" /")-2]
                 plan = plan[2:] if plan[0] == "#" else plan
                 plan = plan + " "*(lenplan-(len(plan)-1))
                 next = str(sch.get_next()) if job.is_enabled() else " disabled"
