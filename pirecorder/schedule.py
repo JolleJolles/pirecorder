@@ -108,7 +108,7 @@ class Schedule:
         elif not self.jobsshow:
             if self.jobtimeplan is None and self.jobname is None and not test:
                 self.jobsshow = True
-            elif self.jobtimeplan is None and self.jobname is not None not test:
+            elif self.jobtimeplan is None and self.jobname is not None and not test:
                 lineprint("No timeplan provided..")
             elif self.jobtimeplan is not None self.jobname is None:
                 lineprint("No jobname provided..")
