@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/pirecorder.svg)](https://badge.fury.io/py/pirecorder) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2529515.svg)](https://doi.org/10.5281/zenodo.2529515)
+
 # pirecorder
 **A python module for controlled and automated image and video recording with the raspberry pi**
 
@@ -28,7 +30,6 @@ All dependencies (see below) will be automatically installed with *pirecorder* e
 
 ## Dependencies
 *pirecorder* is both Python 2.7 and 3 compatible. It builds strongly on the [picamera](http://picamera.readthedocs.io/) package, uses [numpy](http://www.numpy.org/), [pyyaml](https://pyyaml.org), and [opencv](http://opencv.org) for some of its core functionality, and relies on various utility functions of my [pythutils](https://github.com/JolleJolles/pythutils) package. The scheduling functionality is baded on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package.
-
 
 ## Module overview
 
@@ -63,6 +64,19 @@ In addition to the main recording module, *pirecorder* contains a number of modu
 *pirecorder* is developed by [Dr Jolle Jolles](http://jollejolles.com) at the Max Planck Institute of Animal Behavior, Konstanz, Germany.
 
 For an overview of version changes see the [CHANGELOG](https://github.com/JolleJolles/pirecorder/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/JolleJolles/pirecorder/commits/). Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/JolleJolles/pirecorder/issues).
+
+## Citing
+If you use pirecorder in your research, please cite it as follows:
+
+```
+@misc{Jolles2019,
+      title = {pirecorder: controlled and automated image and video recording with the raspberry pi},
+      author = {Jolles, Jolle W.},
+      year = {2019}
+      url = {http://doi.org/10.5281/zenodo.2529515},
+      doi = {10.5281/zenodo.2529515}
+}
+```
 
 ## License
 Released under a Apache 2.0 License. See [LICENSE](https://github.com/JolleJolles/pirecorder/blob/master/LICENSE) for details.
