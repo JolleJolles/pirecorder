@@ -73,8 +73,8 @@ class Convert:
         assert os.path.exists(self.outdir), "out-directory does not exist.."
 
         self.type = type
-        self.withframe = ast.literal_eval(withframe)
-        self.delete = ast.literal_eval(delete)
+        self.withframe = withframe
+        self.delete = delete
         self.pools = int(pools)
         self.resizeval = float(resizeval)
         self.imgfps = int(imgfps)
@@ -194,6 +194,8 @@ def conv():
 
 
     args = parser.parse_args()
+    args.withframe = ast.literal_eval(args.withframe)
+    args.delete = ast.literal_eval(args.delete)
     Convert(indir=args.indir, outdir=args.outdir, type=args.type,
             withframe=args.withframe, delete=args.delete, pools=args.pools,
             resizeval=args.resizeval, imgfps=args.imgfps)
