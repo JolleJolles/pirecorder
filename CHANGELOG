@@ -2,8 +2,9 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Updates not yet in latest release:
-    *
-
+    * Fixed extracting roi (zoom) in calibrate function 
+    * Fixed drawing crosshair for calibrate function
+    * Improved convert function with continuous file checking
 
 2019-11-18 - version 2.0.0
     Major update with large number of small and large improvements and fixes and
