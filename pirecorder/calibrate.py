@@ -96,7 +96,8 @@ class Calibrate:
 
         while True:
             img = self.imgbak.copy()
-            draw.draw_crosshair(img, self.m.pointer)
+            if len(self.m.pointer) > 0:
+                draw.draw_crosshair(img, self.m.pointer)
             if self.m.rect != ():
                 draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
             cv2.imshow("Image", img)
