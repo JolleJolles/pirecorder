@@ -240,11 +240,10 @@ class PiRecorder:
             self.cam.zoom = (0,0,1,1)
             self.resize = self.cam.resolution
         else:
-            self.roi = literal_eval(self.config.cus.roi)
-            self.cam.zoom = self.roi
+            self.cam.zoom = literal_eval(self.config.cus.roi)
             w = int(self.cam.resolution[0]*self.roi[2])
             h = int(self.cam.resolution[1]*self.roi[3])
-            self.resize = picamconv(w,h)
+            self.resize = picamconv((w,h))
 
         self.longexpo = False if self.cam.framerate >= 6 else True
         if self.longexpo:
@@ -423,7 +422,7 @@ class PiRecorder:
         """Automatically finds the best gains for the raspberry pi camera"""
 
         (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains),
-                            zoom = self.roi)
+                            zoom = literal_eval(self.config.cus.roi))
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
