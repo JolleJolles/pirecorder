@@ -468,7 +468,8 @@ class PiRecorder:
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
             # Temporary fix for flicker at start of (first) video..
-            self.cam.start_recording(BytesIO(), format="h264")
+            print(self.resize)
+            self.cam.start_recording(BytesIO(), format="h264", resize = self.resize)
             self.cam.wait_recording(2)
             self.cam.stop_recording()
 
