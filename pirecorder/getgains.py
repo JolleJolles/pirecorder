@@ -42,7 +42,7 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
     cv2.namedWindow("Image")
 
     if auto:
-        with picamera.array.PiRGBArray(cam, size=(128, 72)) as output:
+        with picamera.array.PiRGBArray(camera, size=(128, 72)) as output:
             for i in range(attempts):
                 camera.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
