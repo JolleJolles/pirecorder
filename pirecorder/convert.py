@@ -21,14 +21,16 @@ import os
 import cv2
 import ast
 import sys
+import time
 import glob
 import argparse
 import subprocess
 
+from threading import Thread
 from multiprocess import Pool
 from pythutils.sysutils import lineprint
 from pythutils.drawutils import draw_text
-from pythutils.fileutils import listfiles, get_ext, commonpref
+from pythutils.fileutils import listfiles, get_ext, commonpref, move
 from pythutils.mediautils import get_vid_params, videowriter, imgresize
 
 class KeyboardInterruptError(Exception): pass
@@ -58,32 +60,56 @@ class Convert:
         Float value to which video should be resized
     imgfps : int, default = 25
         Framerate for conversion of images to video
+    sleeptime : 2, default = None
+        Time in seconds between subsequent checks of file folder. No only check
+        once use default
     """
 
     def __init__(self, indir = "", outdir = "", type = ".h264",
                  withframe = False, delete = False, pools = 4, resizeval = 1,
-                 imgfps = 25, internal = False):
+                 imgfps = 25, internal = False, sleeptime = None):
 
         if internal:
             lineprint("Running convert function..")
+
+        global interrupted
+        interrupted = False
+        def keythread():
+            global interrupted
+            input()
+            interrupted = True
+        Thread(target=keythread).start()
 
         self.indir = os.getcwd() if indir == "" else indir
         assert os.path.exists(self.indir), "in-directory does not exist.."
         self.outdir = self.indir if outdir == "" else outdir
         assert os.path.exists(self.outdir), "out-directory does not exist.."
 
+        self.rootdir = os.getcwd()
+        os.chdir(self.indir)
+
         self.type = type
-        self.withframe = ast.literal_eval(withframe)
-        self.delete = ast.literal_eval(delete)
+        self.withframe = withframe
+        self.delete = delete
         self.pools = int(pools)
         self.resizeval = float(resizeval)
         self.imgfps = int(imgfps)
 
-        self.conv_files = listfiles(self.indir, self.type, keepdir = True)
-        self.flen = len(self.conv_files)
-        self.done = False
-
-        self.convertpool()
+        while not interrupted:
+            files = listfiles(self.indir, self.type, keepdir = False)
+            old = listfiles(self.indir, self.type, keepext = False)
+            new = listfiles(self.outdir, ".mp4", keepext = False)
+            self.todo = [files[i] for i,file in enumerate(old) if file not in new]
+            if self.type in [".jpg",".jpeg",".png"] and len(self.todo)>0:
+                 if len([f for f in new if commonpref(self.todo) in f])>0:
+                     self.todo = []
+            self.convertpool()
+            if sleeptime == None:
+                lineprint("No files found..")
+                break
+            else:
+                lineprint("No files found, rechecking in "+str(sleeptime)+"s..")
+                time.sleep(sleeptime)
 
 
     def conv_single(self, filein):
@@ -126,15 +152,14 @@ class Convert:
 
     def convertpool(self):
 
-        if len(self.conv_files) > 0:
+        if len(self.todo) > 0:
 
             if self.type in [".h264",".mp4",".avi"]:
 
-                pool = Pool(min(self.pools, self.flen))
+                pool = Pool(min(self.pools, len(self.todo)))
                 try:
-                    pool.map(self.conv_single, self.conv_files)
+                    pool.map(self.conv_single, self.todo)
                     pool.close()
-                    self.done = True
                     lineprint("Done converting all videofiles!")
                 except KeyboardInterrupt:
                     lineprint("User terminated converting pool..")
@@ -146,20 +171,21 @@ class Convert:
                 finally:
                     pool.join()
 
-                if self.done and self.delete:
-                    for filein in self.conv_files:
+                if self.delete:
+                    for filein in self.todo:
                         os.remove(filein)
                     lineprint("Deleted all original videofiles..")
 
             elif self.type in [".jpg",".jpeg",".png"]:
 
-                vidname = commonpref(self.conv_files)
-                lineprint("Start converting "+len(self.conv_files)" imgaes")
+                vidname = commonpref(self.todo)
+                lineprint("Start converting "+str(len(self.todo))+" images")
 
                 frame_array = []
-                for filename in self.conv_files:
+                for filename in self.todo:
                     frame = cv2.imread(filename)
                     frame_array.append(frame)
+                    #os.rename(filename, self.outdir+"/"+filename)
                 h, w, _ = frame_array[0].shape
                 if self.outdir != "":
                     vidname = self.outdir+"/"+os.path.basename(vidname)
@@ -171,9 +197,6 @@ class Convert:
 
             else:
                 lineprint("No video or image files found..")
-
-        else:
-            lineprint("No files found..")
 
 
 def conv():
@@ -192,8 +215,9 @@ def conv():
     parser.add_argument("-r", "--resizeval", default=1, metavar="")
     parser.add_argument("-f", "--imgfps", default=25, metavar="")
 
-
     args = parser.parse_args()
+    args.withframe = ast.literal_eval(args.withframe)
+    args.delete = ast.literal_eval(args.delete)
     Convert(indir=args.indir, outdir=args.outdir, type=args.type,
             withframe=args.withframe, delete=args.delete, pools=args.pools,
             resizeval=args.resizeval, imgfps=args.imgfps)

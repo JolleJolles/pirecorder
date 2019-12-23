@@ -33,9 +33,10 @@ from time import sleep, strftime
 from localconfig import LocalConfig
 from pythutils.sysutils import Logger, lineprint, homedir, checkfrac
 from pythutils.fileutils import name
+from pythutils.mediautils import picamconv
 
 from .schedule import Schedule
-from .getgains import getgains
+from .setgains import setgains
 from .calibrate import Calibrate
 from .__version__ import __version__
 
@@ -217,9 +218,9 @@ class PiRecorder:
 
     def _setup_cam(self):
 
-        """Sets-up the raspberry pi camera based on configuration"""
+        """Sets up the raspberry pi camera based on configuration"""
 
-        # Load picamera module here so pirecorder is installable on non-rpi OS
+        #load picamera module in-function so pirecorder is installable on all OS
         import picamera
         import picamera.array
 
@@ -234,6 +235,15 @@ class PiRecorder:
             self.cam.resolution = literal_eval(self.config.vid.viddims)
             self.cam.framerate = self.config.vid.vidfps
         self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
+
+        if self.config.cus.roi is None:
+            self.cam.zoom = (0,0,1,1)
+            self.resize = self.cam.resolution
+        else:
+            self.cam.zoom = literal_eval(self.config.cus.roi)
+            w = int(self.cam.resolution[0]*self.cam.zoom[2])
+            h = int(self.cam.resolution[1]*self.cam.zoom[3])
+            self.resize = picamconv((w,h))
 
         self.longexpo = False if self.cam.framerate >= 6 else True
         if self.longexpo:
@@ -370,7 +380,7 @@ class PiRecorder:
         brightchange = False
         if os.path.exists(self.brightfile):
             with open(self.brightfile) as f:
-                brighttune = yaml.load(f)
+                brighttune = yaml.load(f, Loader=yaml.FullLoader)
                 if brighttune != self.config.cus.brighttune:
                     self.config.cus.brighttune = brighttune
                     brightchange = True
@@ -407,11 +417,13 @@ class PiRecorder:
             lineprint("No roi selected..")
 
 
-    def get_gains(self):
+    def set_gains(self, auto = True):
 
-        """Automatically finds the best gains for the raspberry pi camera"""
+        """Find the best gains for the raspberry pi camera"""
 
-        (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains))
+        (rg, bg) = setgains(startgains = checkfrac(self.config.cus.gains),
+                            zoom = literal_eval(self.config.cus.roi),
+                            auto = auto)
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
@@ -433,14 +445,16 @@ class PiRecorder:
         if self.config.rec.rectype == "img":
 
             self.filename = self.filename + strftime("%H%M%S") + self.filetype
-            self.cam.capture(self.filename, format="jpeg", quality = self.config.img.imgquality)
+            self.cam.capture(self.filename, format="jpeg", resize = self.resize,
+                             quality = self.config.img.imgquality)
             lineprint("Captured "+self.filename)
 
         elif self.config.rec.rectype == "imgseq":
 
             timepoint = datetime.now()
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
-                                    format="jpeg", quality = self.config.img.imgquality)):
+                                    format="jpeg", resize = self.resize,
+                                    quality = self.config.img.imgquality)):
                 if i < self.config.img.imgnr-1:
                     timepassed = (datetime.now() - timepoint).total_seconds()
                     delay = max(0, self.config.img.imgwait - timepassed)
@@ -454,14 +468,16 @@ class PiRecorder:
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
             # Temporary fix for flicker at start of (first) video..
-            self.cam.start_recording(BytesIO(), format="h264")
+            print(self.resize)
+            self.cam.start_recording(BytesIO(), format="h264", resize = self.resize)
             self.cam.wait_recording(2)
             self.cam.stop_recording()
 
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
-                filename = self.filename+strftime("%H%M%S" )+session+self.filetype
-                self.cam.start_recording(filename, quality = self.config.vid.vidquality)
+                filename = self.filename+strftime("%H%M%S")+session+self.filetype
+                self.cam.start_recording(filename, resize = self.resize,
+                                         quality = self.config.vid.vidquality)
                 lineprint("Start recording "+filename)
                 self.cam.wait_recording(self.config.vid.vidduration + self.config.vid.viddelay)
                 self.cam.stop_recording()
@@ -488,4 +504,5 @@ def rec():
                         help="pirecorder configuration file")
     args = parser.parse_args()
     recorder = PiRecorder(args.configfile)
+    recorder.set_config(internal=True)
     recorder.record()

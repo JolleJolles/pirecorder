@@ -2,8 +2,18 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Updates not yet in latest release:
-    *
 
+2019-12-23 - version 2.1.0
+    A medium update with convert function now enabling folder monitoring, zoom
+    functionality is properly integrated in the pirecorder and setgains class,
+    integrated dynamic user input for getgains function, and various smaller
+    fixes.
+
+    * Integrated dynamic user input for getgains function
+    * Integrated zoom functionality for recording and getgains functionality
+    * Fixed extracting roi (zoom) in calibrate function
+    * Fixed drawing crosshair for calibrate function
+    * Improved convert function with continuous file checking
 
 2019-11-18 - version 2.0.0
     Major update with large number of small and large improvements and fixes and

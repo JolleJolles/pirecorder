@@ -21,7 +21,9 @@ import argparse
 import numpy as np
 
 from pythutils.sysutils import lineprint
+from pythutils.mediautils import checkroi, roi_to_zoom
 import pythutils.drawutils as draw
+
 
 from .videoin import VideoIn
 from .__version__ import __version__
@@ -96,7 +98,8 @@ class Calibrate:
 
         while True:
             img = self.imgbak.copy()
-            draw.draw_crosshair(img, self.m.pointer)
+            if len(self.m.pointer) > 0:
+                draw.draw_crosshair(img, self.m.pointer)
             if self.m.rect != ():
                 draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
             cv2.imshow("Image", img)
@@ -104,7 +107,8 @@ class Calibrate:
             k = cv2.waitKey(1) & 0xFF
             if k == ord("s"):
                 if self.m.rect and len(self.m.rect) == 2:
-                    self.roi = self.m.rect
+                    self.m.rect = checkroi(self.m.rect, self.vid.res)
+                    self.roi = roi_to_zoom(self.m.rect, self.vid.res)
                     lineprint("roi "+str(self.roi)+" stored..")
                     break
                 else:
