@@ -21,45 +21,63 @@ reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 from __future__ import print_function
 
 import numpy as np
+import picamera
+import picamera.array
 
-def getgains(attempts = 100, step = 0.05, startgains = (0.5, 0.5),
-             zoom = (0,0,1,1)):
+def getgains(attempts = 100, step = 0.05, startgains = (1,2),
+             zoom = (0,0,1,1), auto = True):
 
-    """Automatically finds the best gains for the raspberry pi camera"""
+    """Find the best gains for the raspberry pi camera"""
 
-    #load picamera module in-function so pirecorder is installable on all OS
-    import picamera
-    import picamera.array
-
-    cam = picamera.PiCamera()
-    cam.resolution = (1280, 720)
+    camera = picamera.PiCamera()
+    height, width = (480, 640)
+    cam.resolution = (width, height)
     cam.zoom = zoom
     cam.awb_mode = 'off'
     rg, bg = startgains
     cam.awb_gains = (rg, bg)
+    camera.zoom = zoom
+    time.sleep(0.5)
 
-    with picamera.array.PiRGBArray(cam, size=(128, 72)) as output:
+    cv2.namedWindow("Image")
 
-        for i in range(attempts):
+    if auto:
+        with picamera.array.PiRGBArray(cam, size=(128, 72)) as output:
+            for i in range(attempts):
+                cam.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
+                r, g, b = (np.mean(output.array[..., i]) for i in range(3))
+                print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
+                if abs(r - g) > 2:
+                    if r > g:
+                        rg -= step
+                    else:
+                        rg += step
+                if abs(b - g) > 1:
+                    if b > g:
+                        bg -= step
+                    else:
+                        bg += step
+                cam.awb_gains = (rg, bg)
+                output.seek(0)
+                output.truncate()
+    else:
+        while True:
+            image = np.empty((height * width * 3,), dtype=np.uint8)
+            camera.capture(image, 'bgr')
+            image = image.reshape((height, width, 3))
+            cv2.imshow("Image", image)
+            print("R:%5.2f, B:%5.2f" % (rg, bg))
+            camera.awb_gains = (rg, bg)
 
-            cam.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
-            r, g, b = (np.mean(output.array[..., i]) for i in range(3))
-            print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
-
-            if abs(r - g) > 2:
-                if r > g:
-                    rg -= step
-                else:
-                    rg += step
-            if abs(b - g) > 1:
-                if b > g:
-                    bg -= step
-                else:
-                    bg += step
-
-            cam.awb_gains = (rg, bg)
-            output.seek(0)
-            output.truncate()
+            k = cv2.waitKey(1) & 0xFF
+            if k == ord("q"):
+                rg = round(max(rg-step,0.5),1)
+            if k == ord("w"):
+                rg = round(min(rg+step,2.5),1)
+            if k == ord("e"):
+                bg = round(max(bg-step,0.5),1)
+            if k == ord("r"):
+                bg = round(min(bg+step,2.5),1)
 
         cam.close()
 
