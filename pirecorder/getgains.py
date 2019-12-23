@@ -37,7 +37,6 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
     camera.awb_mode = 'off'
     rg, bg = startgains
     camera.awb_gains = (rg, bg)
-    camera.zoom = zoom
 
     cv2.namedWindow("Image")
 
@@ -71,13 +70,17 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("q"):
-                rg = round(max(rg-step,0.5),1)
+                rg = round(max(rg-step,0.5),2)
             if k == ord("w"):
-                rg = round(min(rg+step,2.5),1)
+                rg = round(min(rg+step,2.5),2)
             if k == ord("e"):
-                bg = round(max(bg-step,0.5),1)
+                bg = round(max(bg-step,0.5),2)
             if k == ord("r"):
-                bg = round(min(bg+step,2.5),1)
+                bg = round(min(bg+step,2.5),2)
+            if k == 27:
+                camera.close()
+                print("Stopped..")
+                break
 
         camera.close()
 
