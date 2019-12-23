@@ -55,6 +55,7 @@ Files are automatically stored in the configured directory (`recdir`), by defaul
 In addition to the main recording module, *pirecorder* contains a number of modules to facilitate setting-up the Raspberry Pi camera, configuring the camera, and schedule future recordings, with more functionalities to be integrated in the future, see the planned enhancements [here](https://github.com/JolleJolles/pirecorder/labels/enhancement).
 
 - `calibrate()`: Opens a live video stream with user interface to calibrate the raspberry pi camera in terms of its position, focus, and region of interest (roi).
+- `set_gains()`: Function to calibrate the red and blue color balance either automatically or dynamically using a live video stream with user interface.
 - `record`: Start a recording using the stored configuration settings. If initiated for the first time, the default configuration file will be created (`pirecorder/pirecorder.conf`). This file can be simply updated with a text editor (e.g. via `sudo nano`).
 - `schedule()`: Automatically start image and video recording in the future according to custom recording schedules.
 - `convert`: Convert images or videos to (resized) videos (with timestamps)
