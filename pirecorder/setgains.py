@@ -28,7 +28,26 @@ import picamera.array
 def setgains(attempts = 100, step = 0.05, startgains = (1,2),
              zoom = (0,0,1,1), auto = True):
 
-    """Find the best gains for the raspberry pi camera"""
+    """
+    Find the best gains for the raspberry pi camera
+
+    Parameters
+    ----------
+    attempts : int, default = 100
+        Number of times gains should be shifted when in automatic mode
+    step : float, detault = 0.05
+        The stepsize between the different gains
+    startgains : tuple, default = (1,2)
+        The starting gains
+    zoom : tuple, default = (0,0,1,1)
+        The camera zoom (x,y,w,h)
+    auto : bool, default = True
+        If gains should be determined automatically or manually
+
+    Returns
+    -------
+    (rg,bg) : A tuple of red and blue camera gains
+    """
 
     #load picamera module in-function so pirecorder is installable on all OS
     import picamera
@@ -81,8 +100,13 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
                 bg = round(max(bg-step,0.5),2)
             if k == ord("r"):
                 bg = round(min(bg+step,2.5),2)
+            if k == ord("s"):
+                print("User exited..")
             if k == 27:
-                print("Stopped..")
+                rg, bg = startgains
+                print("User escaped..")
+                cv2.waitKey(1)
+                cv2.destroyAllWindows()
                 break
 
     camera.close()
