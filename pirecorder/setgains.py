@@ -25,10 +25,14 @@ import numpy as np
 import picamera
 import picamera.array
 
-def getgains(attempts = 100, step = 0.05, startgains = (1,2),
+def setgains(attempts = 100, step = 0.05, startgains = (1,2),
              zoom = (0,0,1,1), auto = True):
 
     """Find the best gains for the raspberry pi camera"""
+
+    #load picamera module in-function so pirecorder is installable on all OS
+    import picamera
+    import picamera.array
 
     camera = picamera.PiCamera()
     height, width = (480, 640)
@@ -78,14 +82,13 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
             if k == ord("r"):
                 bg = round(min(bg+step,2.5),2)
             if k == 27:
-                camera.close()
                 print("Stopped..")
                 break
 
-        camera.close()
+    camera.close()
 
     return (rg, bg)
 
 
 if __name__ == "__main__":
-      getgains()
+      setgains()

@@ -17,7 +17,7 @@ limitations under the License.
 
 from .__version__ import __version__
 from .calibrate import Calibrate
-from .getgains import getgains
+from .setgains import setgains
 from .pirecorder import *
 from .schedule import Schedule
 from .stream import stream

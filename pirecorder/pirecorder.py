@@ -417,9 +417,9 @@ class PiRecorder:
             lineprint("No roi selected..")
 
 
-    def get_gains(self, auto = True):
+    def set_gains(self, auto = True):
 
-        """Automatically finds the best gains for the raspberry pi camera"""
+        """Find the best gains for the raspberry pi camera"""
 
         (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains),
                             zoom = literal_eval(self.config.cus.roi),
