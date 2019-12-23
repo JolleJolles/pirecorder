@@ -36,7 +36,7 @@ from pythutils.fileutils import name
 from pythutils.mediautils import picamconv
 
 from .schedule import Schedule
-from .getgains import getgains
+from .setgains import setgains
 from .calibrate import Calibrate
 from .__version__ import __version__
 
@@ -421,7 +421,7 @@ class PiRecorder:
 
         """Find the best gains for the raspberry pi camera"""
 
-        (rg, bg) = getgains(startgains = checkfrac(self.config.cus.gains),
+        (rg, bg) = setgains(startgains = checkfrac(self.config.cus.gains),
                             zoom = literal_eval(self.config.cus.roi),
                             auto = auto)
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
