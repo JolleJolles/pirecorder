@@ -108,7 +108,7 @@ class Calibrate:
             if k == ord("s"):
                 if self.m.rect and len(self.m.rect) == 2:
                     self.m.rect = checkroi(self.m.rect, self.vid.res)
-                    self.roi = roi_to_zoom(roi, C.vid.res)
+                    self.roi = roi_to_zoom(self.m.rect, self.vid.res)
                     lineprint("roi "+str(self.roi)+" stored..")
                     break
                 else:
