@@ -37,7 +37,6 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
     rg, bg = startgains
     camera.awb_gains = (rg, bg)
     camera.zoom = zoom
-    time.sleep(0.5)
 
     cv2.namedWindow("Image")
 
