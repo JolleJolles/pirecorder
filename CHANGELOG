@@ -2,6 +2,7 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Updates not yet in latest release:
+    * Integrated dynamic user input for getgains function
     * Integrated zoom functionality for recording and getgains functionality
     * Fixed extracting roi (zoom) in calibrate function
     * Fixed drawing crosshair for calibrate function

@@ -20,6 +20,7 @@ reply on a question posted on stackoverflow: https://bit.ly/2V49f48
 
 from __future__ import print_function
 
+import cv2
 import numpy as np
 import picamera
 import picamera.array
