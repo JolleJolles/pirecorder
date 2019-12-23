@@ -31,11 +31,11 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
 
     camera = picamera.PiCamera()
     height, width = (480, 640)
-    cam.resolution = (width, height)
-    cam.zoom = zoom
-    cam.awb_mode = 'off'
+    camera.resolution = (width, height)
+    camera.zoom = zoom
+    camera.awb_mode = 'off'
     rg, bg = startgains
-    cam.awb_gains = (rg, bg)
+    camera.awb_gains = (rg, bg)
     camera.zoom = zoom
     time.sleep(0.5)
 
@@ -44,7 +44,7 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
     if auto:
         with picamera.array.PiRGBArray(cam, size=(128, 72)) as output:
             for i in range(attempts):
-                cam.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
+                camera.capture(output, format="rgb", resize=(128, 80), use_video_port=True)
                 r, g, b = (np.mean(output.array[..., i]) for i in range(3))
                 print("R:%5.2f, B:%5.2f = (%5.2f, %5.2f, %5.2f)" % (rg, bg, r, g, b))
                 if abs(r - g) > 2:
@@ -57,13 +57,13 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
                         bg -= step
                     else:
                         bg += step
-                cam.awb_gains = (rg, bg)
+                camera.awb_gains = (rg, bg)
                 output.seek(0)
                 output.truncate()
     else:
         while True:
             image = np.empty((height * width * 3,), dtype=np.uint8)
-            camera.capture(image, 'bgr')
+            camera.capture(image, "bgr")
             image = image.reshape((height, width, 3))
             cv2.imshow("Image", image)
             print("R:%5.2f, B:%5.2f" % (rg, bg))
@@ -79,7 +79,7 @@ def getgains(attempts = 100, step = 0.05, startgains = (1,2),
             if k == ord("r"):
                 bg = round(min(bg+step,2.5),1)
 
-        cam.close()
+        camera.close()
 
     return (rg, bg)
 
