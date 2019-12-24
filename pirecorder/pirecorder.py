@@ -421,9 +421,12 @@ class PiRecorder:
 
         """Find the best gains for the raspberry pi camera"""
 
-        (rg, bg) = setgains(startgains = checkfrac(self.config.cus.gains),
-                            zoom = literal_eval(self.config.cus.roi),
-                            auto = auto)
+        if self.config.cus.roi == None:
+            zoom = (0,0,1,1)
+        else:
+            zoom = literal_eval(self.config.cus.roi)
+            (rg, bg) = setgains(startgains = checkfrac(self.config.cus.gains),
+                            zoom = zoom, auto = auto)
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
