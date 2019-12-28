@@ -122,7 +122,7 @@ class Calibrate:
                 if self.m.rect and len(self.m.rect) == 2:
                     lineprint("Creating zoomed image..")
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
-                                        crop=self.m.rect)
+                                        crop=self.m.rect, camtype = "other")
                     zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:
