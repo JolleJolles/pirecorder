@@ -24,7 +24,6 @@ from pythutils.sysutils import lineprint
 from pythutils.mediautils import checkroi, roi_to_zoom
 import pythutils.drawutils as draw
 
-
 from .videoin import VideoIn
 from .__version__ import __version__
 
@@ -122,7 +121,7 @@ class Calibrate:
                 if self.m.rect and len(self.m.rect) == 2:
                     lineprint("Creating zoomed image..")
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
-                                        crop=self.m.rect, camtype = "other")
+                                        crop=self.m.rect)
                     zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:

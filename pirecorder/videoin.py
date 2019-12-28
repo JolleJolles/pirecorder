@@ -26,8 +26,7 @@ from pythutils.mediautils import *
 
 class VideoIn:
 
-    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False,
-                 camtype = "v2"):
+    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False):
 
         """Opens a video stream from native camera, webcam or rpi camera"""
 
@@ -43,7 +42,7 @@ class VideoIn:
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
             from picamera import PiCamera
-            self.maxres = (3280,2464) if camtype == "v2" else (2592,1952)
+            self.maxres = (2592,1952)
             self.res = (self.maxres[0]*vidsize,self.maxres[1]*vidsize)
             self.res = picamconv(self.res)
             self.camera = PiCamera()
