@@ -409,7 +409,7 @@ class PiRecorder:
         video stream enter 'esc' key again.
         """
 
-        C = Calibrate(internal=True)
+        C = Calibrate(internal=True, rotation=self.config.cus.rotation)
         if C.roi:
             self.set_config(roi=C.roi, internal="")
             lineprint("Roi stored..")

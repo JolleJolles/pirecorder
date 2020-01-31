@@ -26,7 +26,7 @@ from pythutils.mediautils import *
 
 class VideoIn:
 
-    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False):
+    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False, rotation = 0):
 
         """Opens a video stream from native camera, webcam or rpi camera"""
 
@@ -48,6 +48,7 @@ class VideoIn:
             self.camera = PiCamera()
             self.camera.resolution = self.res
             self.camera.framerate = framerate
+            self.camera.rotation = rotation
             self.rawCapture = PiRGBArray(self.camera, size=self.res)
             self.stream = self.camera.capture_continuous(self.rawCapture,
                           format="bgr", use_video_port=True)
