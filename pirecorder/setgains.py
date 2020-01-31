@@ -104,8 +104,9 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
                 rg, bg = startgains
                 print("User escaped..")
                 break
-            cv2.waitKey(1)
-            cv2.destroyAllWindows()
+
+        cv2.waitKey(1)
+        cv2.destroyAllWindows()
 
     camera.close()
 
