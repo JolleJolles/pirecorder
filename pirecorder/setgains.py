@@ -99,12 +99,13 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
                 bg = round(min(bg+step,2.5),2)
             if k == ord("s"):
                 print("User exited..")
+                break
             if k == 27:
                 rg, bg = startgains
                 print("User escaped..")
-                cv2.waitKey(1)
-                cv2.destroyAllWindows()
                 break
+            cv2.waitKey(1)
+            cv2.destroyAllWindows()
 
     camera.close()
 
