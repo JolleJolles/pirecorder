@@ -40,6 +40,7 @@ class Calibrate:
         self.system = system
         self.framerate = framerate
         self.vidsize = vidsize
+        self.rotation = rotation
         self.cross = False
         self.stream = True
         self.exit = False
@@ -59,7 +60,7 @@ class Calibrate:
         lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
-                           vidsize=self.vidsize)
+                           vidsize=self.vidsize, rotation=self.rotation)
         self.vid.start()
 
         while True:
