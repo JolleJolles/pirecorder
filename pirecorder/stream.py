@@ -15,9 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import os
 import cv2
 
 from .videoin import VideoIn
+from pythutils.mediautils import add_transimg, imgresize
+
 
 def stream():
 
@@ -49,6 +52,64 @@ def stream():
     vid.stop()
     cv2.destroyAllWindows()
     cv2.waitKey(1)
+
+
+def overlay_stream(imagefile = None, alpha = 0.5):
+
+    # Check if image file loads
+    assert os.path.isfile(imagefile), "Image file could not be loaded.."
+
+    # Start videostream
+    fullscreen = False
+    vid = VideoIn(vidsize=1).start()
+    frame = vid.read()
+    cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
+
+    # Load and resize the image to fit
+    photo = cv2.imread(imagefile)
+    photo = imgresize(photo, resize = 1, dims = (frame.shape[1], frame.shape[0]))
+
+    # Start the loop
+    while True:
+
+        # Extract the frame
+        frame = vid.read()
+        overlay = frame.copy()
+        output = frame.copy()
+
+        # Draw photo on overlay
+        overlay[0:720,0:1280] = photo
+
+        # Draw overlay semi-transparent on frame
+        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+
+        # Draw in black and white
+        output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
+
+        # Show the stream
+        cv2.imshow("Stream", output)
+        k = cv2.waitKey(1) & 0xFF
+        if k == ord("["):
+            alpha = max(alpha-0.05, 0)
+        if k == ord("]"):
+            alpha = min(alpha+0.05, 1)
+        if k == ord("f"):
+            fullscreen = not fullscreen
+            if fullscreen:
+                cv2.setWindowProperty("Stream", cv2.WND_PROP_FULLSCREEN,
+                                      cv2.WINDOW_FULLSCREEN)
+            else:
+                cv2.setWindowProperty("Stream",cv2.WND_PROP_AUTOSIZE,
+                                               cv2.WINDOW_NORMAL)
+                cv2.resizeWindow("Stream", vid.res[0], vid.res[1])
+
+        if k == 27:
+            break
+
+    vid.stop()
+    cv2.destroyAllWindows()
+    cv2.waitKey(1)
+
 
 if __name__ == "__main__":
       stream()
