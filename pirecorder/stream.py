@@ -74,8 +74,11 @@ def overlay_stream(imagefile = "", alpha = 0.5, rotation = 0):
     overlay[0:h,0:w] = photo
 
     # Start the loop
+    c = 0
     while True:
 
+        c += 1
+        print(c)
         # Extract the frame
         frame = vid.read()
         output = frame.copy()
