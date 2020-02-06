@@ -84,7 +84,7 @@ def overlay_stream(imagefile = "", alpha = 0.5, rotation = 0):
         output = frame.copy()
 
         # Draw overlay semi-transparent on frame
-        cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+        # cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
 
         # Draw in black and white
         output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
