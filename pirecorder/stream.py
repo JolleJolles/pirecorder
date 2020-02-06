@@ -62,6 +62,7 @@ def overlay_stream(imagefile = "", alpha = 0.5):
     fullscreen = False
     vid = VideoIn(vidsize=1).start()
     frame = vid.read()
+    overlay = frame.copy()
     h, w, _ = frame.shape
     cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
 
@@ -69,16 +70,15 @@ def overlay_stream(imagefile = "", alpha = 0.5):
     photo = cv2.imread(imagefile)
     photo = imgresize(photo, resize = 1, dims = (w,h))
 
+    # Draw photo on overlay
+    overlay[0:h,0:w] = photo
+
     # Start the loop
     while True:
 
         # Extract the frame
         frame = vid.read()
-        overlay = frame.copy()
         output = frame.copy()
-
-        # Draw photo on overlay
-        overlay[0:h,0:w] = photo
 
         # Draw overlay semi-transparent on frame
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
