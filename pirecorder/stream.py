@@ -21,7 +21,6 @@ import cv2
 from .videoin import VideoIn
 from pythutils.mediautils import add_transimg, imgresize
 
-
 def stream():
 
     """
@@ -54,7 +53,7 @@ def stream():
     cv2.waitKey(1)
 
 
-def overlay_stream(imagefile = None, alpha = 0.5):
+def overlay_stream(imagefile = "", alpha = 0.5):
 
     # Check if image file loads
     assert os.path.isfile(imagefile), "Image file could not be loaded.."
@@ -63,11 +62,12 @@ def overlay_stream(imagefile = None, alpha = 0.5):
     fullscreen = False
     vid = VideoIn(vidsize=1).start()
     frame = vid.read()
+    h, w, _ = frame.shape
     cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
 
     # Load and resize the image to fit
     photo = cv2.imread(imagefile)
-    photo = imgresize(photo, resize = 1, dims = (frame.shape[1], frame.shape[0]))
+    photo = imgresize(photo, resize = 1, dims = (w,h))
 
     # Start the loop
     while True:
@@ -78,7 +78,7 @@ def overlay_stream(imagefile = None, alpha = 0.5):
         output = frame.copy()
 
         # Draw photo on overlay
-        overlay[0:720,0:1280] = photo
+        overlay[0:h,0:w] = photo
 
         # Draw overlay semi-transparent on frame
         cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
