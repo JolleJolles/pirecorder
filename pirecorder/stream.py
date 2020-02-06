@@ -21,7 +21,7 @@ import cv2
 from .videoin import VideoIn
 from pythutils.mediautils import add_transimg, imgresize
 
-def stream():
+def stream(rotation = 0):
 
     """
     Opens a video stream of the rpi camera. With keypress 'f' the user can make
@@ -29,7 +29,7 @@ def stream():
     """
 
     fullscreen = False
-    vid = VideoIn(vidsize=0.25).start()
+    vid = VideoIn(vidsize=0.25, rotation=rotation).start()
     cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
     while True:
         frame = vid.read()
@@ -53,14 +53,14 @@ def stream():
     cv2.waitKey(1)
 
 
-def overlay_stream(imagefile = "", alpha = 0.5):
+def overlay_stream(imagefile = "", alpha = 0.5, rotation = 0):
 
     # Check if image file loads
     assert os.path.isfile(imagefile), "Image file could not be loaded.."
 
     # Start videostream
     fullscreen = False
-    vid = VideoIn(vidsize=1).start()
+    vid = VideoIn(vidsize=1, rotation=rotation).start()
     frame = vid.read()
     overlay = frame.copy()
     h, w, _ = frame.shape
