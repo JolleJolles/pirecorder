@@ -75,6 +75,8 @@ def overlay_stream(imagefile = "", alpha = 0.5, rotation = 0):
 
     # Start the loop
     c = 0
+    vid.stop()
+    vid = VideoIn(vidsize=1, rotation=rotation).start()
     while True:
 
         c += 1
