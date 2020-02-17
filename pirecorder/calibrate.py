@@ -24,13 +24,13 @@ from pythutils.sysutils import lineprint
 from pythutils.mediautils import checkroi, roi_to_zoom
 import pythutils.drawutils as draw
 
-
 from .videoin import VideoIn
 from .__version__ import __version__
 
 class Calibrate:
 
-    def __init__(self, system="auto", framerate=8, vidsize=0.2, internal=False):
+    def __init__(self, system="auto", framerate=8, vidsize=0.2, internal=False,
+                 rotation = 0):
 
         """Opens a video stream with user interface to calibrate the camera"""
 
@@ -40,6 +40,7 @@ class Calibrate:
         self.system = system
         self.framerate = framerate
         self.vidsize = vidsize
+        self.rotation = rotation
         self.cross = False
         self.stream = True
         self.exit = False
@@ -59,7 +60,7 @@ class Calibrate:
         lineprint("Streaming video..")
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
-                           vidsize=self.vidsize)
+                           vidsize=self.vidsize, rotation=self.rotation)
         self.vid.start()
 
         while True:
@@ -122,7 +123,7 @@ class Calibrate:
                 if self.m.rect and len(self.m.rect) == 2:
                     lineprint("Creating zoomed image..")
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
-                                        crop=self.m.rect)
+                                        crop=self.m.rect, rotation=self.rotation)
                     zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:

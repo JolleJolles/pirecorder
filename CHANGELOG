@@ -3,6 +3,12 @@ complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Updates not yet in latest release:
 
+
+2020-02-17- version 2.2.0
+    * Integrated new overlay_stream function
+    * Number of fixes to zoom, gains, and calibrate functionalities
+    * Integrated rotation into calibrate function
+
 2019-12-23 - version 2.1.0
     A medium update with convert function now enabling folder monitoring, zoom
     functionality is properly integrated in the pirecorder and setgains class,

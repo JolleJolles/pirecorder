@@ -22,8 +22,6 @@ from __future__ import print_function
 
 import cv2
 import numpy as np
-import picamera
-import picamera.array
 
 def setgains(attempts = 100, step = 0.05, startgains = (1,2),
              zoom = (0,0,1,1), auto = True):
@@ -61,8 +59,6 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
     rg, bg = startgains
     camera.awb_gains = (rg, bg)
 
-    cv2.namedWindow("Image")
-
     if auto:
         with picamera.array.PiRGBArray(camera, size=(128, 72)) as output:
             for i in range(attempts):
@@ -83,6 +79,7 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
                 output.seek(0)
                 output.truncate()
     else:
+        cv2.namedWindow("Image")
         while True:
             image = np.empty((height * width * 3,), dtype=np.uint8)
             camera.capture(image, "bgr")
@@ -102,12 +99,14 @@ def setgains(attempts = 100, step = 0.05, startgains = (1,2),
                 bg = round(min(bg+step,2.5),2)
             if k == ord("s"):
                 print("User exited..")
+                break
             if k == 27:
                 rg, bg = startgains
                 print("User escaped..")
-                cv2.waitKey(1)
-                cv2.destroyAllWindows()
                 break
+
+        cv2.waitKey(1)
+        cv2.destroyAllWindows()
 
     camera.close()
 

@@ -409,7 +409,7 @@ class PiRecorder:
         video stream enter 'esc' key again.
         """
 
-        C = Calibrate(internal=True)
+        C = Calibrate(internal=True, rotation=self.config.cus.rotation)
         if C.roi:
             self.set_config(roi=C.roi, internal="")
             lineprint("Roi stored..")
@@ -421,9 +421,12 @@ class PiRecorder:
 
         """Find the best gains for the raspberry pi camera"""
 
+        if self.config.cus.roi == None:
+            zoom = (0,0,1,1)
+        else:
+            zoom = literal_eval(self.config.cus.roi)
         (rg, bg) = setgains(startgains = checkfrac(self.config.cus.gains),
-                            zoom = literal_eval(self.config.cus.roi),
-                            auto = auto)
+                            zoom = zoom, auto = auto)
         self.set_config(gains="(%5.2f, %5.2f)" % (rg, bg), internal="")
         lineprint("Gains: " + "(R:%5.2f, B:%5.2f)" % (rg, bg) + " stored..")
 
@@ -468,7 +471,6 @@ class PiRecorder:
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
             # Temporary fix for flicker at start of (first) video..
-            print(self.resize)
             self.cam.start_recording(BytesIO(), format="h264", resize = self.resize)
             self.cam.wait_recording(2)
             self.cam.stop_recording()
