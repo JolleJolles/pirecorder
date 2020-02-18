@@ -107,11 +107,12 @@ class Convert:
                  if len([f for f in new if commonpref(self.todo) in f])>0:
                      self.todo = []
             self.convertpool()
+            msg = "No files to convert.."
             if sleeptime == None:
-                lineprint("No files found..")
+                lineprint(msg)
                 break
             else:
-                lineprint("No files found, rechecking in "+str(sleeptime)+"s..")
+                lineprint(msg+" rechecking in "+str(sleeptime)+"s..")
                 time.sleep(sleeptime)
 
 
