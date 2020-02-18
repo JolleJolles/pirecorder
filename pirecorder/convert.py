@@ -66,19 +66,20 @@ class Convert:
     """
 
     def __init__(self, indir="", outdir="", type=".h264", withframe=False,
-                 overwrite=False, delete=False, pools=4, resizeval=1,
-                 fps=None, imgfps=25, internal=False, sleeptime=None):
+                 overwrite=False, delete=False, pools=4, resizeval=1, fps=None,
+                 imgfps=25, internal=False, sleeptime=None, interrupt=True):
 
         if internal:
             lineprint("Running convert function..")
 
         global interrupted
         interrupted = False
-        def keythread():
-            global interrupted
-            input()
-            interrupted = True
-        Thread(target=keythread).start()
+        if interrupt:
+            def keythread():
+                global interrupted
+                input()
+                interrupted = True
+            Thread(target=keythread).start()
 
         self.indir = os.getcwd() if indir == "" else indir
         assert os.path.exists(self.indir), "in-directory does not exist.."
