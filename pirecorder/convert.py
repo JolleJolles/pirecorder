@@ -38,7 +38,7 @@ class KeyboardInterruptError(Exception): pass
 class Convert:
 
     """
-    Converter class to convert a directory of videos to mp4 with
+    CASDonverter class to convert a directory of videos to mp4 with
     potential to write frame number on each frames
 
     Parameters
@@ -65,9 +65,9 @@ class Convert:
         once use default
     """
 
-    def __init__(self, indir = "", outdir = "", type = ".h264",
-                 withframe = False, delete = False, pools = 4, resizeval = 1,
-                 imgfps = 25, internal = False, sleeptime = None):
+    def __init__(self, indir="", outdir="", type=".h264", withframe=False,
+                 overwrite=False, delete=False, pools=4, resizeval=1,
+                 fps=None, imgfps=25, internal=False, sleeptime=None):
 
         if internal:
             lineprint("Running convert function..")
@@ -93,13 +93,16 @@ class Convert:
         self.delete = delete
         self.pools = int(pools)
         self.resizeval = float(resizeval)
+        self.fps = int(fps) if fps is not None else None
         self.imgfps = int(imgfps)
 
         while not interrupted:
             files = listfiles(self.indir, self.type, keepdir = False)
             old = listfiles(self.indir, self.type, keepext = False)
             new = listfiles(self.outdir, ".mp4", keepext = False)
-            self.todo = [files[i] for i,file in enumerate(old) if file not in new]
+            self.todo = files
+            if not overwrite:
+                self.todo = [files[i] for i,file in enumerate(old) if file not in new]
             if self.type in [".jpg",".jpeg",".png"] and len(self.todo)>0:
                  if len([f for f in new if commonpref(self.todo) in f])>0:
                      self.todo = []
@@ -122,7 +125,10 @@ class Convert:
             if self.withframe:
                 vid = cv2.VideoCapture(filein)
                 fps, width, height, _ = get_vid_params(vid)
-                vidout = videowriter(fileout, width, height, fps, self.resizeval)
+                if self.fps is None:
+                    self.fps = fps
+                print(self.fps)
+                vidout = videowriter(fileout, width, height, self.fps, self.resizeval)
 
                 while True:
                     flag, frame = vid.read()
@@ -140,7 +146,10 @@ class Convert:
                     comm = "' -vf 'scale=iw*" + str(self.resizeval) + ":-2' '"
                 else:
                     comm = "' -vcodec copy '"
-                bashcomm = "ffmpeg -i '"+filein+comm+fileout[:-len(self.type)]+".mp4'"
+                bashcomm = "ffmpeg"
+                if self.fps is not None:
+                    bashcomm = bashcomm+" -r "+ str(self.fps)
+                bashcomm = bashcomm+" -i '"+filein+comm+fileout[:-len(self.type)]+".mp4'"
                 bashcomm = bashcomm + " -y -nostats -loglevel 0"
                 output = subprocess.check_output(['bash','-c', bashcomm])
 
