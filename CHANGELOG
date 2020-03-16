@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2020-02-18 version 2.2.2
+    * Integrated new logging function
+
 2020-02-18 version 2.2.1
     * Included user input of fps and overwrite option for video converter
 

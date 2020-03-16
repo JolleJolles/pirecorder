@@ -155,7 +155,7 @@ class PiRecorder:
         Recorder class instance
     """
 
-    def __init__(self, configfile = "pirecorder.conf"):
+    def __init__(self, configfile = "pirecorder.conf", logging=True):
 
         lineprint("pirecorder "+__version__+" started!")
         lineprint("="*47, False)
@@ -172,7 +172,9 @@ class PiRecorder:
         if not os.path.exists(self.logfolder):
             lineprint("Setup folder already exists but was not set up properly..")
 
-        sys.stdout = Logger(self.logfolder+"/pirecorder.log")
+        if logging:
+            self.log = Logger(self.logfolder+"/pirecorder.log")
+            self.log.start()
 
         self.brightfile = self.setupdir+"/cusbright.yml"
         self.configfile = self.setupdir+"/"+configfile
