@@ -101,10 +101,10 @@ class Calibrate:
 
         while True:
             img = self.imgbak.copy()
-            if len(self.m.pointer) > 0:
+            if self.m.twoPoint is not None:
                 draw.draw_crosshair(img, self.m.pos)
+            print(self.m.posDown)
             if self.m.posDown is not None:
-                draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
                 cv2.rectangle(img, self.m.posDown, self.m.pos, self.tempcol, 2)
             if self.m.posUp is not None:
                 cv2.rectangle(img, self.m.pts[-1], self.m.posUp,
