@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019-2020 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 - 2020 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -46,6 +46,8 @@ class Calibrate:
         self.exit = False
         self.roi = False
         self.fullscreen = False
+        self.tempcol = draw.namedcols("orange")
+        self.col = draw.namedcols("red")
 
         cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
         self.m = draw.mouse_events()
@@ -100,16 +102,20 @@ class Calibrate:
         while True:
             img = self.imgbak.copy()
             if len(self.m.pointer) > 0:
-                draw.draw_crosshair(img, self.m.pointer)
-            if self.m.rect != ():
+                draw.draw_crosshair(img, self.m.pos)
+            if self.m.posDown is not None:
                 draw.draw_rectangle(img, self.m.pointer, self.m.rect, self.m.drawing)
+                cv2.rectangle(img, self.m.posDown, self.m.pos, self.tempcol, 2)
+            if self.m.posUp is not None:
+                cv2.rectangle(img, self.m.pts[-1], self.m.posUp,
+                              self.col, 2)
             cv2.imshow("Image", img)
 
             k = cv2.waitKey(1) & 0xFF
             if k == ord("s"):
-                if self.m.rect and len(self.m.rect) == 2:
-                    self.m.rect = checkroi(self.m.rect, self.vid.res)
-                    self.roi = roi_to_zoom(self.m.rect, self.vid.res)
+                if self.m.twoPoint is not None:
+                    self.m.twoPoint = checkroi(self.m.twoPoint, self.vid.res)
+                    self.roi = roi_to_zoom(self.m.twoPoint, self.vid.res)
                     lineprint("roi "+str(self.roi)+" stored..")
                     break
                 else:
@@ -120,10 +126,10 @@ class Calibrate:
                 lineprint("new roi erased..")
 
             if k == ord("z"):
-                if self.m.rect and len(self.m.rect) == 2:
+                if self.m.twoPoint is not None:
                     lineprint("Creating zoomed image..")
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
-                                        crop=self.m.rect, rotation=self.rotation)
+                                        crop=self.m.twoPoint, rotation=self.rotation)
                     zimg = self.vid2.img()
                     cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
                     while True:
@@ -138,7 +144,7 @@ class Calibrate:
 
             if k == 27:
                 self.stream = True
-                self.m.rect = ()
+                self.m.twoPoint = None
                 break
 
 
