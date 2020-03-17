@@ -103,7 +103,6 @@ class Calibrate:
             img = self.imgbak.copy()
             if self.m.twoPoint is not None:
                 draw.draw_crosshair(img, self.m.pos)
-            print(self.m.posDown)
             if self.m.posDown is not None:
                 cv2.rectangle(img, self.m.posDown, self.m.pos, self.tempcol, 2)
             if self.m.posUp is not None:
