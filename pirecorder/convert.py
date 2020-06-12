@@ -38,7 +38,7 @@ class KeyboardInterruptError(Exception): pass
 class Convert:
 
     """
-    CASDonverter class to convert a directory of videos to mp4 with
+    Converter class to convert a directory of media files with
     potential to write frame number on each frames
 
     Parameters
@@ -46,7 +46,8 @@ class Convert:
     indir : str, default = ""
         Directory containing the videos
     outdir : str, default = ""
-        Directory where the converted videos should be stored
+        Directory where the converted videos should be stored. If it doesn't
+        exist yet it will be newly created
     type : str, default = ".h264"
         The filetype of the media to convert
     withframe : bool, default = False
@@ -70,7 +71,7 @@ class Convert:
                  imgfps=25, internal=False, sleeptime=None, interrupt=True):
 
         if internal:
-            lineprint("Running convert function..")
+            lineprint("Running convert function..", label="pirecorder")
 
         global interrupted
         interrupted = False
@@ -84,7 +85,8 @@ class Convert:
         self.indir = os.getcwd() if indir == "" else indir
         assert os.path.exists(self.indir), "in-directory does not exist.."
         self.outdir = self.indir if outdir == "" else outdir
-        assert os.path.exists(self.outdir), "out-directory does not exist.."
+        if not os.path.exists(self.outdir):
+            os.makedirs(self.outdir)
 
         self.rootdir = os.getcwd()
         os.chdir(self.indir)
@@ -105,15 +107,15 @@ class Convert:
             if not overwrite:
                 self.todo = [files[i] for i,file in enumerate(old) if file not in new]
             if self.type in [".jpg",".jpeg",".png"] and len(self.todo)>0:
-                 if len([f for f in new if commonpref(self.todo) in f])>0:
+                 if len([f for f in new if commonpref(self.todo) in f])>0 and not overwrite:
                      self.todo = []
             self.convertpool()
             msg = "No files to convert.."
             if sleeptime == None:
-                lineprint(msg)
-                break
+                lineprint(msg, label="pirecorder")
+                exit()
             else:
-                lineprint(msg+" rechecking in "+str(sleeptime)+"s..")
+                lineprint(msg+" rechecking in "+str(sleeptime)+"s..", label="pirecorder")
                 time.sleep(sleeptime)
 
 
@@ -122,7 +124,7 @@ class Convert:
         try:
             filebase = os.path.basename(filein)
             fileout = filein if self.outdir == "" else self.outdir+"/"+filebase
-            lineprint("Start converting "+filebase)
+            lineprint("Start converting "+filebase, label="pirecorder")
 
             if self.withframe:
                 vid = cv2.VideoCapture(filein)
@@ -155,7 +157,7 @@ class Convert:
                 bashcomm = bashcomm + " -y -nostats -loglevel 0"
                 output = subprocess.check_output(['bash','-c', bashcomm])
 
-            lineprint("Finished converting "+filebase)
+            lineprint("Finished converting "+filebase, label="pirecorder")
 
         except KeyboardInterrupt:
             raise KeyboardInterruptError()
@@ -171,13 +173,13 @@ class Convert:
                 try:
                     pool.map(self.conv_single, self.todo)
                     pool.close()
-                    lineprint("Done converting all videofiles!")
+                    lineprint("Done converting all videofiles!", label="pirecorder")
                 except KeyboardInterrupt:
-                    lineprint("User terminated converting pool..")
+                    lineprint("User terminated converting pool..", label="pirecorder")
                     pool.terminate()
                 except Exception as e:
                     excep = "Got exception: %r, terminating pool" % (e,)
-                    lineprint(excep)
+                    lineprint(excep, label="pirecorder")
                     pool.terminate()
                 finally:
                     pool.join()
@@ -185,12 +187,12 @@ class Convert:
                 if self.delete:
                     for filein in self.todo:
                         os.remove(filein)
-                    lineprint("Deleted all original videofiles..")
+                    lineprint("Deleted all original videofiles..", label="pirecorder")
 
             elif self.type in [".jpg",".jpeg",".png"]:
 
                 vidname = commonpref(self.todo)
-                lineprint("Start converting "+str(len(self.todo))+" images")
+                lineprint("Start converting "+str(len(self.todo))+" images", label="pirecorder")
 
                 frame_array = []
                 for filename in self.todo:
@@ -204,10 +206,10 @@ class Convert:
                 for i in range(len(frame_array)):
                     vidout.write(frame_array[i])
                 vidout.release()
-                lineprint("Finished converting "+os.path.basename(vidname))
+                lineprint("Finished converting "+os.path.basename(vidname), label="pirecorder")
 
             else:
-                lineprint("No video or image files found..")
+                lineprint("No video or image files found..", label="pirecorder")
 
 
 def conv():

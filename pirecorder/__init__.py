@@ -22,3 +22,4 @@ from .pirecorder import *
 from .schedule import Schedule
 from .stream import stream
 from .videoin import VideoIn
+from .convert import Convert

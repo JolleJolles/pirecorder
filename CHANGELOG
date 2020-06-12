@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2020-06-12 version 2.2.3
+    * A number of small improvements to the convert function
+
 2020-03-17 version 2.2.2
     * Integrated new logging function
     * Updated functions that use pythutils updated mouse_events function
