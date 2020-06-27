@@ -1,0 +1,38 @@
+
+.site-title {
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+}
+.site-logo {
+  margin-left: 30px;
+}
+
+.text-delta {
+  padding-top: 12px;
+}
+
+.navigation {
+  padding-right: 1rem !important;
+  width: 230px !important;
+}
+
+a {
+  color: #139073;
+}
+
+.page-content a {
+  text-decoration: underline !important;
+}
+
+a:not([class]):hover {
+  background-size: 0px;
+}
+
+a:active, a:hover {
+  outline: 0;
+  color: #000000;
+}
+
+::selection {
+  background: #61c9e9;
+}

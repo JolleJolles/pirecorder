@@ -26,7 +26,8 @@ from pythutils.mediautils import *
 
 class VideoIn:
 
-    def __init__(self, system="auto", vidsize=0.2, framerate=32, crop=False, rotation = 0):
+    def __init__(self, system = "auto", vidsize = 0.2, framerate = 32,
+                 crop = False, rotation = 0, cameratype = None):
 
         """Opens a video stream from native camera, webcam or rpi camera"""
 
@@ -42,8 +43,14 @@ class VideoIn:
         if self.cam == "rpi":
             from picamera.array import PiRGBArray
             from picamera import PiCamera
-            self.maxres = (2592,1952)
-            self.res = (self.maxres[0]*vidsize,self.maxres[1]*vidsize)
+
+            if cameratype == "v2":
+                self.maxres = (3264,2464)
+            elif cameratype == "hq":
+                self.maxres = (4056,3040)
+            else:
+                self.maxres = (2592,1952)
+            self.res = (self.maxres[0]*vidsize, self.maxres[1]*vidsize)
             self.res = picamconv(self.res)
             self.camera = PiCamera()
             self.camera.resolution = self.res
@@ -90,6 +97,8 @@ class VideoIn:
 
 
     def read(self):
+        if not hasattr(self, 'frame'):
+            time.sleep(4)
         if self.crop:
             self.frame = crop(self.frame, self.crop[0], self.crop[1])
         return self.frame
@@ -100,7 +109,7 @@ class VideoIn:
         if self.cam == "rpi":
             self.camera.resolution = self.maxres
             self.image = np.empty((h * w * 3,), dtype=np.uint8)
-            time.sleep(2)
+            time.sleep(1)
             self.camera.capture(self.image, 'bgr')
             self.image = self.image.reshape((h, w, 3))
             self.stream.close()
@@ -109,7 +118,7 @@ class VideoIn:
         else:
             self.stream.release()
             self.stream = cv2.VideoCapture(self.cam)
-            time.sleep(2)
+            time.sleep(1)
             self.stream.set(3, w)
             self.stream.set(4, h)
             _, self.image = self.stream.read()

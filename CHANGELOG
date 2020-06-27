@@ -1,6 +1,47 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2020-06-27 version 3.0.0
+    Major update with a large number of additions, improvements, and fixes.
+
+    Large additions:
+    - Created an in-depth documentation website hosted with GitHub
+      pages that provides tutorials for all the different functionalities of
+      pirecorder with a nice and clear webdesign, from setting up the raspberry
+      pi, and installing pirecorder, to configation, scheduling recordings, and
+      converting media. See https://jollejolles.github.io/pirecorder/
+    - Added new camconfig module to interactively set all the recording
+      parameters, including rotation, shutterspeed, whitebalance, iso, contrast,
+      saturation, and sharpness via a dynamically updated video stream. Changes
+      can be automatically linked to a PiRecorder configuration file.
+    - Integrated automatic exposure and white balance modes both for each new
+      recording and within each (video) recording as well as a function to get
+      the optimal shutterspeed and white balance parameters and store them in
+      the configuration file to be used later as static parameters.
+    - Wrote accompanying academic paper for pirecorder, submitted to The
+      Journal of Open Source Software
+
+    Improvements:
+    * Fully updated and extended the jupyter notebook example file with more
+      examples and more detailed documentation
+    * Stream module now draws on video rather than static frame.
+    * Integrated option to refresh zoomed-in image for the stream module.
+    * Integrated possibility to add parameters to stream function on the
+      command line.
+    * Integrated the possibility to schedule jobs with different configuration
+      files.
+    * Added a new cameratype parameter that makes it easier to get the maximum
+      resolution depending on if the v1, v2, or the new hq camera is used.
+    * Added three new Jupyter Notebooks
+    * Removed the auto and manual set_gains function as it is now improved and
+      integrated in the auto_config function and camconfig module
+    * Many other smaller changes and fixes, including integrating the calibrate
+      and stream modules, updated the logo, made some fixes to the stream,
+      videoin, and schedule modules, and improved possibilities for user
+      interrupt during media converting.
+    * Improved the readme and documentation throughout
+
+
 2020-06-12 version 2.2.3
     * A number of small improvements to the convert function
 

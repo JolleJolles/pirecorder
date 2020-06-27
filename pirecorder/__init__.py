@@ -16,10 +16,9 @@ limitations under the License.
 """
 
 from .__version__ import __version__
-from .calibrate import Calibrate
-from .setgains import setgains
 from .pirecorder import *
-from .schedule import Schedule
-from .stream import stream
-from .videoin import VideoIn
+from .camconfig import Camconfig
 from .convert import Convert
+from .schedule import Schedule
+from .stream import Stream
+from .videoin import VideoIn

@@ -20,14 +20,14 @@ import sys
 
 exec(open("pirecorder/__version__.py").read())
 
-DESCRIPTION="""A python module for controlled and automated image and video \
+DESCRIPTION="""A python package for controlled and automated image and video \
 recording with the raspberry pi"""
 
 DISTNAME="pirecorder"
 MAINTAINER="Jolle Jolles"
 MAINTAINER_EMAIL="j.w.jolles@gmail.com"
-URL="https://github.com/JolleJolles"
-DOWNLOAD_URL="https://github.com/JolleJolles/pirecorder/archive/v2.2.2.tar.gz"
+URL="https://github.com/jollejolles"
+DOWNLOAD_URL="https://github.com/jollejolles/pirecorder/archive/v3.0.0.tar.gz"
 
 with open("README.md") as f:
     readme = f.read()
@@ -55,7 +55,8 @@ if __name__ == "__main__":
                             "localconfig==0.4.2; python_version>='2' and python_version<'3'",
                             "localconfig==1.1.1; python_version>='3'"],
           entry_points={"console_scripts": [
-                            "calibrate = pirecorder.calibrate:Calibrate",
+                            "stream = pirecorder.stream:strm",
+                            "camconfig = pirecorder.camconfig:config",
                             "record = pirecorder.pirecorder:rec",
                             "schedule = pirecorder.schedule:sch",
                             "convert = pirecorder.convert:conv"],},

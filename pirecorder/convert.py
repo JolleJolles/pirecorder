@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019-2020 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 - 2020 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,49 +38,44 @@ class KeyboardInterruptError(Exception): pass
 class Convert:
 
     """
-    Converter class to convert a directory of media files with
-    potential to write frame number on each frames
+    Module to convert a directory of media files with potential to resize the
+    media, write the unique frame number on each frame, and continuously monitor
+    a folder for updated files. Multiple files can be converted simultaneously
+    with the pools parameter to optimally use the computer's processing cores.
 
     Parameters
     -----------
     indir : str, default = ""
-        Directory containing the videos
+        Directory containing the videos.
     outdir : str, default = ""
-        Directory where the converted videos should be stored. If it doesn't
-        exist yet it will be newly created
+        Directory where the converted videos should be stored. If the directory
+        does not exist yet it will be newly created.
     type : str, default = ".h264"
-        The filetype of the media to convert
+        The filetype of the media to convert.
     withframe : bool, default = False
-        Type of conversion, either very fast conversion using ffmpeg or
-        using opencv to add frame number to each frame
+        Type of conversion, either very fast conversion using FFmpeg or using
+        OpenCV to draw the frame number on each video frame.
     delete : bool, default = False
-        If the original videos should be delete or not
+        If the original videos should be deleted or not.
     pools : int, default = 4
-        Number of computer cores to use for conversion script
+        Number of simultaneous converting processing that should be allowed.
+        Works optimally when equal to the number of computer processing cores.
     resizeval : float, default = 1
-        Float value to which video should be resized
+        Float value to which the video should be resized.
     imgfps : int, default = 25
-        Framerate for conversion of images to video
+        Framerate for conversion of images to video.
     sleeptime : 2, default = None
-        Time in seconds between subsequent checks of file folder. No only check
-        once use default
+        Time in seconds between subsequent checks for files within a folder. The
+        default value (None) only converts the current files.
     """
 
-    def __init__(self, indir="", outdir="", type=".h264", withframe=False,
-                 overwrite=False, delete=False, pools=4, resizeval=1, fps=None,
-                 imgfps=25, internal=False, sleeptime=None, interrupt=True):
+    def __init__(self, indir = "", outdir = "", type = ".h264",
+                 withframe = False, overwrite = False, delete = False,
+                 pools = 4, resizeval = 1, fps = None, imgfps = 25,
+                 internal = False, sleeptime = None):
 
         if internal:
             lineprint("Running convert function..", label="pirecorder")
-
-        global interrupted
-        interrupted = False
-        if interrupt:
-            def keythread():
-                global interrupted
-                input()
-                interrupted = True
-            Thread(target=keythread).start()
 
         self.indir = os.getcwd() if indir == "" else indir
         assert os.path.exists(self.indir), "in-directory does not exist.."
@@ -98,8 +93,9 @@ class Convert:
         self.resizeval = float(resizeval)
         self.fps = int(fps) if fps is not None else None
         self.imgfps = int(imgfps)
+        self.terminated = False
 
-        while not interrupted:
+        while True:
             files = listfiles(self.indir, self.type, keepdir = False)
             old = listfiles(self.indir, self.type, keepext = False)
             new = listfiles(self.outdir, ".mp4", keepext = False)
@@ -112,12 +108,16 @@ class Convert:
             self.convertpool()
             msg = "No files to convert.."
             if sleeptime == None:
-                lineprint(msg, label="pirecorder")
-                exit()
+                if not self.terminated:
+                    lineprint(msg, label="pirecorder")
+                return
             else:
-                lineprint(msg+" rechecking in "+str(sleeptime)+"s..", label="pirecorder")
-                time.sleep(sleeptime)
-
+                try:
+                    lineprint(msg+" rechecking in "+str(sleeptime)+"s..", label="pirecorder")
+                    time.sleep(sleeptime)
+                except KeyboardInterrupt:
+                    lineprint("Terminating checking for files..", label="pirecorder")
+                    return
 
     def conv_single(self, filein):
 
@@ -131,7 +131,6 @@ class Convert:
                 fps, width, height, _ = get_vid_params(vid)
                 if self.fps is None:
                     self.fps = fps
-                print(self.fps)
                 vidout = videowriter(fileout, width, height, self.fps, self.resizeval)
 
                 while True:
@@ -140,7 +139,8 @@ class Convert:
                         if self.resizeval != 1:
                             frame = imgresize(frame, self.resizeval)
                         frame_nr = int(vid.get(cv2.CAP_PROP_POS_FRAMES))
-                        draw_text(frame, str(frame_nr), (10,10), 0.9)
+                        draw_text(frame, str(frame_nr), (10,10), 0.9, col="white",
+                                  shadow=True)
                         vidout.write(frame)
                     if not flag:
                         break
@@ -176,7 +176,9 @@ class Convert:
                     lineprint("Done converting all videofiles!", label="pirecorder")
                 except KeyboardInterrupt:
                     lineprint("User terminated converting pool..", label="pirecorder")
+                    self.terminated = True
                     pool.terminate()
+                    return
                 except Exception as e:
                     excep = "Got exception: %r, terminating pool" % (e,)
                     lineprint(excep, label="pirecorder")
@@ -231,6 +233,6 @@ def conv():
     args = parser.parse_args()
     args.withframe = ast.literal_eval(args.withframe)
     args.delete = ast.literal_eval(args.delete)
-    Convert(indir=args.indir, outdir=args.outdir, type=args.type,
-            withframe=args.withframe, delete=args.delete, pools=args.pools,
-            resizeval=args.resizeval, imgfps=args.imgfps)
+    Convert(indir = args.indir, outdir = args.outdir, type = args.type,
+            withframe = args.withframe, delete = args.delete, pools = args.pools,
+            resizeval = args.resizeval, imgfps = args.imgfps)

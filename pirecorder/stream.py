@@ -17,104 +17,224 @@ limitations under the License.
 
 import os
 import cv2
+import time
+import argparse
+import numpy as np
+
+from pythutils.sysutils import lineprint
+from pythutils.mediautils import checkroi, roi_to_zoom, imgresize
+import pythutils.drawutils as draw
 
 from .videoin import VideoIn
-from pythutils.mediautils import add_transimg, imgresize
+from .__version__ import __version__
 
-def stream(rotation = 0):
+class Stream:
 
-    """
-    Opens a video stream of the rpi camera. With keypress 'f' the user can make
-    the videostream fullscreen and with the 'ESC' key the window is closed.
-    """
+    def __init__(self, system = "auto", framerate = 8, vidsize = 0.2,
+                 rotation = 0, internal = False, cameratype = None,
+                 imgoverlay = None):
 
-    fullscreen = False
-    vid = VideoIn(vidsize=0.25, rotation=rotation).start()
-    cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
-    while True:
-        frame = vid.read()
-        cv2.imshow('Stream', frame)
-        k = cv2.waitKey(1) & 0xFF
-        if k == ord("f"):
-            fullscreen = not fullscreen
-            if fullscreen:
-                cv2.setWindowProperty("Stream", cv2.WND_PROP_FULLSCREEN,
-                                      cv2.WINDOW_FULLSCREEN)
+        """
+        Opens a video stream with user interface to help position and
+        adjust the camera
+
+        parameters
+        -----------
+        system : str, default = "auto"
+            If the system should be automatically determined. Should detect if
+            the computer is a raspberry pi or not. If this somehow fails, set
+            to "rpi" manually.
+        framerate : int, default = 8
+            The framerate of the displayed video stream. Lower framerates take
+            longer to start up. When using an image overlay, maximum possible
+            framerate is 5, to avoid getting shutter effects
+        vidsize : float, default = 0.2
+            The relative size of the video window to the maximum resolution of
+            the raspberry pi camera type.
+        rotation : int, default = 180
+            If the camera should be rotated or not. 0 and 180 are valid values.
+        cameratype : str, default = "v2"
+            The raspberry camera type used. Should be either "v1", "v2", or "hq"
+        imgoverlay : str, default = None
+            The path to an image that will be overlaid on the video stream. This
+            can be helpful for accurate positioning of the camera in line with
+            previous recordings or setups.
+
+        interface
+        -----------
+        This interactive module stores mouse position and clicks and responds to
+        the following keypresses:
+        f-key : display the stream fullscreen/display the stream in a window
+        c-key : display/hide a diagonal cross across the screen
+        s-key : save the coordinates of the rectangular area when drawn
+        e-key : erase the rectangular area when drawn
+        z-key : show a zoomed-in section of the video inside the rectangular
+            area in maximum resolution
+        n-key : refresh the zoom-in image
+        o-key : if the potential overlay image should be shown or not
+        [- and ]-keys : decrease or increase the relative opacity of the
+            potential overlay image with 5%
+        esc-key : exit the the zoom window; exit the calibrate function
+        """
+
+        if internal:
+            lineprint("Running calibrate function.. ")
+
+        self.system = system
+        self.framerate = framerate
+        self.vidsize = vidsize
+        self.rotation = rotation
+        self.cameratype = cameratype
+
+        if imgoverlay == None:
+            self.overlay = False
+            self.waitms = 1
+        else:
+            if os.path.isfile(imgoverlay):
+                self.overlay = True
+                self.overlayimg = cv2.imread(imgoverlay)
+                self.alpha = 0.5
+                self.waitms = 200
+                self.framerate = min(self.framerate, 5)
             else:
-                cv2.setWindowProperty("Stream",cv2.WND_PROP_AUTOSIZE,
-                                               cv2.WINDOW_NORMAL)
-                cv2.resizeWindow("Stream", vid.res[0], vid.res[1])
+                print("Image file could not be loaded..")
 
-        if k == 27:
-            break
+        self.cross = False
+        self.stream = True
+        self.exit = False
+        self.roi = False
+        self.fullscreen = False
+        self.tempcol = draw.namedcols("orange")
+        self.col = draw.namedcols("red")
 
-    vid.stop()
-    cv2.destroyAllWindows()
-    cv2.waitKey(1)
+        cv2.namedWindow("Image", cv2.WND_PROP_FULLSCREEN)
+        self.m = draw.mouse_events()
+        cv2.setMouseCallback('Image', self.m.draw)
+        time.sleep(1)
 
-
-def overlay_stream(imagefile = "", alpha = 0.5, rotation = 0):
-
-    # Check if image file loads
-    assert os.path.isfile(imagefile), "Image file could not be loaded.."
-
-    # Start videostream
-    fullscreen = False
-    vid = VideoIn(vidsize=1, rotation=rotation).start()
-    frame = vid.read()
-    overlay = frame.copy()
-    h, w, _ = frame.shape
-    cv2.namedWindow("Stream", cv2.WND_PROP_FULLSCREEN)
-
-    # Load and resize the image to fit
-    photo = cv2.imread(imagefile)
-    photo = imgresize(photo, resize = 1, dims = (w,h))
-
-    # Draw photo on overlay
-    overlay[0:h,0:w] = photo
-
-    # Start the loop
-    c = 0
-    vid.stop()
-    vid = VideoIn(vidsize=1, rotation=rotation).start()
-    while True:
-
-        c += 1
-        print(c)
-        # Extract the frame
-        frame = vid.read()
-        output = frame.copy()
-
-        # Draw overlay semi-transparent on frame
-        # cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-
-        # Draw in black and white
-        output = cv2.cvtColor(output, cv2.COLOR_BGR2GRAY)
-
-        # Show the stream
-        cv2.imshow("Stream", output)
-        k = cv2.waitKey(1) & 0xFF
-        if k == ord("["):
-            alpha = max(alpha-0.05, 0)
-        if k == ord("]"):
-            alpha = min(alpha+0.05, 1)
-        if k == ord("f"):
-            fullscreen = not fullscreen
-            if fullscreen:
-                cv2.setWindowProperty("Stream", cv2.WND_PROP_FULLSCREEN,
-                                      cv2.WINDOW_FULLSCREEN)
-            else:
-                cv2.setWindowProperty("Stream",cv2.WND_PROP_AUTOSIZE,
-                                               cv2.WINDOW_NORMAL)
-                cv2.resizeWindow("Stream", vid.res[0], vid.res[1])
-
-        if k == 27:
-            break
-
-    vid.stop()
-    cv2.destroyAllWindows()
-    cv2.waitKey(1)
+        self.drawer()
 
 
-if __name__ == "__main__":
-      stream()
+    def draw_stream(self):
+
+        lineprint("Streaming video..")
+
+        self.vid = VideoIn(system=self.system, framerate=self.framerate,
+                           vidsize=self.vidsize, rotation=self.rotation,
+                           cameratype=self.cameratype)
+        self.vid.start()
+
+        if self.overlay:
+            h, w, _ = self.vid.read().shape
+            self.overlayimg = imgresize(self.overlayimg, resize=1, dims=(w,h))
+
+        while True:
+            self.img = self.vid.read()
+
+            if self.overlay:
+                overlay = self.img.copy()
+                overlay[0:h,0:w] = self.overlayimg
+                cv2.addWeighted(overlay, self.alpha, self.img, 1-self.alpha, 0, self.img)
+            if self.cross:
+                draw.draw_cross(self.img, pt2 = self.vid.res)
+            if self.m.twoPoint is not None:
+                draw.draw_crosshair(self.img, self.m.pos)
+            if self.m.posDown is not None:
+                cv2.rectangle(self.img, self.m.posDown, self.m.pos,
+                              self.tempcol, 2)
+            if self.m.posUp is not None:
+                cv2.rectangle(self.img, self.m.pts[-1], self.m.posUp,
+                              self.col, 2)
+            cv2.imshow("Image", self.img)
+
+            k = cv2.waitKey(self.waitms) & 0xFF
+            if k == ord("o"):
+                self.overlay = not self.overlay
+            if k == ord("c"):
+                self.cross = not self.cross
+            if k == ord("f"):
+                self.fullscreen = not self.fullscreen
+                if self.fullscreen:
+                    cv2.setWindowProperty("Image", cv2.WND_PROP_FULLSCREEN,
+                                          cv2.WINDOW_FULLSCREEN)
+                else:
+                    cv2.setWindowProperty("Image", cv2.WND_PROP_AUTOSIZE,
+                                          cv2.WINDOW_NORMAL)
+                    cv2.resizeWindow("Image", self.vid.res[0], self.vid.res[1])
+            if k == ord("s"):
+                if self.m.twoPoint is not None:
+                    self.m.twoPoint = checkroi(self.m.twoPoint, self.vid.res)
+                    self.roi = roi_to_zoom(self.m.twoPoint, self.vid.res)
+                    lineprint("roi "+str(self.roi)+" stored..")
+                else:
+                    lineprint("Nothing to store..")
+            if k == ord("e"):
+                self.m.posUp = None
+                self.roi = False
+                lineprint("roi data erased..")
+            if k == ord("z"):
+                if self.m.twoPoint is not None:
+                    lineprint("Creating zoomed image..")
+                    self.stream = False
+                    break
+            if self.overlay and k == ord("["):
+                self.alpha = max(self.alpha-0.05, 0)
+            if self.overlay and k == ord("]"):
+                self.alpha = min(self.alpha+0.05, 1)
+            if k == 27:
+                lineprint("User exited..")
+                self.exit = True
+                break
+
+        self.vid.stop()
+        time.sleep(1)
+
+
+    def drawer(self):
+        while True:
+            if self.stream:
+                self.draw_stream()
+
+            if not self.stream:
+                cv2.namedWindow("Zoomed", cv2.WINDOW_NORMAL)
+                cv2.setWindowProperty("Zoomed", cv2.WND_PROP_AUTOSIZE,
+                                      cv2.WINDOW_NORMAL)
+                while True:
+                    self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
+                                        crop=self.m.twoPoint, rotation=self.rotation,
+                                        cameratype=self.cameratype)
+                    zimg = self.vid2.img()
+                    cv2.imshow("Zoomed", zimg)
+                    cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
+                    k = cv2.waitKey(0) & 0xFF
+                    if k == 27:
+                        break
+                k = 255
+                cv2.destroyWindow("Zoomed")
+                self.stream = True
+
+            if self.exit:
+                cv2.waitKey(1)
+                cv2.destroyAllWindows()
+                for i in range(5):
+                    cv2.waitKey(1)
+                break
+
+def strm():
+
+    """To run the stream function from the command line"""
+
+    parser = argparse.ArgumentParser(prog="Stream",
+             description=Stream.__doc__,
+             formatter_class=argparse.RawDescriptionHelpFormatter)
+
+    parser.add_argument("-c","--cameratype",metavar="")
+    parser.add_argument("-f","--framerate",metavar="")
+    parser.add_argument("-v","--vidsize",metavar="")
+    parser.add_argument("-r","--rotation",metavar="")
+    parser.add_argument("-o","--imgoverlay",metavar="")
+
+    args = parser.parse_args()
+    Stream(framerate = args.framerate, vidsize = args.vidsize,
+           rotation = args.rotation, cameratype = args.cameratype,
+           imgoverlay = args.imgoverlay)
