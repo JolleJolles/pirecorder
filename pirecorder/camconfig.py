@@ -90,6 +90,7 @@ def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
     cv2.createTrackbar("sharpness", "Config", set_shar, 200, nothing)
 
     rawCapture = picamera.array.PiRGBArray(cam, size=cam.resolution)
+    lineprint("Streaming interactive video..")
     with rawCapture as stream:
         while True:
             cam.capture(stream, format="bgr", use_video_port=True)
@@ -158,6 +159,7 @@ def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
                           "shutterspeed": shutterspeed}
                 break
             if k == 27:
+                lineprint("User exited..")
                 break
 
         rawCapture.close()
