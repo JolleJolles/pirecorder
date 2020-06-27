@@ -182,5 +182,5 @@ def config():
     parser.add_argument("-v","--vidsize", default=0.4, metavar="")
 
     args = parser.parse_args()
-    camconfig(auto = args.auto, iso = args.iso, framerate = args.framerate,
+    Camconfig(auto = args.auto, iso = args.iso, framerate = args.framerate,
               res = args.res, vidsize = args.vidsize)
