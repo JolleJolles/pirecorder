@@ -21,7 +21,7 @@ import argparse
 
 from pythutils.mediautils import picamconv
 from pythutils.mathutils import maxrect
-from pythutils.sysutils import checkfrac, isrpi
+from pythutils.sysutils import checkfrac, isrpi, lineprint
 
 def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
               res = (1640, 1232), vidsize = 0.4):
