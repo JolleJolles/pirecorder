@@ -11,7 +11,7 @@ permalink: /
 *pirecorder* is a package to facilitate controlled and automated image and video recording for the raspberry pi, specifically developed with the biological sciences in mind.
 {: .fs-6 .fw-300 }
 
-![pirecorder logo](/assets/images/pirecorder-logo-large.jpg)
+![pirecorder logo](/pirecorder/assets/images/pirecorder-logo-large.jpg)
 
 This website provides detailed documentation for setting-up your raspberry pi and installing and working with *pirecorder*. The guides provided here should also enable you to start working with your raspberry pi and making automated recordings, even if you have very limited knowledge of the raspberry pi and/or Python.
 
