@@ -178,6 +178,7 @@ def config():
 
     parser.add_argument("-a","--auto", default=None, metavar="")
     parser.add_argument("-i","--iso", default=200, metavar="")
+    parser.add_argument("-f","--framerate", default=20, metavar="")
     parser.add_argument("-r","--res", default=(1640,1232), metavar="")
     parser.add_argument("-v","--vidsize", default=0.4, metavar="")
 
