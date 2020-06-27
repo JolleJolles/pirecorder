@@ -32,8 +32,11 @@ remote_theme:  pmarsceill/just-the-docs
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
-exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
-permalink: :year/:month/:day/:title/
+  - jekyll-include-cache
+
+include:
+  - _docs
+
 
 # Theme settings
 logo: "/assets/images/pirecorder-logo-small.png"
