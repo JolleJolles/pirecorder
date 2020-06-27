@@ -95,7 +95,7 @@ class PiRecorder:
 
         self.config = LocalConfig(self.configfile, compact_form = True)
         if not os.path.isfile(self.configfile):
-            lineprint("Config file "+configfile+"not found, new file created..")
+            lineprint("Config file "+configfile+" not found, new file created..")
             for section in ["rec","cam","cus","img","vid"]:
                 if section not in list(self.config):
                     self.config.add_section(section)

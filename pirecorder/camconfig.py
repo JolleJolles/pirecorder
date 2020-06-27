@@ -17,21 +17,26 @@ limitations under the License.
 
 import cv2
 import time
+import argparse
 
 from pythutils.mediautils import picamconv
 from pythutils.mathutils import maxrect
-from pythutils.sysutils import checkfrac
+from pythutils.sysutils import checkfrac, isrpi
 
 def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
               res = (1640, 1232), vidsize = 0.4):
 
     """Opens a video stream to configure a wide array of camera parameters"""
 
-    def nothing(x):
-        pass
+    if not isrpi():
+        lineprint("PiRecorder only works on a raspberry pi. Exiting..")
+        return
 
     import picamera
     import picamera.array
+
+    def nothing(x):
+        pass
 
     if cam == None:
         cam = picamera.PiCamera()

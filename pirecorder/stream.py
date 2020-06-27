@@ -228,11 +228,11 @@ def strm():
              description=Stream.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("-c","--cameratype",metavar="")
-    parser.add_argument("-f","--framerate",metavar="")
-    parser.add_argument("-v","--vidsize",metavar="")
-    parser.add_argument("-r","--rotation",metavar="")
-    parser.add_argument("-o","--imgoverlay",metavar="")
+    parser.add_argument("-c","--cameratype", default="v2", metavar="")
+    parser.add_argument("-f","--framerate", default=8, metavar="")
+    parser.add_argument("-v","--vidsize", default=0.2, metavar="")
+    parser.add_argument("-r","--rotation", default=0, metavar="")
+    parser.add_argument("-o","--imgoverlay", default=None, metavar="")
 
     args = parser.parse_args()
     Stream(framerate = args.framerate, vidsize = args.vidsize,
