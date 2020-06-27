@@ -17,8 +17,7 @@ limitations under the License.
 
 import cv2
 import time
-import picamera
-import picamera.array
+
 from pythutils.mediautils import picamconv
 from pythutils.mathutils import maxrect
 from pythutils.sysutils import checkfrac
@@ -30,6 +29,9 @@ def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
 
     def nothing(x):
         pass
+
+    import picamera
+    import picamera.array
 
     if cam == None:
         cam = picamera.PiCamera()
