@@ -618,6 +618,9 @@ def rec():
                         action="store",
                         help="pirecorder configuration file")
     args = parser.parse_args()
+    if not isrpi():
+        lineprint("PiRecorder only works on a raspberry pi. Exiting..")
+        return
     rec = PiRecorder(args.configfile)
     rec.settings(internal = True)
     rec.record()
