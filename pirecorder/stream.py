@@ -229,9 +229,9 @@ def strm():
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument("-c","--cameratype", default="v2", metavar="")
-    parser.add_argument("-f","--framerate", default=8, metavar="")
-    parser.add_argument("-v","--vidsize", default=0.2, metavar="")
-    parser.add_argument("-r","--rotation", default=0, metavar="")
+    parser.add_argument("-f","--framerate", default=8, type=int, metavar="")
+    parser.add_argument("-v","--vidsize", default=0.2, type=float, metavar="")
+    parser.add_argument("-r","--rotation", default=0, type=int, metavar="")
     parser.add_argument("-o","--imgoverlay", default=None, metavar="")
 
     args = parser.parse_args()

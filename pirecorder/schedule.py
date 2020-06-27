@@ -196,7 +196,7 @@ def sch():
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument("-j","--jobname", default=None, metavar="")
-    parser.add_argument("-p","--timeplan",default = None, metavar="")
+    parser.add_argument("-p","--timeplan",default=None, metavar="")
     parser.add_argument("-e","--enable", default=None, metavar="")
     parser.add_argument("-s","--showjobs", default=False, metavar="")
     parser.add_argument("-d","--delete", default=None, metavar="")

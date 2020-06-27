@@ -226,9 +226,9 @@ def conv():
     parser.add_argument("-t", "--type", default=".h264", metavar="")
     parser.add_argument("-w", "--withframe", default="False", metavar="")
     parser.add_argument("-d", "--delete", default="False", metavar="")
-    parser.add_argument("-p", "--pools", default=4, metavar="")
-    parser.add_argument("-r", "--resizeval", default=1, metavar="")
-    parser.add_argument("-f", "--imgfps", default=25, metavar="")
+    parser.add_argument("-p", "--pools", default=4, type=int, metavar="")
+    parser.add_argument("-r", "--resizeval", default=1, type=float, metavar="")
+    parser.add_argument("-f", "--imgfps", default=25, type=int, metavar="")
 
     args = parser.parse_args()
     args.withframe = ast.literal_eval(args.withframe)
