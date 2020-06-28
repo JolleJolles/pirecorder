@@ -1,5 +1,5 @@
 ---
-title: pirecorder: Controlled and automated image and video recording with the raspberry pi
+title: 'pirecorder: Controlled and automated image and video recording with the raspberry pi'
 tags:
   - Python
   - raspberry pi
