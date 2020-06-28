@@ -46,6 +46,9 @@ Builds heavily on the picamera package [@Jones2018]
 
 For example Aidukas et al [@Aidukas2019] captured raw 10-bit Bayer images using the picamera package for sub-micron resolution microscopy.
 
+A figure here:
+\autoref{fig:example}.
+
 
 [detailed documentation](https://jollejolles.github.io/pirecorder/), pirecorder includes a set of Jupyter Notebooks with examples.
 
@@ -83,6 +86,7 @@ rec.schedule(timeplan = "*/10 */2 10-15 * *", jobname = "rec1")
 picamera.Convert(indir = "pirecorder/recordings")
 ```
 
+![Caption for example figure.\label{fig:example}](testfigure.jpg)
 
 # Acknowledgements
 This research was made possible by a postdoctoral fellowship from the the Alexander von Humboldt-Stiftung, a postdoctoral fellowship from the Zukunfstkolleg, Institute for Advanced Study, and a research grant from the Dr. J.L. Dobberke Foundation.
