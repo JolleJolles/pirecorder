@@ -29,6 +29,11 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt-get autoremove -y
 ```
 
+Also make sure your firmware is fully up to date to get the latest drivers to work with the picamera
+```
+sudo apt-get dist-upgrade -y
+```
+
 ## Enable and test the camera
 
 To be able to use the camera we need to enable it in the configuration menu. Enter:

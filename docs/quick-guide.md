@@ -23,13 +23,17 @@ This guide is meant to get you up and running and using pirecorder in no time. W
 ```
 sudo apt-get update && sudo apt-get upgrade -y
 ```
-4. Make sure the camera is enabled
+4. Also make sure your firmware is fully up to date to get the latest drivers to work with the picamera
+```
+sudo apt-get dist-upgrade -y
+```
+5. Make sure the camera is enabled
 ```
 sudo raspi-config
 ```
 go to `5 Interfacing options`, then `P1 Camera`, and click `yes`. Now reboot your raspberry pi.
 
-4. Make sure the camera is properly connected:
+6. Make sure the camera is properly connected:
 ```
 raspistill -t 0 -k
 ```
