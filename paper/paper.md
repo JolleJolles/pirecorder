@@ -33,22 +33,17 @@ bibliography: paper.bib
 
 *Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.*
 
-Testing refs
-`@Aidukas:2019` did this and this
-this is a sentence `[@Aidukas:2019]`
-multiple refs `[@Jolles:2018; @Jolles:2019]`
-
 @Aidukas2019 did this and this
 this is a sentence @Aidukas2019
 multiple refs [@Jolles2018; @Jolles2019]
 
 Builds heavily on the picamera package [@Jones2018]
 
-For example Aidukas et al [@Aidukas2019] captured raw 10-bit Bayer images using the picamera package for sub-micron resolution microscopy.
+For example @Aidukas2019 captured raw 10-bit Bayer images using the picamera package for sub-micron resolution microscopy.
 
-A figure here:
-\autoref{fig:example}.
-
+Here is a figure:
+\autoref{fig:example}
+![Caption for example figure.\label{fig:example}](testfigure.jpg)
 
 [detailed documentation](https://jollejolles.github.io/pirecorder/), pirecorder includes a set of Jupyter Notebooks with examples.
 
@@ -86,7 +81,7 @@ rec.schedule(timeplan = "*/10 */2 10-15 * *", jobname = "rec1")
 picamera.Convert(indir = "pirecorder/recordings")
 ```
 
-![Caption for example figure.\label{fig:example}](testfigure.jpg)
+
 
 # Acknowledgements
 This research was made possible by a postdoctoral fellowship from the the Alexander von Humboldt-Stiftung, a postdoctoral fellowship from the Zukunfstkolleg, Institute for Advanced Study, and a research grant from the Dr. J.L. Dobberke Foundation.
