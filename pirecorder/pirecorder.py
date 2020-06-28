@@ -592,7 +592,8 @@ class PiRecorder:
                 session = "" if self.config.rec.rectype == "vid" else session
                 filename = self.filename+strftime("%H%M%S")+session+self.filetype
                 self.cam.start_recording(filename, resize = self.resize,
-                                         quality = self.config.vid.vidquality)
+                                         quality = self.config.vid.vidquality,
+                                         level = "4.2")
                 lineprint("Start recording "+filename)
                 self.cam.wait_recording(self.config.vid.vidduration+self.config.vid.viddelay)
                 self.cam.stop_recording()

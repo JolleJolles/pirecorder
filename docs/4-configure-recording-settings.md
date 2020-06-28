@@ -70,7 +70,9 @@ rec.record()
 ## Settings for video recording
 For recording video you can set the `vidduration` and `viddelay` to get the right recording duration. The viddelay is extra recording time in seconds that will be added to vidduration. Its use is to add a standard amount of time to the video that can be easily cropped or skipped, such as for tracking, but still provides useful information.
 
-To set the resolution for video recording use the `viddims` parameter. Note that the maximum video resolution for all currently existing raspberry pi camera's ("v1","v2" and "hq") is 1080p, but that it is also possible to record in a different format as long as the total number of pixels does not exceed that, such as 1640 x 1232. To set the framerate of the video use the `vidfps` parameter. With smaller resolutions higher framerates are possible.
+To set the resolution for video recording use the `viddims` parameter. Note that the maximum video resolution for all currently existing raspberry pi camera's ("v1","v2" and "hq") is 1080p, but that it is also possible to record in a different format as long as the total number of pixels does not exceed that, such as 1640 x 1232.
+
+To set the framerate of the video use the `vidfps` parameter. With smaller resolutions higher framerates are possible, see [this page](https://picamera.readthedocs.io/en/release-1.13/fov.html#camera-modes) for more information. 40fps with the max resolution of 1640 x 1232, and 90fps with 1280 x 720 is possible but may result in dropped frame, so it is safer to stay just slightly below that.
 
 The `vidquality` parameter specifies the quality that the h264 encoder should attempt to maintain. Use values between 10 and 40, where 10 is extremely high quality, and 40 is extremely low.
 
