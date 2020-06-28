@@ -169,7 +169,7 @@ class PiRecorder:
         if auto or self.config.cam.automode:
             self.cam.shutter_speed = 0
             sleep(2)
-        if self.cam.framerate >= 6:
+        elif self.cam.framerate >= 6:
             sleep(6) if self.cam.framerate > 1.6 else sleep(10)
         else:
             sleep(2)
@@ -584,7 +584,8 @@ class PiRecorder:
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
             # Temporary fix for flicker at start of (first) video
-            self.cam.start_recording(BytesIO(), format="h264", resize=self.resize)
+            self.cam.start_recording(BytesIO(), format = "h264",
+                                     resize = self.resize, level = "4.2")
             self.cam.wait_recording(2)
             self.cam.stop_recording()
 
