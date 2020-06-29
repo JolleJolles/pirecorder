@@ -159,7 +159,8 @@ class PiRecorder:
             self.cam.zoom = literal_eval(self.config.cus.roi)
             w = int(self.cam.resolution[0]*self.cam.zoom[2])
             h = int(self.cam.resolution[1]*self.cam.zoom[3])
-            self.resize = picamconv((w,h))
+            if self.config.rec.rectype in ["vid","vidseq"]:
+                self.resize = picamconv((w,h))
 
         self.longexpo = False if self.cam.framerate >= 6 else True
 
