@@ -33,11 +33,11 @@ bibliography: paper.bib
 
 *Mention (if applicable) a representative set of past or ongoing research projects using the software and recent scholarly publications enabled by it.*
 
-@Aidukas2019 did this and this
-this is a sentence @Aidukas2019
-multiple refs [@Jolles2018; @Jolles2019]
+The Raspberry Pi is a single-board, low-cost micro-computer built on open-source principles. This low-cost computer, developed by the Raspberry Pi Foundation, a UK charity that aims to educate people in coding and computing, is currently the most popular micro-computer available. The Raspberry Pi is also increasingly taken up by the scientific community [@Fletcher2019] and used as a central component in research projects across a range of fields. One of the foremost uses of the Raspberry Pi is image and video recording. 
 
-Builds heavily on the picamera package [@Jones2018]
+Read barcodes on animals. [@Alarcon-Nieto2018] used multiple Raspberry Pi's as part of a long-term, automated monitoring system of birds housed in outdoor aviaries and were able to track individuals based small barcoded backpacks.
+
+Builds heavily on the picamera package [@Jones2018], and uses OpenCV [@Bradski2000] for user-interfaces to dynamically control the raspberry pi camera settings.
 
 For example @Aidukas2019 captured raw 10-bit Bayer images using the picamera package for sub-micron resolution microscopy.
 
@@ -49,37 +49,6 @@ Here is a figure:
 
 Used successfully for the controlled and repeated video recording of individually housed fish over multi-week period [@Jolles2019] as well as groups of fish [@Jolles2018], which enabled the subsequent tracking of individual identities. Also more recently we filmed 24 tanks of fish every day for 4+ months from dawn till dusk.
 
-```python
-import pirecorder
-
-# Initiate the recorder class
-rec = pirecorder.PiRecorder(configfile = "myconfig.conf")
-
-# Position and calibrate the camera; add region of interest
-rec.stream()
-
-# Dynamically set the camera settings
-rec.camconfig()
-
-# Set configuration manually
-rec.settings(recdir = "pirecorder/recordings", subdirs = False, label = "test", \
-             rectype = "img", rotation = 0, brighttune = 0, roi = None, \
-             cameratype = None, imgdims = (2592,1944), imgquality = 50, \
-             imgwait = 5.0, imgnr = 12, imgtime = 60, viddims = (1640,1232), \
-             vidduration = 10, viddelay = 10, vidfps=24, vidquality = 11, \
-             automode = True, gains = (1.0,2.5), iso = 200, compensation = 0,  \
-             brightness = 45, contrast = 10, saturation = 0, sharpness = 0,
-             shutterspeed = 8000)
-
-# Run a recording
-rec.record()
-
-# Schedule a recording
-rec.schedule(timeplan = "*/10 */2 10-15 * *", jobname = "rec1")
-
-# Convert recordings
-picamera.Convert(indir = "pirecorder/recordings")
-```
 
 
 
