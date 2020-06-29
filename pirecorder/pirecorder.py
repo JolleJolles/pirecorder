@@ -144,7 +144,7 @@ class PiRecorder:
         self.cam.exposure_compensation = self.config.cam.compensation
 
         if self.config.rec.rectype in ["img","imgseq"]:
-            self.cam.resolution = picamconv(literal_eval(self.config.img.imgdims))
+            self.cam.resolution = literal_eval(self.config.img.imgdims)
             self.cam.framerate = self.config.img.imgfps
         if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = picamconv(literal_eval(self.config.vid.viddims))
@@ -269,33 +269,35 @@ class PiRecorder:
         Parameters
         ---------------
         recdir : str, default = "pirecorder/recordings"
-            The directory where media will be stored. Default is "recordings". If
-            different, a folder with name corresponding to location will be created
-            inside the home directory. If no name is provided (""), the files are
-            stored in the home directory. If "NAS" is provided it will additionally
-            check if the folder links to a mounted drive.
+            The directory where media will be stored. Default is "recordings".
+            If different, a folder with name corresponding to location will be
+            created inside the home directory. If no name is provided (""), the
+            files are stored in the home directory. If "NAS" is provided it will
+            additionally check if the folder links to a mounted drive.
         label : str, default = "test"
-            Label that will be associated with the specific recording and stored in
-            the filenames.
+            Label that will be associated with the specific recording and stored
+            in the filenames.
         rectype : ["img", "imgseq", "vid", "vidseq"], default = "img"
-            Recording type, either a single image or video or a sequence of images
-            or videos.
+            Recording type, either a single image or video or a sequence of
+            images or videos.
         automode : bool, default = True
-            If the shutterspeed and white balance should be set automatically and
-            dynamically for each recording.
+            If the shutterspeed and white balance should be set automatically
+            and dynamically for each recording.
         cameratype : str, default = None
-            The raspberry cameratype used. Can be either None, "v1", "v2", or "hq"
-            to indicate the different models and will help set the maximum recording
-            resolution.
+            The raspberry cameratype used. Can be either None, "v1", "v2", or
+            "hq" to indicate the different models and will help set the maximum
+            recording resolution.
         rotation : int, default = 0
-            Custom rotation specific to the Raspberry Pi, should be either 0 or 180.
+            Custom rotation specific to the Raspberry Pi, should be either 0 or
+            180.
         brighttune : int, default = 0
             A rpi-specific brightness compensation factor to standardize light
             levels across multiple rpi"s, an integer between -10 and 10.
         roi : tuple, default = None
-            Region of interest to be used for recording. Consists of coordinates of
-            top left and bottom right coordinate of a rectangular area encompassing
-            the region of interest. Can be set with the set_roi() method.
+            Region of interest to be used for recording. Consists of coordinates
+            of top left and bottom right coordinate of a rectangular area
+            encompassing the region of interest. Can be set with the set_roi()
+            method.
         gains : tuple, default = (1.0, 2.5)
             Sets the blue and red gains to acquire the desired white balance.
             Expects a tuple of floating values (e.g. "(1.5, 1.85)"). Can be
@@ -305,72 +307,77 @@ class PiRecorder:
             Sets the brightness level of the camera. Expects an integer value
             between 0 and 100. Higher values result in brighter images.
         contrast : int, default = 20
-            Sets the contrast for the recording. Expects an integer value between 0
-            and 100. Higher values result in images with higher contrast.
+            Sets the contrast for the recording. Expects an integer value
+            between 0 and 100. Higher values result in images with higher
+            contrast.
         saturation : int, default 0
-            Sets the saturation level for the recording. Expects an integer value
-            between -100 and 100.
+            Sets the saturation level for the recording. Expects an integer
+            value between -100 and 100.
         iso : int, default = 200
             Sets the camera ISO value. Should be one of the following values:
-            [100, 200, 320, 400, 500, 640, 800]. Higher values result in brighter
-            images but with higher gain.
+            [100, 200, 320, 400, 500, 640, 800]. Higher values result in
+            brighter images but with higher gain.
         sharpness : int, default = 50
-            Sets the sharpness of the camera. Expects an integer value between -100
-            and 100. Higher values result in sharper images.
+            Sets the sharpness of the camera. Expects an integer value between
+            -100 and 100. Higher values result in sharper images.
         compensation : int, default = 0
             Adjusts the camera’s exposure compensation level before recording.
             Expects a value between -25 and 25, with each increment representing
             1/6th of a stop and thereby a brighter image.
         shutterspeed : int, detault = 10000
-            Sets the shutter speed of the camera in microseconds, i.e. a value of
-            10000 would indicate a shutterspeed of 1/100th of a second. A longer
-            shutterspeed will result in a brighter image but more motion blur.
-            Important to consider is that the framerate of the camera will be
-            adjusted based on the shutterspeed. At low shutterspeeds (i.e. above
-            ~ 0.2s) the required waiting time between images increases considerably
-            due to the raspberry pi hardware. To control for this, automatically a
-            standard `imgwait` time should be chosen that is at least 6x the
-            shutterspeed. For example, for a shutterspeed of 300000 imgwait should
-            be > 1.8s.
+            Sets the shutter speed of the camera in microseconds, i.e. a value
+            of 10000 would indicate a shutterspeed of 1/100th of a second. A
+            longer shutterspeed will result in a brighter image but more motion
+            blur. Important to consider is that the framerate of the camera will
+            be adjusted based on the shutterspeed. At low shutterspeeds (i.e.
+            above ~ 0.2s) the required waiting time between images increases
+            considerably due to the raspberry pi hardware. To control for this,
+            automatically a standard `imgwait` time should be chosen that is at
+            least 6x the shutterspeed. For example, for a shutterspeed of 300000
+            imgwait should be > 1.8s.
         imgdims : tuple, default = (2592, 1944)
-            The resolution of the images to be taken in pixels. The default is the
-            max resolution for the v1.5 model, the v2 model has a max resolution of
-            3280 x 2464 pixels, and the hq camera 4056 x 3040 pixels.
+            The resolution of the images to be taken in pixels. The default is
+            the max resolution for the v1.5 model, the v2 model has a max
+            resolution of 3280 x 2464 pixels, and the hq camera 4056 x 3040
+            pixels.
         viddims : tuple, default = (1640, 1232)
-            The resolution of the videos to be taken in pixels. The default is the
-            max resolution that does not return an error for this mode.
+            The resolution of the videos to be taken in pixels. The default is
+            the max resolution that does not return an error for this mode.
         imgfps : int, default = 1
-            The framerate for recording images. Will be set automatically based on
-            the imgwait setting so should not be set by user.
+            The framerate for recording images. Will be set automatically based
+            on the imgwait setting so should not be set by user.
         vidfps : int, default = 24
             The framerate for recording video.
         imgwait : float, default = 5.0
-        	The delay between subsequent images in seconds. When a delay is provided
-          	that is less than ~x5 the shutterspeed, the camera processing time will
-            take more time than the provided imgwait parameter and so images are
-            taken immideately one after the other. To take a sequence of images at
-            the exact right delay interval the imgwait parameter should be at least
-            5x the shutterspeed (e.g. shutterspeed of 400ms needs imgwait of 2s).
+        	The delay between subsequent images in seconds. When a delay is
+            provided that is less than ~x5 the shutterspeed, the camera
+            processing time will take more time than the provided imgwait
+            parameter and so images are taken immideately one after the other.
+            To take a sequence of images at the exact right delay interval the
+            imgwait parameter should be at least 5x the shutterspeed (e.g.
+            shutterspeed of 400ms needs imgwait of 2s).
         imgnr : int, default = 12
-            The number of images that should be taken. When this number is reached,
-            the recorder will automatically terminate.
+            The number of images that should be taken. When this number is
+            reached, the recorder will automatically terminate.
         imgtime : integer, default = 60
-            The time in seconds during which images should be taken. The minimum of
-            a) imgnr and b) nr of images based on imgwait and imgtime will be used.
+            The time in seconds during which images should be taken. The minimum
+            of a) imgnr and b) nr of images based on imgwait and imgtime will be
+            used.
         imgquality : int, default = 50
-            Specifies the quality that the jpeg encoder should attempt to maintain.
-            Use values between 1 and 100, where higher values are higher quality.
+            Specifies the quality that the jpeg encoder should attempt to
+            maintain. Use values between 1 and 100, where higher values are
+            higher quality.
         vidduration : int, default = 10
             Duration of video recording in seconds.
         viddelay : int, default = 0
-            Extra recording time in seconds that will be added to vidduration. Its
-            use is to add a standard amount of time to the video that can be easily
-            cropped or skipped, such as for tracking, but still provides useful
-            information, such as behaviour during acclimation.
+            Extra recording time in seconds that will be added to vidduration.
+            Its use is to add a standard amount of time to the video that can be
+            easily cropped or skipped, such as for tracking, but still provides
+            useful information, such as behaviour during acclimation.
         vidquality : int, default = 11
-            Specifies the quality that the h264 encoder should attempt to maintain.
-            Use values between 10 and 40, where 10 is extremely high quality, and
-            40 is extremely low.
+            Specifies the quality that the h264 encoder should attempt to
+            maintain. Use values between 10 and 40, where 10 is extremely high
+            quality, and 40 is extremely low.
         """
 
         if "recdir" in kwargs:
