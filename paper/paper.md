@@ -25,9 +25,9 @@ Controlled and automated image and video recording is a fundamental component of
 
 So far, researchers tend to use custom-build solutions around the native software that comes with the raspberry pi, specifically, `raspistill` and `raspivid`, which can take still photographs and videos from the command line, and `picamera` [@Jones2017] to control the raspberry pi camera module from within Python. Also software exists to monitor video streams and run motion-triggered recordings ([Motion](https://motion-project.github.io)). However, so far an easy-to-use solution for image and video recording with the raspberry pi had been lacking, especially with the consistency and control that is often required in the natural sciences. `pirecorder` aims to fill this gap.
 
-![The various modules of the pirecorder package put to work u.\label{fig:Figure1}](Figure1.jpg)
-
 `pirecorder` is a Python package build on the picamera [@Jones2017] and OpenCV [@Bradski2000] libraries that consists of the main `PiRecorder` module to configure and run recordings, a live `stream` module with user interface to calibrate the raspberry pi camera position, focus, and potential region of interest, a `camconfig` module to dynamically configure the camera settings using a live video stream, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos with the option to resize, add timestamps, and monitor folders for automatic conversion.
+
+![](Figure1.jpg)
 
 `pirecorder` makes it very easy to record single images and videos, timelapses, and standardized sequences of videos with automatic filenaming. It is possible to set a wide range of camera and recording settings that are then automatically used for future recordings without further user input. Multiple configuration files can be created and called for specific recordings and easily edited directly or interactively via a live video stream. Recordings can thereby be easily initated remotely such as via an SSH connection to the raspberry pi, or scheduled to start automatically at specific times in the future using simple-to-use monitoring commands.
 
