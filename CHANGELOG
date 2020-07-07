@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2020-07-07 version 3.1.0
+    * Added accompanying academic paper for pirecorder, submitted to The
+      Journal of Open Source Software
+
 2020-06-29 version 3.0.2
     * Updated recording mode to be able to record at higher framerates and
     * updated documentation with a note about high framerates.
@@ -29,8 +33,6 @@ complete changelog, see https://github.com/jollejolles/pirecorder/commits/
       recording and within each (video) recording as well as a function to get
       the optimal shutterspeed and white balance parameters and store them in
       the configuration file to be used later as static parameters.
-    - Wrote accompanying academic paper for pirecorder, submitted to The
-      Journal of Open Source Software
 
     Improvements:
     * Fully updated and extended the jupyter notebook example file with more
