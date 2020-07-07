@@ -1,5 +1,3 @@
-[![PyPI version](https://badge.fury.io/py/pirecorder.svg)](https://badge.fury.io/py/pirecorder) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2529515.svg)](https://doi.org/10.5281/zenodo.2529515)
-
 # pirecorder
 **A Python package for controlled and automated image and video recording with the raspberry pi**
 
