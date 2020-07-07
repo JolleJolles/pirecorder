@@ -1,10 +1,16 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
-Updates not yet in final release:
-    * Added steps to documentation to get the latest firmware
+2020-06-29 version 3.0.2
     * Updated recording mode to be able to record at higher framerates and
-      updated documentation with a note about high framerates.
+    * updated documentation with a note about high framerates.
+    * Fixed resolution for images not needing to be divisible by multiples of 16
+
+2020-06-28 version 3.0.1
+    * Added steps to documentation to get the latest firmware
+    * Updated recording mode to be able to record at higher framerates
+    * Small fix to schedule function logfile filenaming
+    * Small updates to documentation and website
 
 2020-06-27 version 3.0.0
     Major update with a large number of additions, improvements, and fixes.

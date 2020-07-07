@@ -64,7 +64,7 @@ class Convert:
         Float value to which the video should be resized.
     imgfps : int, default = 25
         Framerate for conversion of images to video.
-    sleeptime : 2, default = None
+    sleeptime : int, default = None
         Time in seconds between subsequent checks for files within a folder. The
         default value (None) only converts the current files.
     """
@@ -229,10 +229,12 @@ def conv():
     parser.add_argument("-p", "--pools", default=4, type=int, metavar="")
     parser.add_argument("-r", "--resizeval", default=1, type=float, metavar="")
     parser.add_argument("-f", "--imgfps", default=25, type=int, metavar="")
+    parser.add_argument("-s", "--sleeptime", default=None, type=int, metavar="")
 
     args = parser.parse_args()
     args.withframe = ast.literal_eval(args.withframe)
     args.delete = ast.literal_eval(args.delete)
     Convert(indir = args.indir, outdir = args.outdir, type = args.type,
             withframe = args.withframe, delete = args.delete, pools = args.pools,
-            resizeval = args.resizeval, imgfps = args.imgfps)
+            resizeval = args.resizeval, imgfps = args.imgfps,
+            sleeptime = args.sleeptime)

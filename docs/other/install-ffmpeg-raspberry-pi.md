@@ -56,11 +56,11 @@ git clone git://source.ffmpeg.org/ffmpeg --depth=1
 ```
 * Change to ffmpeg directory:
 ```
-cd ffmpg
+cd ffmpeg
 ```
 * Configure installation:
 ```
-./configure --arch=armel --target-os=linux --enable-gpl --enable-libx264 --enable-nonfree
+./configure --extra-ldflags="-latomic" --arch=armel --target-os=linux --enable-gpl --enable-omx --enable-omx-rpi --enable-libx264 --enable-nonfree
 ```
 * Make the installation:
 ```
@@ -77,10 +77,14 @@ There are many options available and many other ways to convert h264 videos with
 Note: If you are working with an older model of the raspberrypi (&lt; 3 B+) then you may not have 4 cores available. You will then have to change `make -j4` to `make -j`.
 
 ## Convert (h264) video
-Now you are ready to convert (h264) videos on your Raspberry Pi. To simply convert a single video:
+Now you are ready to convert (h264) videos on your Raspberry Pi. To convert a single video with ffmpeg:
 
 ```
 ffmpeg -i USER_VIDEO.h264 -vcodec copy USER_VIDEO.mp4
 ```
 
-The `Convert` class of the pirecorder package builds on ffmpeg and added a number of functionalities to make it easier to help you convert your media, especially as recorded with `pirecorder`. Read its documentation [here](https://github.com/JolleJolles/pirecorder/wiki/pirecorder-convert/).
+The `Convert` class of the pirecorder package builds on ffmpeg and added a number of functionalities to make it easier to help you convert your media, especially as recorded with `pirecorder`. Read its documentation [here](https://github.com/JolleJolles/pirecorder/wiki/pirecorder-convert/). For example, to convert a folder of videos, add frame numbers to the topleft corner of each video frame, and resize the video by half:
+
+```
+convert --indir VIDEOS --outdir CONVERTED --withframe True --resizeval 0.5
+```

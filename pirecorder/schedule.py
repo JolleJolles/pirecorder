@@ -51,7 +51,7 @@ class Schedule:
             pexec = sys.executable + " -c "
             pcomm1 = """'import pirecorder; """
             pcomm2 = """R=pirecorder.PiRecorder("%s"); R.record()'""" % configfile
-            log1 = " >> " + logfolder + "$(date +%y%m%d_$HOSTNAME)_"
+            log1 = " >> " + logfolder + "$(date +%y%m%d)_"
             log2 = str(self.jobname[4:])+".log 2>&1"
             self.task = pexec+pcomm1+pcomm2+log1+log2
         else:
