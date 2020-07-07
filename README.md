@@ -40,16 +40,16 @@ pip install git+https://github.com/jollejolles/pirecorder.git --upgrade
 
 ## Documentation
 For detailed documentation and tutorials about *pirecorder* and all its functionalities, see the dedicated website [jollejolles.github.io/pirecorder/](http://jollejolles.github.io/pirecorder/).
-1. [quick guide ](https://github.com/jollejolles/pirecorder/tree/master/docs/quick-guide.md)
-2. [the pirecorder package](https://github.com/jollejolles/pirecorder/tree/master/docs/pirecorder-package.md)
-3. [setting up your raspberry pi](https://github.com/jollejolles/pirecorder/tree/master/docs/1-setting-up-raspberry-pi.md)
-4. [installing pirecorder](https://github.com/jollejolles/pirecorder/tree/master/docs/2-installing-pirecorder.md)
-5. [position and calibrate the camera](https://github.com/jollejolles/pirecorder/tree/master/docs/3-position-and-calibrate-camera.md)
-6. [configure recording settings](https://github.com/jollejolles/pirecorder/tree/master/docs/4-configure-recording-settings.md)
-7. [configure camera settings](https://github.com/jollejolles/pirecorder/tree/master/docs/5-configure-camera-settings.md)
-8. [record and schedule recordings](https://github.com/jollejolles/pirecorder/tree/master/docs/6-recording-and-scheduling.md)
-9. [converting media](https://github.com/JolleJolles/jollejolles/tree/master/docs/7-convert-media.md)
-10. [run from the command line](https://github.com/jollejolles/pirecorder/tree/master/docs/8-run-from-commandline.md)
+1. [quick guide ](https://jollejolles.github.io/pirecorder/quick-guide.html)
+2. [the pirecorder package](https://jollejolles.github.io/pirecorder/pirecorder-package.html)
+3. [setting up your raspberry pi](https://jollejolles.github.io/pirecorder/1-setting-up-raspberry-pi.html)
+4. [installing pirecorder](https://jollejolles.github.io/pirecorder/2-installing-pirecorder.html)
+5. [position and calibrate the camera](https://jollejolles.github.io/pirecorder/3-position-and-calibrate-camera.html)
+6. [configure recording settings](https://jollejolles.github.io/pirecorder/4-configure-recording-settings.html)
+7. [configure camera settings](https://jollejolles.github.io/pirecorder/5-configure-camera-settings.html)
+8. [record and schedule recordings](https://jollejolles.github.io/pirecorder/6-recording-and-scheduling.html)
+9. [converting media](https://jollejolles.github.io/pirecorder/7-convert-media.html)
+10. [run from the command line](https://jollejolles.github.io/pirecorder/8-run-from-commandline.html)
 
 ## Development
 *pirecorder* is developed by Dr Jolle Jolles, a research fellow at the Max Planck Institute of Animal Behavior, and at the Zukunftskolleg, Institute of Advanced Study at the University of Konstanz.
