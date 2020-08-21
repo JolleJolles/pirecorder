@@ -229,7 +229,7 @@ class PiRecorder:
         if self.config.rec.rectype == "imgseq":
             date = strftime("%y%m%d")
             counter = "im{counter:05d}" if self.config.img.imgnr>999 else "im{counter:03d}"
-            time = "{timestamp:%H%M%S}"
+            time = "{timestamp:%H%M%S%f}"
             self.filename = "_".join([self.config.rec.label,date,self.host,counter,time])
             self.filename = self.filename+self.filetype
         else:
@@ -577,16 +577,20 @@ class PiRecorder:
 
         elif self.config.rec.rectype == "imgseq":
 
-            timepoint = datetime.now()
+            timept1 = datetime.now()
+            while True:
+                timept2 = datetime.now()
+                if timept2.second > timept1.second and timept2.microsecond >= 0:
+                    break
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
                 if i < self.config.img.imgnr-1:
-                    timepassed = (datetime.now() - timepoint).total_seconds()
+                    timepassed = (datetime.now() - timept2).total_seconds()
                     delay = max(0, self.config.img.imgwait - timepassed)
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
-                    timepoint = datetime.now()
+                    timept2 = datetime.now()
                 else:
                     lineprint("Captured "+img)
                     break
