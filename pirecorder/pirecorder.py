@@ -578,7 +578,6 @@ class PiRecorder:
         elif self.config.rec.rectype == "imgseq":
 
             timept1 = datetime.now()
-            print(timept1.second, timept1.microsecond)
             while True:
                 timept2 = datetime.now()
                 if timept2.second > timept1.second and timept2.microsecond >= 0:
