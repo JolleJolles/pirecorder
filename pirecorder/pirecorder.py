@@ -27,7 +27,7 @@ import argparse
 import numpy as np
 from io import BytesIO
 from ast import literal_eval
-from datetime import datetime
+from datetime import datetime, timedelta
 from socket import gethostname
 from fractions import Fraction
 from time import sleep, strftime
@@ -586,13 +586,17 @@ class PiRecorder:
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
                 if i < self.config.img.imgnr-1:
-                    timepassed = (datetime.now() - timept2).total_seconds()
-                    delay = max(0, self.config.img.imgwait - timepassed)
+                    #!temp blocked for experiment
+                    #timepassed = (datetime.now() - timept2).total_seconds()
+                    #delay = max(0, self.config.img.imgwait - timepassed)
+
                     #timeimgtaken = int(img.split("_")[-1:][0][6:-4])/1000000
                     #delay = self.config.img.imgwait-timeimgtaken
-                    lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
+                    nextimg = (datetime.now()+timedelta(seconds=2)).replace(microsecond=0)
+                    delay = (nextimg - datetime.now()).total_seconds()
+                    lineprint("Captured "+img+", sleeping "+str(round(delay,4))+"s..")
                     sleep(delay)
-                    timept2 = datetime.now()
+                    #timept2 = datetime.now()
                 else:
                     lineprint("Captured "+img)
                     break
