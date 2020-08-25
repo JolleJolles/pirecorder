@@ -590,7 +590,6 @@ class PiRecorder:
                     delay = max(0, self.config.img.imgwait - timepassed)
                     #timeimgtaken = int(img.split("_")[-1:][0][6:-4])/1000000
                     #delay = self.config.img.imgwait-timeimgtaken
-                    datetime.now()
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timept2 = datetime.now()
