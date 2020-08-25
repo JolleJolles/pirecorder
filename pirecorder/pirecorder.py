@@ -592,6 +592,7 @@ class PiRecorder:
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timept2 = datetime.now()
+                    print(timept2)
                 else:
                     lineprint("Captured "+img)
                     break
