@@ -588,8 +588,8 @@ class PiRecorder:
                 if i < self.config.img.imgnr-1:
                     #timepassed = (datetime.now() - timept2).total_seconds()
                     #delay = max(0, self.config.img.imgwait - timepassed)
-                    print(self.filename)
-                    delay = self.config.img.imgwait-(timept2.microsecond/1000000)
+                    timeimgtaken = int(img.split("_")[-1:][0][6:-4])/1000000
+                    delay = self.config.img.imgwait-timeimgtaken
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timept2 = datetime.now()
