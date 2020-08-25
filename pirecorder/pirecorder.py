@@ -578,10 +578,16 @@ class PiRecorder:
         elif self.config.rec.rectype == "imgseq":
 
             timept1 = datetime.now()
-            while True:
-                timept2 = datetime.now()
-                if timept2.second > timept1.second and timept2.microsecond >= 0:
-                    break
+            #while True:
+            #    timept2 = datetime.now()
+            #    if timept2.second > timept1.second and timept2.microsecond >= 0:
+            #        break
+            #! Start on the next full minute
+            nextmin = (datetime.now()+timedelta(minutes=1)).replace(second=0, microsecond=0)
+            delay = (nextmin - datetime.now()).total_seconds()
+            minute = str((datetime.now()+timedelta(minutes=1)).replace(second=0, microsecond=0).minute)
+            lineprint("Sleeping until start of min "+minute+"..")
+            sleep(delay)
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
