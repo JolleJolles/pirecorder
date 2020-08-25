@@ -586,8 +586,9 @@ class PiRecorder:
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
                 if i < self.config.img.imgnr-1:
-                    timepassed = (datetime.now() - timept2).total_seconds()
-                    delay = max(0, self.config.img.imgwait - timepassed)
+                    #timepassed = (datetime.now() - timept2).total_seconds()
+                    #delay = max(0, self.config.img.imgwait - timepassed)
+                    delay = self.config.img.imgwait-(timept2.microsecond/1000000)
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
                     timept2 = datetime.now()
