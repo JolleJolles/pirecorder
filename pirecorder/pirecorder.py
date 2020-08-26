@@ -599,7 +599,7 @@ class PiRecorder:
                     #timeimgtaken = int(img.split("_")[-1:][0][6:-4])/1000000
                     #delay = self.config.img.imgwait-timeimgtaken
                     nextimg = (timept1+timedelta(seconds=int(self.config.img.imgwait*i+self.config.img.imgwait))).replace(microsecond=0)
-                    delay = (nextimg - datetime.now()).total_seconds()
+                    delay = max(0,(nextimg - datetime.now()).total_seconds())
                     lineprint("Captured "+img+", sleeping "+str(round(delay,4))+"s..")
                     sleep(delay)
                     #timept2 = datetime.now()
