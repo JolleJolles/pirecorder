@@ -65,9 +65,9 @@ class PiRecorder:
 
     def __init__(self, configfile = "pirecorder.conf", logging = True):
 
-        if not isrpi():
-            lineprint("PiRecorder only works on a raspberry pi. Exiting..")
-            return
+        #if not isrpi():
+        #    lineprint("PiRecorder only works on a raspberry pi. Exiting..")
+        #    return
 
         self.system = "auto"
         self.host = gethostname()
