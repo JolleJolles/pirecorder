@@ -54,6 +54,8 @@ For detailed documentation and tutorials about *pirecorder* and all its function
 
 For an overview of version changes see the [CHANGELOG](https://github.com/jollejolles/pirecorder/blob/master/CHANGELOG) and for detailed changes see the [commits page](https://github.com/jollejolles/pirecorder/commits/). Please submit bugs or feature requests to the GitHub issue tracker [here](https://github.com/jollejolles/pirecorder/issues).
 
+Contributions to this package are welcomed via the usual pull request mechanism.
+
 ## Citing
 pirecorder was originally developed with the Biological Sciences in mind. If you use pirecorder in your research, please cite it as follows:
 

@@ -4,6 +4,7 @@ complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 Committed changes not yet in latest release:
     * Added statement to camconfig and documentation website regarding minimum
       recommended resolution
+    * Contribution statement added to README
 
 2020-07-07 version 3.1.0
     * Added accompanying academic paper for pirecorder, submitted to The
