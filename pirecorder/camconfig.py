@@ -26,7 +26,10 @@ from pythutils.sysutils import checkfrac, isrpi, lineprint
 def Camconfig(cam = None, auto = None, iso = 200, framerate = 20,
               res = (1640, 1232), vidsize = 0.4):
 
-    """Opens a video stream to configure a wide array of camera parameters"""
+    """
+    Opens a video stream to configure a wide array of camera parameters
+    Note: A screen resolution of at least 800x600 is strongly recommended
+    """
 
     if not isrpi():
         lineprint("PiRecorder only works on a raspberry pi. Exiting..")

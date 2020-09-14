@@ -46,6 +46,12 @@ go to `5 Interfacing options`, then `P1 Camera`, and click `yes`. Alternatively 
 
 You can test the camera quickly by entering the command `raspistill -t 0 -k` in a terminal window. To exit again, press `ctrl+c`. If you get an error message, then double check the cable is properly connected to the raspberry pi and the camera and try restarting.
 
+## Set the screen resolution
+
+For configuring and calibrating the camera and using the dynamic interfaces that come with pirecorder, a screen resolution of at least 800x600 is strongly recommended, and at least 1024x1024 is preferable.
+
+The resolution can be set with `raspi-config`: option `7 Advanced options`, then `A5 Resolution`. When changing the resolution a restart will be required.
+
 ## Setup python for working with the camera
 
 *pirecorder* uses Python, which comes pre-installed with Raspbian on any raspberry pi. However, we need to update some python development tools for the raspberry pi camera to work properly. To do this simply open a terminal window and enter:
