@@ -9,6 +9,8 @@ nav_order: 2
 *pirecorder* is a Python package with a number of inter-connected modules, developed with the aim to facilitate running controlled and automatic image and video recordings using optimal settings with the raspberry pi.
 {: .fs-6 .fw-300 }
 
+So far, researchers have often relied on writing their own recordings scripts to take still photographs and videos from the command line. Although so some specific software solutions exist, what was missing is a complete solution that helps researchers, especially those with limited coding skills, to easily set up and configure their raspberry pi to run large numbers of controlled and automated image and video recordings. `pirecorder` was developed to over come this need.
+
 The package consists of a main `PiRecorder` module to run recordings, `stream` and `camconfig` modules for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
 
 A core component of *pirecorder* is that it uses configuration files and timeplans that can be easily called, modified, and stored by the user, with automatic naming of files and folders. *pirecorder* also works directly from the terminal without the need to code in Python (see [this page](8-run-from-commandline.md) and comes with detailed documentation and tutorials (this website). This also has the aim to further help people with limited coding experience to set up their raspberry pi and make controlled and automated recordings.

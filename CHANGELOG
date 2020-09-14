@@ -5,6 +5,7 @@ Committed changes not yet in latest release:
     * Added statement to camconfig and documentation website regarding minimum
       recommended resolution
     * Contribution statement added to README
+    * Included improved statement of need in JOSS paper and documentation
 
 2020-07-07 version 3.1.0
     * Added accompanying academic paper for pirecorder, submitted to The
