@@ -27,6 +27,7 @@ import pythutils.drawutils as draw
 
 from .videoin import VideoIn
 from .__version__ import __version__
+from .pirecorder import PiRecorder
 
 class Stream:
 
@@ -228,13 +229,20 @@ def strm():
              description=Stream.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("-c","--cameratype", default="v2", metavar="")
-    parser.add_argument("-f","--framerate", default=8, type=int, metavar="")
-    parser.add_argument("-v","--vidsize", default=0.2, type=float, metavar="")
-    parser.add_argument("-r","--rotation", default=0, type=int, metavar="")
-    parser.add_argument("-o","--imgoverlay", default=None, metavar="")
+    parser.add_argument("-c", "--cameratype", default="v2", metavar="")
+    parser.add_argument("-f", "--framerate", default=8, type=int, metavar="")
+    parser.add_argument("-v", "--vidsize", default=0.2, type=float, metavar="")
+    parser.add_argument("-r", "--rotation", default=0, type=int, metavar="")
+    parser.add_argument("-o", "--imgoverlay", default=None, metavar="")
+    parser.add_argument("-c", "--configfile", default=None,
+                        action="store", help="pirecorder configuration file")
 
     args = parser.parse_args()
-    Stream(framerate = args.framerate, vidsize = args.vidsize,
-           rotation = args.rotation, cameratype = args.cameratype,
-           imgoverlay = args.imgoverlay)
+    if args.configfile is None:
+        Stream(framerate = args.framerate, vidsize = args.vidsize,
+               rotation = args.rotation, cameratype = args.cameratype,
+               imgoverlay = args.imgoverlay)
+    else:
+        rec = PiRecorder(args.configfile)
+        rec.settings(internal = True)
+        rec.stream()
