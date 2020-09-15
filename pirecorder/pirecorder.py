@@ -260,8 +260,10 @@ class PiRecorder:
             self.config.cam.shutterspeed = self.cam.exposure_speed
             self.config.cus.gains = tuple([round(float(i),2) for i in self.cam.awb_gains])
             self.config.save()
-            lineprint("Shutterspeed automaticall set to",self.cam.exposure_speed)
-            lineprint("White balance gains automatically set to",self.config.cus.gains)
+            lineprint("Shutterspeed set to "+str(self.cam.exposure_speed))
+            lineprint("White balance gains set to "+str(self.config.cus.gains))
+
+        stream.release()
 
 
     def settings(self, **kwargs):
