@@ -249,4 +249,4 @@ def strm():
         from pirecorder import PiRecorder
         rec = PiRecorder(args.configfile)
         rec.settings(internal = True)
-        rec.stream(internal = True)
+        rec.stream()
