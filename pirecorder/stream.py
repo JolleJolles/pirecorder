@@ -78,8 +78,9 @@ class Stream:
         esc-key : exit the the zoom window; exit the calibrate function
         """
 
-        if internal:
-            lineprint("Running calibrate function.. ")
+        self.internal = internal
+        if self.internal:
+            lineprint("Running stream function.. ")
 
         self.system = system
         self.framerate = framerate
@@ -166,9 +167,12 @@ class Stream:
                 if self.m.twoPoint is not None:
                     self.m.twoPoint = checkroi(self.m.twoPoint, self.vid.res)
                     self.roi = roi_to_zoom(self.m.twoPoint, self.vid.res)
-                    lineprint("roi "+str(self.roi)+" stored..")
+                    if self.internal is True:
+                        lineprint("roi "+str(self.roi)+" stored..")
+                    else:
+                        lineprint("roi: "+str(self.roi))
                 else:
-                    lineprint("Nothing to store..")
+                    lineprint("Nothing selected..")
             if k == ord("e"):
                 self.m.posUp = None
                 self.roi = False
@@ -245,4 +249,4 @@ def strm():
     else:
         rec = PiRecorder(args.configfile)
         rec.settings(internal = True)
-        rec.stream()
+        rec.stream(internal = True)
