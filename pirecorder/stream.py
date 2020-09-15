@@ -246,6 +246,7 @@ def strm():
                rotation = args.rotation, cameratype = args.cameratype,
                imgoverlay = args.imgoverlay)
     else:
-        rec = pirecorder.PiRecorder(args.configfile)
+        from pirecorder import PiRecorder
+        rec = PiRecorder(args.configfile)
         rec.settings(internal = True)
         rec.stream(internal = True)
