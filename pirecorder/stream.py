@@ -27,7 +27,6 @@ import pythutils.drawutils as draw
 
 from .videoin import VideoIn
 from .__version__ import __version__
-from .pirecorder import PiRecorder
 
 class Stream:
 
