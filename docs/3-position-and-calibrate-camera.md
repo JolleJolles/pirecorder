@@ -48,7 +48,7 @@ and directly from the command line:
 stream
 ```
 
-If using the `stream` module to store the region of interest it needs to be run as part of a `PiRecorder` instance.
+When running stream directly from the command line it is also possible to add a configuration file parameter such that when a rectangle is drawn, its coordinates will be stored as the ROI in the configfile (e.g. `stream --configfile pirecorder.conf`).
 
 ## Adjust the stream settings
 There are a 5 parameters you can set for the video stream:
