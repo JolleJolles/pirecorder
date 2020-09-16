@@ -103,7 +103,7 @@ class PiRecorder:
                           label="test",rectype="img",rotation=0,brighttune=0,
                           roi=None,gains=(1.0,2.5),brightness=45,contrast=10,
                           saturation=0,iso=200,sharpness=0,compensation=0,
-                          shutterspeed=8000,imgdims=(2592,1944),cameratype=None,
+                          shutterspeed=8000,imgdims=(2592,1944),maxres=None,
                           viddims=(1640,1232),imgfps=1,vidfps=24,imgwait=5.0,
                           imgnr=12,imgtime=60,imgquality=50,vidduration=10,
                           viddelay=10,vidquality=11,automode=True,internal="")
@@ -293,10 +293,11 @@ class PiRecorder:
         automode : bool, default = True
             If the shutterspeed and white balance should be set automatically
             and dynamically for each recording.
-        cameratype : str, default = None
-            The raspberry cameratype used. Can be either None, "v1", "v2", or
-            "hq" to indicate the different models and will help set the maximum
-            recording resolution.
+        maxres : str or tuple, default = "v2"
+            The maximum potential resolution of the camera used. Either provide
+            a tuple of the max resolution, or use "v1.5", "v2" (default), or
+            "hq" to get the maximum resolution associated with the official
+            cameras directly.
         rotation : int, default = 0
             Custom rotation specific to the Raspberry Pi, should be either 0 or
             180.
@@ -398,13 +399,14 @@ class PiRecorder:
             self.config.rec.label = kwargs["label"]
         if "rectype" in kwargs:
             self.config.rec.rectype = kwargs["rectype"]
-        if "cameratype" in kwargs:
-            self.config.rec.cameratype = kwargs["cameratype"]
-            if self.config.rec.cameratype == "v2":
+        if "maxres" in kwargs:
+            self.config.rec.maxres = kwargs["maxres"]
+            if isinstance(self.config.rec.maxres, tuple):
+                self.config.img.imgdims = self.config.rec.maxres
+            elif self.config.rec.maxres == "v2":
                 self.config.img.imgdims = (3264,2464)
-            if self.config.rec.cameratype == "hq":
+            elif self.config.rec.maxres == "hq":
                 self.config.img.imgdims = (4056,3040)
-
         if "rotation" in kwargs:
             self.config.cus.rotation = kwargs["rotation"]
         if "brighttune" in kwargs:
@@ -484,7 +486,7 @@ class PiRecorder:
 
         lineprint("Opening stream for cam positioning and roi extraction..")
         vidstream = Stream(internal=True, rotation=self.config.cus.rotation,
-                       cameratype=self.config.rec.cameratype)
+                       maxres=self.config.rec.maxres)
         if vidstream.roi:
             self.settings(roi=vidstream.roi, internal="")
             lineprint("Roi stored..")

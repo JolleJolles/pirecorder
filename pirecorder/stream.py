@@ -31,7 +31,7 @@ from .__version__ import __version__
 class Stream:
 
     def __init__(self, system = "auto", framerate = 8, vidsize = 0.2,
-                 rotation = 0, internal = False, cameratype = None,
+                 rotation = 0, internal = False, maxres = None,
                  imgoverlay = None):
 
         """
@@ -53,8 +53,11 @@ class Stream:
             the raspberry pi camera type.
         rotation : int, default = 180
             If the camera should be rotated or not. 0 and 180 are valid values.
-        cameratype : str, default = "v2"
-            The raspberry camera type used. Should be either "v1", "v2", or "hq"
+        maxres : str or tuple, default = "v2"
+            The maximum potential resolution of the camera used. Either provide
+            a tuple of the max resolution, or use "v1.5", "v2" (default), or
+            "hq" to get the maximum resolution associated with the official cameras
+            directly.
         imgoverlay : str, default = None
             The path to an image that will be overlaid on the video stream. This
             can be helpful for accurate positioning of the camera in line with
@@ -85,7 +88,7 @@ class Stream:
         self.framerate = framerate
         self.vidsize = vidsize
         self.rotation = rotation
-        self.cameratype = cameratype
+        self.maxres = maxres
 
         if imgoverlay == None:
             self.overlay = False
@@ -122,7 +125,7 @@ class Stream:
 
         self.vid = VideoIn(system=self.system, framerate=self.framerate,
                            vidsize=self.vidsize, rotation=self.rotation,
-                           cameratype=self.cameratype)
+                           maxres=self.maxres)
         self.vid.start()
 
         if self.overlay:
@@ -206,7 +209,7 @@ class Stream:
                 while True:
                     self.vid2 = VideoIn(system=self.system, vidsize=self.vidsize,
                                         crop=self.m.twoPoint, rotation=self.rotation,
-                                        cameratype=self.cameratype)
+                                        maxres=self.maxres)
                     zimg = self.vid2.img()
                     cv2.imshow("Zoomed", zimg)
                     cv2.resizeWindow("Zoomed", self.vid2.roiw, self.vid2.roih)
@@ -232,18 +235,18 @@ def strm():
              description=Stream.__doc__,
              formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument("-t", "--cameratype", default="v2", metavar="")
     parser.add_argument("-f", "--framerate", default=8, type=int, metavar="")
     parser.add_argument("-v", "--vidsize", default=0.2, type=float, metavar="")
     parser.add_argument("-r", "--rotation", default=0, type=int, metavar="")
     parser.add_argument("-o", "--imgoverlay", default=None, metavar="")
+    parser.add_argument("-m", "--maxres", default="v2", metavar="")
     parser.add_argument("-c", "--configfile", default=None,
                         action="store", help="pirecorder configuration file")
 
     args = parser.parse_args()
     if args.configfile is None:
         Stream(framerate = args.framerate, vidsize = args.vidsize,
-               rotation = args.rotation, cameratype = args.cameratype,
+               rotation = args.rotation, maxres = args.maxres,
                imgoverlay = args.imgoverlay)
     else:
         from pirecorder import PiRecorder
