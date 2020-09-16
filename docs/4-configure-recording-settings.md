@@ -96,6 +96,9 @@ recdir : str, default = "pirecorder/recordings"
     inside the home directory. If no name is provided (""), the files are
     stored in the home directory. If "NAS" is provided it will additionally
     check if the folder links to a mounted drive.
+subdirs : bool, default = False
+    If files of individual recordings should be stored in subdirectories
+    or not, to keep all files of a single recording session together.
 label : str, default = "test"
     Label that will be associated with the specific recording and stored in
     the filenames.
