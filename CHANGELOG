@@ -10,6 +10,7 @@ Committed changes not yet in latest release:
       command line
     * Fixed autoconfig camera closure
     * Added test.py file for testing all functionalities of pirecorder
+    * Improved paper in a number of ways
     * Small fixes
         - Added missing subdir to pirecorder settings documentation
         - Fixed delete parameter name in schedule documentation
