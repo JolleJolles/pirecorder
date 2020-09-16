@@ -263,7 +263,7 @@ class PiRecorder:
             lineprint("Shutterspeed set to "+str(self.cam.exposure_speed))
             lineprint("White balance gains set to "+str(self.config.cus.gains))
 
-        stream.release()
+        self.rawCapture.close()
 
 
     def settings(self, **kwargs):
