@@ -62,7 +62,7 @@ It is very easy to install pirecorder with pip. First make sure you are in the d
 pip install pirecorder
 ```
 
-This command will also install the majority of dependencies, which include `pandas`, `numpy`, and my `pythutils` package [link](https://github.com/jollejolles/pythutils). One of the main dependencies, `picamera` should already be installed by default. If it is not, follow the simple steps [here](https://picamera.readthedocs.io/en/release-1.13/install.html).
+This command will also install the majority of dependencies, which include `numpy` and my `pythutils` package [link](https://github.com/jollejolles/pythutils). One of the main dependencies, `picamera` should already be installed by default. If it is not, follow the simple steps [here](https://picamera.readthedocs.io/en/release-1.13/install.html).
 
 `OpenCV` is a dependency that needs to be manually installed. Follow my 5min guide for Mac, ubuntu and raspberry pi [here](other/install-opencv.md). And if you plan on using the converter functionality then you will additionally need to install `FFmpeg`. Click [here](other/install-ffmpeg-raspberry-pi.md) for my guide to install it on raspberry pi and [here](other/install-ffmpeg-osx.md) for my guide to install it on OS X.
 
@@ -85,6 +85,9 @@ rec = pirecorder.PiRecorder()
 As the PiRecorder functionality is a class instance it needs to be stored as a variable. Above we used the variable name `Rec`, but any variable is fine as long as you are consistent in using it.
 
 The first time the PiRecorder instance is run, automatically a `pirecorder` directory will be created in the user's home directory with a default configuration file (`pirecorder.conf`) that will be used as the basis for future recordings. To also make it is easy to see what recordings you did back in time, all commands and output created with the PiRecorder instance will be stored in a log file in the setup directory with a date and time stamp.
+
+## Testing
+It is  possible to test all the functionalities of the pirecorder package. Simply run the `tests/test.py` file ([here](https://github.com/JolleJolles/pirecorder/tree/master/tests/test.py)), or alternatively run the main functionalities manually using the documented jupyter notebook files [here](https://github.com/JolleJolles/pirecorder/tree/master/notebooks). Note that running the tests will require user input as some of the functionalities are interactive.
 
 ---
 PiRecorder module documentation

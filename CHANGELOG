@@ -9,6 +9,11 @@ Committed changes not yet in latest release:
     * Integrated ability to store ROI directly when running stream from the
       command line
     * Fixed autoconfig camera closure
+    * Added test.py file for testing all functionalities of pirecorder
+    * Small fixes
+        - Added missing subdir to pirecorder settings documentation
+        - Fixed delete parameter name in schedule documentation
+        - Removed pandas as dependency of linked pythutils package
 
 2020-07-07 version 3.1.0
     * Added accompanying academic paper for pirecorder, submitted to The

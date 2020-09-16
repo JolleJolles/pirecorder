@@ -51,6 +51,9 @@ For detailed documentation and tutorials about *pirecorder* and all its function
 9. [converting media](https://jollejolles.github.io/pirecorder/7-convert-media.html)
 10. [run from the command line](https://jollejolles.github.io/pirecorder/8-run-from-commandline.html)
 
+## Tests
+To test all functionalities of the pirecorder package, run the `tests/test.py` file ([here](https://github.com/JolleJolles/pirecorder/tree/master/tests/test.py)), or alternatively run commands manually using the documented jupyter files [here](https://github.com/JolleJolles/pirecorder/tree/master/notebooks). Note that running the tests will require user input as some of the functionalities are interactive.
+
 ## Development
 *pirecorder* is developed by Dr Jolle Jolles, a research fellow at the Max Planck Institute of Animal Behavior, and at the Zukunftskolleg, Institute of Advanced Study at the University of Konstanz.
 
