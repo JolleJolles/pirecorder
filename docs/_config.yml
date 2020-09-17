@@ -22,8 +22,8 @@ title: pirecorder documentation
 email: j.w.jolles@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Detailed documentation for use of the python pirecorder package.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://jollejolles.github.io/pirecorder/"
+baseurl: "/pirecorder" # the subpath of your site, e.g. /blog
+url: "https://jollejolles.github.io"
 twitter_username: jollewjolles
 github_username:  jollejolles
 
