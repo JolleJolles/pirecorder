@@ -34,6 +34,6 @@ A core functionality of `pirecorder` is that it works with configuration files. 
 `pirecorder` has already been used successfully in a number of studies, such as to facilitate the high-throughput recording of large numbers of individuals and shoals of fish [@Jolles2017; @Jolles2018; @Jolles2019] and more recently, the autonomous long-term recording of fish each day, every day, for the first four-month of their life. By facilitating and streamlining controlled and automated image and video recordings, I hope `pirecorder` will increasingly help scientists simplify and improve their collection of high quality data, and ultimately thereby enhance their research.
 
 # Acknowledgements
-This work was made possible by an Alexander von Humboldt postdoctoral fellowship, a fellowship from the Zukunfstkolleg, Institute for Advanced Study at the University of Konstanz, and a research grant from the Dr. J.L. Dobberke Foundation.
+This work was made possible by an Alexander von Humboldt postdoctoral fellowship, a fellowship from the Zukunfstkolleg, Institute for Advanced Study at the University of Konstanz, and a research grant from the Dr. J.L. Dobberke Foundation. I would also like to thank Lucas Koerner and Jan Heuschele for helpful feedback on the paper and the package.
 
 # References
