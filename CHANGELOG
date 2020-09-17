@@ -8,13 +8,15 @@ Committed changes not yet in latest release:
     * Included improved statement of need in JOSS paper and documentation
     * Integrated ability to store ROI directly when running stream from the
       command line
-    * Fixed autoconfig camera closure
     * Added test.py file for testing all functionalities of pirecorder
     * Improved paper in a number of ways
+    * Changed user settings to facilitate getting max resolution
+    * Fixed autoconfig stream not releasing camera after use
     * Small fixes
         - Added missing subdir to pirecorder settings documentation
         - Fixed delete parameter name in schedule documentation
         - Removed pandas as dependency of linked pythutils package
+        - Fixed jekyll issue that prevented documentation website of not updating
 
 2020-07-07 version 3.1.0
     * Added accompanying academic paper for pirecorder, submitted to The
