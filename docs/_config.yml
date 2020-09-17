@@ -37,7 +37,6 @@ plugins:
 include:
   - _docs
 
-
 # Theme settings
 logo: "/assets/images/pirecorder-logo-small.png"
 search_enabled: true
