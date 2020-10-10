@@ -22,7 +22,7 @@ A paper accompanying this package is published in the Journal of Open Source Sof
 * **Jupyter notebook tutorial files**
 
 ## An overview
-<p align="center"><a href="https://www.youtube.com/watch?v=pcVHpijd6wc" title="A quick overview of the pirecorder package" target="_blank"><img src="https://github.com/jollejolles/pirecorder/blob/master/images/pirecorder-video.jpg"></a></p>
+<p align="center"><a href="https://www.youtube.com/watch?v=pcVHpijd6wc" title="A quick overview of the pirecorder package" target="_blank"><img src="https://github.com/jollejolles/pirecorder/blob/master/images/pirecorder-video.jpg" width="400" height="298"></a></p>
 
 ## Modules
 *pirecorder* consists of a main `PiRecorder` module to run image and video recordings, `stream` and `camconfig` modules with interactive user interfaces for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
