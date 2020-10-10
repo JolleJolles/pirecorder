@@ -3,6 +3,9 @@
 
 *pirecorder* is a Python package, built on the [picamera](http://picamera.readthedocs.io/) and [OpenCV](https://opencv.org/) libraries, that provides a flexible solution for the collection of consistent image and video data with the raspberry pi. It was developed to overcome the need for a complete solution to help researchers, especially those with limited coding skills, to easily set up and configure their raspberry pi to run large numbers of controlled and automated image and video recordings using optimal settings.
 
+A paper accompanying this package is published in the Journal of Open Source Software:
+**Jolles, J.W. (2020). pirecorder: controlled and automated image and video recording with the raspberry pi. J. Open Source Softw. 5, 2584. doi: [http://doi.org/10.21105/joss.02584](10.21105/joss.02584).**
+
 <p align="center"><img src="https://github.com/jollejolles/pirecorder/blob/master/images/pirecorder-logo-large.jpg"></p>
 
 ## Key Features
@@ -16,6 +19,9 @@
 * **Convert (folders of) images and videos with resize, monitor, and label options**
 * **Dedicated documentation website with detailed guides and tutorials**
 * **Jupyter notebook tutorial files**
+
+## An overview
+<p align="center"><a href="https://www.youtube.com/watch?v=pcVHpijd6wc"><img src="https://github.com/jollejolles/pirecorder/blob/master/images/pirecorder-video.jpg"></a></p>
 
 ## Modules
 *pirecorder* consists of a main `PiRecorder` module to run image and video recordings, `stream` and `camconfig` modules with interactive user interfaces for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
@@ -62,15 +68,17 @@ For an overview of version changes see the [CHANGELOG](https://github.com/jollej
 Contributions to this package are welcomed via the usual pull request mechanism.
 
 ## Citing
-pirecorder was originally developed with the Biological Sciences in mind. If you use pirecorder in your research, please cite it as follows:
+If you use pirecorder in your research, do let me know and please cite the accompanying paper:
 
 ```
-@misc{Jolles2019,
+@misc{Jolles2020,
       title = {pirecorder: controlled and automated image and video recording with the raspberry pi},
       author = {Jolles, Jolle W.},
-      year = {2019}
-      url = {http://doi.org/10.5281/zenodo.2529515},
-      doi = {10.5281/zenodo.2529515}
+      year = {2020},
+      volume = {5},
+      number = {54},
+      pages = {2584},
+      doi = {https://doi.org/10.21105/joss.02584}
 }
 ```
 
