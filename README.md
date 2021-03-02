@@ -1,3 +1,5 @@
+[![Downloads](https://pepy.tech/badge/pirecorder)](https://pepy.tech/project/pirecorder)
+
 # pirecorder
 **A Python package for controlled and automated image and video recording with the raspberry pi**
 
