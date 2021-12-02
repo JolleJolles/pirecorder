@@ -28,6 +28,8 @@ A paper accompanying this package is published in the Journal of Open Source Sof
 *pirecorder* consists of a main `PiRecorder` module to run image and video recordings, `stream` and `camconfig` modules with interactive user interfaces for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
 
 ## Install
+**Note:** pirecorder relies on picamera, which is not properly integrated in the latest Raspberry Pi OS (Bullseye). Therefore use the previous OS Buster to use pirecorder and picamera. You can download the OS [here](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/) and find more information from the Raspberry Pi foundation [here](https://www.raspberrypi.com/news/bullseye-camera-system/). I am frustrated about this remarkable change too.
+
 To install the latest release, simply open a terminal window and enter:
 
 ```
