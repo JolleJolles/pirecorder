@@ -652,7 +652,7 @@ class PiRecorder:
                     if self.config.vid.maxviddur > 0:
                         waittime = min(timeremaining, self.config.vid.maxviddur)
                     nr = ""
-                    if not waittime == timeremaining and self.config.vid.maxviddur == 0:
+                    if not waittime == timeremaining and self.config.vid.maxvidsize == 0:
                         nr = "_v"+str(counter).zfill(2)
                     finalname = filename+nr+self.filetype
                     video = VidOutput(finalname)
@@ -663,6 +663,7 @@ class PiRecorder:
                     lineprint("Start recording "+filename)
                     rectime = 0
                     while video.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
+                        print(video.size, rectime)
                         rectime += 0.1
                         self.cam.wait_recording(0.1)
                     timeremaining -= rectime
