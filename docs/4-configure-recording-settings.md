@@ -79,10 +79,22 @@ The `vidquality` parameter specifies the quality that the h264 encoder should at
 For example, to take a single video for 10 minutes with 20s extra time, with a 1640x1232 resolution at 24fps, with a relatively low quality and thus file size:
 
 ```
-rec.set_config(rectype = "vid", vidduration = 600, viddelay = 20, vidquality = 30 \
+rec.settings(rectype = "vid", vidduration = 600, viddelay = 20, vidquality = 30 \
                viddims = (1640, 1232), vidfps = 24)
 rec.record()
 ```
+
+## Automatic splitting of videos
+As of version v3.3.0 it is possible to automatically split videos by duration or by size using the `maxviddur` and `maxvidsize` (in MB) parameters. When a video that is being recorded goes beyond these thresholds, automatically a new video will be created, with subsequent video segments belonging to the same recording ending in video iterator, e.g. `_v01.h264`, `_v02.h264` etc. Both parameters can be set in parallel, and whatever threshold is reached further will be used to split the video.
+
+As an example, say you want to record a video for one hour, but you want to cut it automatically in either 10min sections or in sections of 500MB, then you can run the recording as follows:
+
+```
+rec.settings(vidduration = 3600, maxviddur = 600, maxvidsize = 500)
+rec.record()
+```
+
+Likely, the 10min video sections will be less than 500MB each so in the end the recording will result in 6 video files with the same file name but ending with sequence number 01 to 06.
 
 ---
 Recording settings documentation
@@ -148,4 +160,12 @@ vidquality : int, default = 11
     Specifies the quality that the h264 encoder should attempt to maintain.
     Use values between 10 and 40, where 10 is extremely high quality, and
     40 is extremely low.
+maxviddur : int, default = 3600
+    The maximum duration in seconds for single videos, beyond which
+    videos will be automatically split. A value of 9 indicates there is
+    no maximum file duration.
+maxvidsize : int, default = 0
+    The maximum file size in Megabytes for single videos, beyond which
+    videos will be automatically split. A value of 0 indicates there is
+    no maximum file size.
 ```

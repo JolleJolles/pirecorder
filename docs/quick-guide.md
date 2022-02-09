@@ -79,7 +79,7 @@ rec.stream()
 Still in the stream instance, use the mouse again to draw a rectangle that encompasses the region of the camera stream that should be recorded. When satisfied with the region press the `s`-key to store the coordinates in the configuration file. Press the `esc`-key to exit the stream.
 
 ## Set the recording settings
-Configure your recording settings with the `settings` function. Key is the `rectype` parameter, which can be `img` (a single image), `vid` (a single video), `imgseq` (a timelape), `vidseq` (a sequence of videos). By default it will record with the maximal resolution, which can be altered with `imgdims` and `viddims`. Videos are recorded with 24fps, which can be changed with the `vidfps` parameter. The `label` parameter will help identify your recorded files. Other relevant parameters are `vidduration`, `viddelay`, `imgnr`, `imgtime`, `imgwait`, `imgquality`, and `vidquality`. For example, to set the `rectype`, `vidduration`, and `label` for your recordings:
+Configure your recording settings with the `settings` function. Key is the `rectype` parameter, which can be `img` (a single image), `vid` (a single video), `imgseq` (a timelape), `vidseq` (a sequence of videos). By default it will record with the maximal resolution, which can be altered with `imgdims` and `viddims`. Videos are recorded with 24fps, which can be changed with the `vidfps` parameter. The `label` parameter will help identify your recorded files. Other relevant parameters are `vidduration`, `viddelay`, `imgnr`, `imgtime`, `imgwait`, `imgquality`, `vidquality`, `maxviddur`, and `maxvidsize`. For example, to set the `rectype`, `vidduration`, and `label` for your recordings:
 ```
 rec.settings(rectype = "vid", vidduration = 60, label = "test")
 ```

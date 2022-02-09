@@ -33,6 +33,8 @@ It is also possible to run recordings straight from the terminal without requiri
 record --configfile "custom.conf"
 ```
 
+As of version v3.3.0 after each video has finished recording, its total duration and file size (in MB) will be printed to easily keep track of the total output that is being created.
+
 ## Schedule recordings
 Besides starting recordings directly, it is possible to schedule recordings to start recordings (repeatedly) in the future. For this there is the `schedule` function, which creates unique recording jobs (`jobname`) with specific `timeplan`s. An overview with a concise description of all parameters can be found at the bottom of this page.
 
