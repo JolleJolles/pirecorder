@@ -662,12 +662,12 @@ class PiRecorder:
                                              format = self.filetype[1:])
                     lineprint("Start recording "+filename)
                     rectime = 0
-                    while output.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
+                    while video.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
                         rectime += 0.1
                         self.cam.wait_recording(0.1)
                     timeremaining -= rectime
                     self.cam.stop_recording()
-                    vidinfo = " ("+str(round(rectime))+"s; "+str(round(output.size/1000000,1))+"MB)"
+                    vidinfo = " ("+str(round(rectime))+"s; "+str(round(video.size/1000000,1))+"MB)"
                     lineprint("Finished recording "+finalname+vidinfo)
                 if self.config.rec.rectype == "vid":
                     break
