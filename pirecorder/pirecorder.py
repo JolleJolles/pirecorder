@@ -659,7 +659,7 @@ class PiRecorder:
                     self.cam.start_recording(video, resize = self.resize,
                                              quality = self.config.vid.vidquality,
                                              level = "4.2",
-                                             format = self.filetype)
+                                             format = self.filetype[1:])
                     lineprint("Start recording "+filename)
                     rectime = 0
                     while output.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
