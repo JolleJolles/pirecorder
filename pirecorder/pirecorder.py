@@ -41,6 +41,24 @@ from .camconfig import Camconfig
 from .schedule import Schedule
 from .__version__ import __version__
 
+class VidOutput(object):
+
+    """
+    Video output object for continuous monitoring of file size while recording
+    """
+
+    def __init__(self, filename):
+        self.vid = io.open(filename, 'wb')
+        self.size = 0
+
+    def write(self, s):
+        self.vid.write(s)
+        self.size += len(s)
+
+    def flush(self):
+        self.vid.flush()
+
+
 class PiRecorder:
 
     """
@@ -106,7 +124,8 @@ class PiRecorder:
                           shutterspeed=8000,imgdims=(2592,1944),maxres=None,
                           viddims=(1640,1232),imgfps=1,vidfps=24,imgwait=5.0,
                           imgnr=12,imgtime=60,imgquality=50,vidduration=10,
-                          viddelay=10,vidquality=11,automode=True,internal="")
+                          viddelay=10,vidquality=11,automode=True,internal="",
+                          maxviddur=3600,maxvidsize=0)
             lineprint("Config settings stored..")
 
         else:
@@ -389,6 +408,14 @@ class PiRecorder:
             Specifies the quality that the h264 encoder should attempt to
             maintain. Use values between 10 and 40, where 10 is extremely high
             quality, and 40 is extremely low.
+        maxviddur : int, default = 3600
+            The maximum duration in seconds for single videos, beyond which
+            videos will be automatically split. A value of 9 indicates there is
+            no maximum file duration.
+        maxvidsize : int, default = 0
+            The maximum file size in Megabytes for single videos, beyond which
+            videos will be automatically split. A value of 0 indicates there is
+            no maximum file size.
         """
 
         if "recdir" in kwargs:
@@ -455,14 +482,18 @@ class PiRecorder:
             self.config.vid.vidduration = kwargs["vidduration"]
         if "viddelay" in kwargs:
             self.config.vid.viddelay = kwargs["viddelay"]
-        if "vidquality" in kwargs:
-            self.config.vid.vidquality = kwargs["vidquality"]
+        if "maxviddur" in kwargs:
+            self.config.vid.maxviddur = kwargs["maxviddur"]
+        if "maxvidsize" in kwargs:
+            self.config.vid.maxvidsize = kwargs["maxvidsize"]
 
         brightchange = False
         if os.path.exists(self.brightfile):
             with open(self.brightfile) as f:
                 brighttune = yaml.load(f, Loader=yaml.FullLoader)
                 if brighttune != self.config.cus.brighttune:
+                    if "internal" not in kwargs:
+                        lineprint("cusbright.yml file found and loaded..")
                     self.config.cus.brighttune = brighttune
                     brightchange = True
 
@@ -492,6 +523,7 @@ class PiRecorder:
             lineprint("Roi stored..")
         else:
             lineprint("No roi selected..")
+
 
     def camconfig(self, fps=None, vidsize=0.4):
 
@@ -610,14 +642,29 @@ class PiRecorder:
 
             for session in ["_S%02d" % i for i in range(1,999)]:
                 session = "" if self.config.rec.rectype == "vid" else session
-                filename = self.filename+strftime("%H%M%S")+session+self.filetype
-                self.cam.start_recording(filename, resize = self.resize,
-                                         quality = self.config.vid.vidquality,
-                                         level = "4.2")
-                lineprint("Start recording "+filename)
-                self.cam.wait_recording(self.config.vid.vidduration+self.config.vid.viddelay)
-                self.cam.stop_recording()
-                lineprint("Finished recording "+filename)
+                filename = self.filename+strftime("%H%M%S")+session
+                timeremaining = self.config.vid.vidduration+self.config.vid.viddelay
+                counter = 0
+                while timeremaining > 0:
+                    counter += 1
+                    waittime = min(timeremaining, self.config.vid.maxviddur)
+                    nr = ""
+                    if not waittime == viddur and self.config.vid.maxviddur == 0:
+                        nr = "_v"+str(counter).zfill(2)
+                    finalname = filename+nr+self.filetype
+                    video = VidOutput(finalname)
+                    self.cam.start_recording(video, resize = self.resize,
+                                             quality = self.config.vid.vidquality,
+                                             level = "4.2")
+                    lineprint("Start recording "+filename)
+                    rectime = 0
+                    while output.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
+                        rectime += 0.1
+                        self.cam.wait_recording(0.1)
+                    timeremaining -= rectime
+                    self.cam.stop_recording()
+                    vidinfo = " ("+str(round(rectime))+"s; "+str(round(output.size/1000000,1))+"MB)"
+                    lineprint("Finished recording "+finalname+vidinfo)
                 if self.config.rec.rectype == "vid":
                     break
                 else:
