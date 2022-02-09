@@ -19,6 +19,7 @@ from __future__ import print_function
 from builtins import input
 
 import os
+import io
 import cv2
 import sys
 import yaml
