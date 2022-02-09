@@ -664,7 +664,6 @@ class PiRecorder:
                     lineprint("Start recording "+filename)
                     rectime = 0
                     while video.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
-                        print(video.size, rectime)
                         rectime += 0.1
                         self.cam.wait_recording(0.1)
                     timeremaining -= rectime
