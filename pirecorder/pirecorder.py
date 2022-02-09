@@ -651,8 +651,9 @@ class PiRecorder:
                     waittime = timeremaining
                     if self.config.vid.maxviddur > 0:
                         waittime = min(timeremaining, self.config.vid.maxviddur)
-                    nr = ""
-                    if not waittime == timeremaining and self.config.vid.maxvidsize == 0:
+                    if waittime == timeremaining and self.config.vid.maxvidsize == 0:
+                        nr = ""
+                    else:
                         nr = "_v"+str(counter).zfill(2)
                     finalname = filename+nr+self.filetype
                     video = VidOutput(finalname)
@@ -668,7 +669,7 @@ class PiRecorder:
                         self.cam.wait_recording(0.1)
                     timeremaining -= rectime
                     self.cam.stop_recording()
-                    vidinfo = " ("+str(round(rectime))+"s; "+str(round(video.size/1000000,1))+"MB)"
+                    vidinfo = " ("+str(round(rectime))+"s; "+str(round(video.size/1000000,2))+"MB)"
                     lineprint("Finished recording "+finalname+vidinfo)
                 if self.config.rec.rectype == "vid":
                     break
