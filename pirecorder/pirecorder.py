@@ -647,9 +647,11 @@ class PiRecorder:
                 counter = 0
                 while timeremaining > 0:
                     counter += 1
-                    waittime = min(timeremaining, self.config.vid.maxviddur)
+                    waittime = timeremaining
+                    if self.config.vid.maxviddur > 0:
+                        waittime = min(timeremaining, self.config.vid.maxviddur)
                     nr = ""
-                    if not waittime == viddur and self.config.vid.maxviddur == 0:
+                    if not waittime == timeremaining and self.config.vid.maxviddur == 0:
                         nr = "_v"+str(counter).zfill(2)
                     finalname = filename+nr+self.filetype
                     video = VidOutput(finalname)
