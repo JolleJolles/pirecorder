@@ -2,7 +2,7 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Committed changes not yet in latest release:
-2021-02-15
+2021-02-15 version 3.3.1
     * Fixed imgseq taking max imgnr beyond when imgtime was already reached to
       do with slow writing of images when resolution is large
 
