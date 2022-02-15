@@ -2,9 +2,12 @@ All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
 Committed changes not yet in latest release:
+2021-02-15
+    * Fixed imgseq taking max imgnr beyond when imgtime was already reached to
+      do with slow writing of images when resolution is large
 
 2021-02-09 version 3.3.0
-    * Fixed wrong reference of now obsolete set_config() to settings function 
+    * Fixed wrong reference of now obsolete set_config() to settings function
     * Updated the documentation and jupyter notebook with this new functionality
     * Video duration and size are now printed after creation 2021-02-09
     * Integrated new functionality: max video duration and max video filesize

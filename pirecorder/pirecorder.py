@@ -623,8 +623,8 @@ class PiRecorder:
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
-                if i < self.config.img.imgnr-1:
-                    timepassed = (datetime.now() - timepoint).total_seconds()
+                timepassed = (datetime.now() - timepoint).total_seconds()
+                if i < self.config.img.imgnr-1 and timepassed < self.config.img.imgtime:
                     delay = max(0, self.config.img.imgwait - timepassed)
                     lineprint("Captured "+img+", sleeping "+str(round(delay,2))+"s..")
                     sleep(delay)
