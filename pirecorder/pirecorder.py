@@ -105,7 +105,7 @@ class PiRecorder:
             self.log.start()
             print("")
 
-        lineprint("pirecorder "+__version__+" started!")
+        lineprint("pirecorder "+__version__+" started!", date=True)
         lineprint("="*47, False)
 
         self.brightfile = self.setupdir+"/cusbright.yml"
