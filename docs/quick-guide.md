@@ -44,15 +44,17 @@ To exit again, press `ctrl+c`
 ```
 pip install pirecorder
 ```
-2. install dependencies for OpenCV:
+2. install picamera:
 ```
-sudo apt-get install libhdf5-dev libhdf5-serial-dev -y
-sudo apt-get install libqtwebkit4 libqt4-test -y
-sudo apt-get install libatlas-base-dev libatlas3-base libjasper-dev libqtgui4 python3-pyqt5 -y
+sudo pip install "picamera[array]"
 ```
-3. Install OpenCV with pip:
+3. install dependencies for OpenCV:
 ```
-pip install opencv-contrib-python==4.1.0.25
+sudo apt-get install libhdf5-dev libhdf5-serial-dev libatlas-base-dev libatlas3-base libjasper-dev python3-pyqt5 -y
+```
+4. Install OpenCV with pip:
+```
+pip install opencv-contrib-python==4.5.3.56
 ```
 Note: we use a specific version as the latest version may not always work properly on raspberry pi yet.
 
