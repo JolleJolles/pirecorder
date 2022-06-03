@@ -62,9 +62,11 @@ It is very easy to install pirecorder with pip. First make sure you are in the d
 pip install pirecorder
 ```
 
-This command will also install the majority of dependencies, which include `numpy` and my `pythutils` package [link](https://github.com/jollejolles/pythutils). One of the main dependencies, `picamera` should already be installed by default. If it is not, follow the simple steps [here](https://picamera.readthedocs.io/en/release-1.13/install.html).
+This command will also install the majority of dependencies, which include `numpy` and my `pythutils` package [link](https://github.com/jollejolles/pythutils). One of the main dependencies, `picamera` should already be installed by default. If it is not, I recommend to install it with pip:
 
-`OpenCV` is a dependency that needs to be manually installed. Follow my 5min guide for Mac, ubuntu and raspberry pi [here](other/install-opencv.md). And if you plan on using the converter functionality then you will additionally need to install `FFmpeg`. Click [here](other/install-ffmpeg-raspberry-pi.md) for my guide to install it on raspberry pi and [here](other/install-ffmpeg-osx.md) for my guide to install it on OS X.
+```sudo pip install "pirecorder[array]"
+
+`OpenCV` is a dependency that needs to be manually installed. Follow my 5min guide on my raspberrypi-guide.github website [here](https://raspberrypi-guide.github.io/programming/install-opencv). And if you plan on using the converter functionality then you will additionally need to install `FFmpeg`. Click [here](other/install-ffmpeg-raspberry-pi.md) for my guide to install it on raspberry pi and [here](other/install-ffmpeg-osx.md) for my guide to install it on OS X.
 
 You should now be fully set up and have pirecorder working. To test it, open a terminal window and type in `python3` to enter python, and then import the pirecorder module:
 
