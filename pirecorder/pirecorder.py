@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2015 - 2020 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2015 - 2022 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -213,6 +213,8 @@ class PiRecorder:
         self.rawCapture = picamera.array.PiRGBArray(self.cam,
                           size=self.cam.resolution)
 
+        self.maxvidsize = self.config.vid.maxvidsize if self.config.vid.maxvidsize>0 else 999
+
 
     def _imgparams(self, mintime = 0.45):
 
@@ -411,7 +413,7 @@ class PiRecorder:
             quality, and 40 is extremely low.
         maxviddur : int, default = 3600
             The maximum duration in seconds for single videos, beyond which
-            videos will be automatically split. A value of 9 indicates there is
+            videos will be automatically split. A value of 0 indicates there is
             no maximum file duration.
         maxvidsize : int, default = 0
             The maximum file size in Megabytes for single videos, beyond which
@@ -665,7 +667,7 @@ class PiRecorder:
                                              format = self.filetype[1:])
                     lineprint("Start recording "+filename)
                     rectime = 0
-                    while video.size < self.config.vid.maxvidsize*1000000 and rectime < waittime:
+                    while video.size < self.maxvidsize*1000000 and rectime < waittime:
                         rectime += 0.1
                         self.cam.wait_recording(0.1)
                     timeremaining -= rectime

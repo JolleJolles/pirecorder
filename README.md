@@ -30,9 +30,9 @@ A paper accompanying this package is published in the Journal of Open Source Sof
 *pirecorder* consists of a main `PiRecorder` module to run image and video recordings, `stream` and `camconfig` modules with interactive user interfaces for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
 
 ## Install
-**Note:** pirecorder relies on picamera, which is not properly integrated in the latest Raspberry Pi OS (Bullseye). Therefore use the previous OS Buster to use pirecorder and picamera. You can download the OS [here](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/) and find more information from the Raspberry Pi foundation [here](https://www.raspberrypi.com/news/bullseye-camera-system/). I am frustrated about this remarkable change too.
+**Note:** ! pirecorder relies on picamera, which is not properly integrated in the latest Raspberry Pi OS (Bullseye). Therefore it is highly recommended to use the previous OS Buster to use pirecorder and picamera. It still works but there may be issues with dependencies. You can download Buster OS [here](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/) and find more information from the Raspberry Pi foundation about the issue [here](https://www.raspberrypi.com/news/bullseye-camera-system/). I hope to be able to update pirecorder later this year to work easier with bullseye.
 
-To install the latest release, simply open a terminal window and enter:
+To install the latest release of pirecorder, simply open a terminal window and enter:
 
 ```
 pip install pirecorder
@@ -45,7 +45,8 @@ pip install git+https://github.com/jollejolles/pirecorder.git --upgrade
 ```
 
 ## Dependencies
-*pirecorder* builds strongly on the [picamera](http://picamera.readthedocs.io/) package, uses [numpy](http://www.numpy.org/), [pyyaml](https://pyyaml.org), and [opencv](http://opencv.org) for some of its core functionality, and relies on various utility functions of the accompanying [pythutils](https://github.com/jolle/pythutils) package. Scheduling functionality is based on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. All dependencies are automatically installed with *pirecorder* except for:
+*pirecorder* builds strongly on the [picamera](http://picamera.readthedocs.io/) package. As some users want to use pirecorder on computers other than a raspberry pi, the picamera package is not set as a dependency. Therefore when using pirecorder for any other functionality it needs to be installed: `pip install "picamera[array]"`.
+*pirecorder* also uses [numpy](http://www.numpy.org/) and [pyyaml](https://pyyaml.org), and relies on various utility functions of the accompanying [pythutils](https://github.com/jolle/pythutils) package. Scheduling functionality is based on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. All these ependencies are automatically installed with *pirecorder*.
 * *OpenCV*: has to be manually installed due to its various dependencies on raspberry pi. Click [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-opencv.md) for a quick install guide.
 * *FFmpeg*: is only needed for the convert functionality of *pirecorder*. Click [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-ffmpeg-raspberry-pi.md) and [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-ffmpeg-osx.md) for guides to install on raspberry pi and OS X respectively.
 
