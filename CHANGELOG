@@ -1,6 +1,10 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2022-08-04 version 3.3.4
+    * Fixed issue with maxres not working well with v1.3 and v1.5 raspberry pi
+      cameras, both for when recording and streaming.
+
 2022-06-03 version 3.3.3
     * Fixed issue when maxvidsize was 0
     * Improved readme and guides on website to include installing of picamera

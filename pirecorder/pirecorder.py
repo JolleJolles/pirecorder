@@ -317,9 +317,10 @@ class PiRecorder:
             and dynamically for each recording.
         maxres : str or tuple, default = "v2"
             The maximum potential resolution of the camera used. Either provide
-            a tuple of the max resolution, or use "v1.5", "v2" (default), or
-            "hq" to get the maximum resolution associated with the official
-            cameras directly.
+            a tuple of the max resolution, or use "v1.3", "v1.5", "v2" (default)
+            or "hq" to get the maximum resolution associated with the official
+            cameras directly. Note that "v2" is the default so when an older
+            camera model is connected this should be set here.
         rotation : int, default = 0
             Custom rotation specific to the Raspberry Pi, should be either 0 or
             180.
@@ -431,11 +432,15 @@ class PiRecorder:
             self.config.rec.rectype = kwargs["rectype"]
         if "maxres" in kwargs:
             self.config.rec.maxres = kwargs["maxres"]
-            if isinstance(self.config.rec.maxres, tuple):
+            if self.config.rec.maxres[0] != "(":
+                self.config.rec.imgdims = literal_eval(self.config.rec.maxres)
+            elif isinstance(self.config.rec.maxres, tuple):
                 self.config.img.imgdims = self.config.rec.maxres
-            elif self.config.rec.maxres == "v2":
+            if self.config.rec.maxres in ("v1.5","v1.3"):
+                self.config.img.imgdims = (2592,1944)
+            if self.config.rec.maxres == "v2":
                 self.config.img.imgdims = (3264,2464)
-            elif self.config.rec.maxres == "hq":
+            if self.config.rec.maxres == "hq":
                 self.config.img.imgdims = (4056,3040)
         if "rotation" in kwargs:
             self.config.cus.rotation = kwargs["rotation"]

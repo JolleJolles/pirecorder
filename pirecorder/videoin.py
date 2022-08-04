@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from ast import literal_eval
 from threading import Thread
 import os
 import cv2
@@ -44,14 +45,18 @@ class VideoIn:
             from picamera.array import PiRGBArray
             from picamera import PiCamera
 
-            if isinstance(maxres, tuple):
+            if maxres == None:
+                self.maxres = (2592,1944)
+            elif maxres[0] == "(":
+                self.maxres = literal_eval(maxres)
+            elif isinstance(maxres, tuple):
                 self.maxres = maxres
             elif maxres == "v2":
                 self.maxres = (3264,2464)
             elif maxres == "hq":
                 self.maxres = (4056,3040)
             else:
-                self.maxres = (2592,1952)
+                self.maxres = (2592,1944)
             self.res = (self.maxres[0]*vidsize, self.maxres[1]*vidsize)
             self.res = picamconv(self.res)
             self.camera = PiCamera()

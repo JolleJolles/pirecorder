@@ -27,7 +27,7 @@ DISTNAME="pirecorder"
 MAINTAINER="Jolle Jolles"
 MAINTAINER_EMAIL="j.w.jolles@gmail.com"
 URL="https://github.com/jollejolles"
-DOWNLOAD_URL="https://github.com/jollejolles/pirecorder/archive/v3.3.3.tar.gz"
+DOWNLOAD_URL="https://github.com/jollejolles/pirecorder/archive/v3.3.4.tar.gz"
 
 with open("README.md") as f:
     readme = f.read()
