@@ -432,18 +432,23 @@ class PiRecorder:
             self.config.rec.rectype = kwargs["rectype"]
         if "maxres" in kwargs:
             self.config.rec.maxres = kwargs["maxres"]
-            if self.config.rec.maxres is None:
-                self.config.img.imgdims = (3264,2464)
-            if self.config.rec.maxres[0] != "(":
-                self.config.rec.imgdims = literal_eval(self.config.rec.maxres)
-            elif isinstance(self.config.rec.maxres, tuple):
-                self.config.img.imgdims = self.config.rec.maxres
-            if self.config.rec.maxres in ("v1.5","v1.3"):
-                self.config.img.imgdims = (2592,1944)
-            if self.config.rec.maxres == "v2":
-                self.config.img.imgdims = (3264,2464)
-            if self.config.rec.maxres == "hq":
-                self.config.img.imgdims = (4056,3040)
+            self.config.img.imgdims = (3264,2464)
+            if self.config.rec.maxres is not None:
+                if self.config.rec.maxres in ("v1.5","v1.3","v2","hq"):
+                    if self.config.rec.maxres in ("v1.5","v1.3"):
+                        self.config.img.imgdims = (2592,1944)
+                    if self.config.rec.maxres == "v2":
+                        self.config.img.imgdims = (3264,2464)
+                    if self.config.rec.maxres == "hq":
+                        self.config.img.imgdims = (4056,3040)
+                elif isinstance(self.config.rec.maxres, tuple):
+                    self.config.img.imgdims = self.config.rec.maxres
+                else:
+                    try:
+                        self.config.rec.imgdims = literal_eval(self.config.rec.maxres)
+                    except:
+                        pass
+
         if "rotation" in kwargs:
             self.config.cus.rotation = kwargs["rotation"]
         if "brighttune" in kwargs:
