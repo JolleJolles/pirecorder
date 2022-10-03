@@ -122,7 +122,7 @@ class PiRecorder:
                           label="test",rectype="img",rotation=0,brighttune=0,
                           roi=None,gains=(1.0,2.5),brightness=45,contrast=10,
                           saturation=0,iso=200,sharpness=0,compensation=0,
-                          shutterspeed=8000,imgdims=(2592,1944),maxres=None,
+                          shutterspeed=8000,imgdims=(2592,1944),maxres="v2",
                           viddims=(1640,1232),imgfps=1,vidfps=24,imgwait=5.0,
                           imgnr=12,imgtime=60,imgquality=50,vidduration=10,
                           viddelay=10,vidquality=11,automode=True,internal="",
@@ -432,6 +432,8 @@ class PiRecorder:
             self.config.rec.rectype = kwargs["rectype"]
         if "maxres" in kwargs:
             self.config.rec.maxres = kwargs["maxres"]
+            if self.config.rec.maxres is None:
+                self.config.img.imgdims = (3264,2464)
             if self.config.rec.maxres[0] != "(":
                 self.config.rec.imgdims = literal_eval(self.config.rec.maxres)
             elif isinstance(self.config.rec.maxres, tuple):
