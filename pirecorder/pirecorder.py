@@ -623,6 +623,7 @@ class PiRecorder:
 
         self._setup_cam()
         self._namefile()
+        startdate = datetime.now()
 
         if self.config.rec.rectype == "img":
 
@@ -638,6 +639,9 @@ class PiRecorder:
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
+                if startdate.day < datetime.now().day:
+                    self.cam.close
+                    self.record()
                 tottimepassed = (datetime.now() - starttime).total_seconds()
                 if i < self.config.img.imgnr-1 and tottimepassed < self.config.img.imgtime:
                     timepassed = (datetime.now() - timepoint).total_seconds()
