@@ -47,8 +47,8 @@ pip install git+https://github.com/jollejolles/pirecorder.git --upgrade
 ## Dependencies
 *pirecorder* builds strongly on the [picamera](http://picamera.readthedocs.io/) package. As some users want to use pirecorder on computers other than a raspberry pi, the picamera package is not set as a dependency. Therefore when using pirecorder for any other functionality it needs to be installed: `pip install "picamera[array]"`.
 *pirecorder* also uses [numpy](http://www.numpy.org/) and [pyyaml](https://pyyaml.org), and relies on various utility functions of the accompanying [pythutils](https://github.com/jolle/pythutils) package. Scheduling functionality is based on *CronTab* and the associated [python-crontab](https://pypi.org/project/python-crontab/) package. All these ependencies are automatically installed with *pirecorder*.
-* *OpenCV*: has to be manually installed due to its various dependencies on raspberry pi. Click [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-opencv.md) for a quick install guide.
-* *FFmpeg*: is only needed for the convert functionality of *pirecorder*. Click [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-ffmpeg-raspberry-pi.md) and [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-ffmpeg-osx.md) for guides to install on raspberry pi and OS X respectively.
+* *OpenCV*: has to be manually installed due to its various dependencies on raspberry pi. Click [here](https://raspberrypi-guide.github.io/programming/install-opencv) for my quick install guide.
+* *FFmpeg*: is only needed for the convert functionality of *pirecorder*. Click [here](https://raspberrypi-guide.github.io/other/convert-h264-ffmpegs) and [here](https://github.com/JolleJolles/pirecorder/tree/master/docs/other/install-ffmpeg-osx.md) for guides to install on raspberry pi and OS X respectively.
 
 ## Documentation
 For detailed documentation and tutorials about *pirecorder* and all its functionalities, see the dedicated website [jollejolles.github.io/pirecorder/](http://jollejolles.github.io/pirecorder/).
