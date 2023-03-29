@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2023-03-24 version 3.4.1
+    * Fixed some typos in the pirecorder script
+  
 2023-03-24 version 3.4.0
     * Updated image sequence script to store images in different correctly-dated
       folders when the image sequence crosses multiple days

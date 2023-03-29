@@ -640,7 +640,7 @@ class PiRecorder:
                                     format="jpeg", resize = self.resize,
                                     quality = self.config.img.imgquality)):
                 if startdate.day < datetime.now().day:
-                    self.cam.close
+                    self.cam.close()
                     self.record()
                 tottimepassed = (datetime.now() - starttime).total_seconds()
                 if i < self.config.img.imgnr-1 and tottimepassed < self.config.img.imgtime:
