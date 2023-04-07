@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+2023-03-24 version 3.5.1
+    * Fixed annotation of counter when more than 999 images
+
 2023-03-24 version 3.5.0
     * Included check in main pirecorder script to update the config file
       to ensure backwards compatibility

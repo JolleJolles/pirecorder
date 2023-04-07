@@ -697,6 +697,7 @@ class PiRecorder:
                 if "{timestamp:%H%M%S}" in self.filename:
                     filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
                     filename = filename.replace("{counter:03d}","001").split("/",1)[::-1][0]
+                    filename = filename.replace("{counter:05d}","00001").split("/",1)[::-1][0]
                 self.cam.annotate_text = filename.replace(".jpg","")
             counter= 1
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
@@ -717,6 +718,7 @@ class PiRecorder:
                         if "{timestamp:%H%M%S}" in self.filename:
                             filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
                             filename = filename.replace("{counter:03d}","{:03d}".format(counter)).split("/",1)[::-1][0]
+                            filename = filename.replace("{counter:05d}","{:05d}".format(counter)).split("/",1)[::-1][0]
                             self.cam.annotate_text = filename.split("/",1)[::-1][0].replace(".jpg","")
                 else:
                     lineprint("Captured "+img)
