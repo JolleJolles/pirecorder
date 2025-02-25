@@ -15,4 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+<<<<<<< HEAD
 __version__ = "3.6.0"
+=======
+__version__ = "3.5.1"
+>>>>>>> 8f8b69d28ee67e0ce7280ae24c32fa0cc4a37dc0

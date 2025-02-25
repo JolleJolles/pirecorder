@@ -1,6 +1,7 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+<<<<<<< HEAD
 Changes to include in latest version
 
 2025-02-24 version 3.6.0
@@ -11,6 +12,8 @@ Changes to include in latest version
     * Removed hack to get rid of potential flicker in the record function by improving the _cam_config function
     * Added a command to wait for user input after camera initialisation after warming up for the vid and vidseq types
 
+=======
+>>>>>>> 8f8b69d28ee67e0ce7280ae24c32fa0cc4a37dc0
 2023-03-24 version 3.5.1
     * Fixed annotation of counter when more than 999 images
 
