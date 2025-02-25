@@ -1,6 +1,19 @@
 All notable changes to this project will be documented in this file. For a
 complete changelog, see https://github.com/jollejolles/pirecorder/commits/
 
+Changes to include in latest version
+
+2025-02-24 version 3.6.0
+    * Added -r command to convert function as otherwise converted videos would be 2 seconds long only.
+    * Added argparse commands for fps and overwrite to the config function as somehow they were still missing
+    * Corrected pirecorder file by adding spaces where missed
+    * Fixed issue with annotation in single image resulting in error
+    * Removed hack to get rid of potential flicker in the record function by improving the _cam_config function
+    * Added a command to wait for user input after camera initialisation after warming up for the vid and vidseq types
+
+2023-03-24 version 3.5.1
+    * Fixed annotation of counter when more than 999 images
+
 2023-03-24 version 3.5.0
     * Included check in main pirecorder script to update the config file
       to ensure backwards compatibility

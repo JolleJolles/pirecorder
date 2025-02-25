@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2019 - 2023 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2019 - 2025 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -151,8 +151,8 @@ class Convert:
                 else:
                     comm = "' -vcodec copy '"
                 bashcomm = "ffmpeg"
-                if self.fps is not None:
-                    bashcomm = bashcomm+" -r "+ str(self.fps)
+                fpscom = str(self.fps) if self.fps is not None else str(24)
+                bashcomm = bashcomm+" -r "+ fpscom
                 bashcomm = bashcomm+" -i '"+filein+comm+fileout[:-len(self.type)]+".mp4'"
                 bashcomm = bashcomm + " -y -nostats -loglevel 0"
                 output = subprocess.check_output(['bash','-c', bashcomm])
@@ -225,9 +225,11 @@ def conv():
     parser.add_argument("-o", "--outdir" ,default="", metavar="")
     parser.add_argument("-t", "--type", default=".h264", metavar="")
     parser.add_argument("-w", "--withframe", default="False", metavar="")
+    parser.add_argument("-n", "--overwrite", default="False", metavar="")
     parser.add_argument("-d", "--delete", default="False", metavar="")
     parser.add_argument("-p", "--pools", default=4, type=int, metavar="")
     parser.add_argument("-r", "--resizeval", default=1, type=float, metavar="")
+    parser.add_argument("-g", "--fps", default=24, type=int, metavar="")
     parser.add_argument("-f", "--imgfps", default=25, type=int, metavar="")
     parser.add_argument("-s", "--sleeptime", default=None, type=int, metavar="")
 
@@ -235,6 +237,7 @@ def conv():
     args.withframe = ast.literal_eval(args.withframe)
     args.delete = ast.literal_eval(args.delete)
     Convert(indir = args.indir, outdir = args.outdir, type = args.type,
-            withframe = args.withframe, delete = args.delete, pools = args.pools,
-            resizeval = args.resizeval, imgfps = args.imgfps,
+            withframe = args.withframe, overwrite = args.overwrite, 
+            delete = args.delete, pools = args.pools,
+            resizeval = args.resizeval, fps = args.fps, imgfps = args.imgfps,
             sleeptime = args.sleeptime)

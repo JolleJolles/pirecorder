@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 """
-Copyright (c) 2015 - 2023 Jolle Jolles <j.w.jolles@gmail.com>
+Copyright (c) 2015 - 2025 Jolle Jolles <j.w.jolles@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ class PiRecorder:
         self.host = gethostname()
         self.home = homedir()
         self.setupdir = self.home + "pirecorder"
-        self.logfolder = self.setupdir+"/logs/"
+        self.logfolder = self.setupdir + "/logs/"
         if not os.path.exists(self.logfolder):
             os.makedirs(self.setupdir)
             os.makedirs(self.logfolder)
@@ -101,48 +101,49 @@ class PiRecorder:
             lineprint("Setup folder exists but was not set up properly..")
 
         if logging:
-            self.log = Logger(self.logfolder+"/pirecorder.log")
+            self.log = Logger(self.logfolder + "/pirecorder.log")
             self.log.start()
             print("")
 
-        lineprint("pirecorder "+__version__+" started!", date=True)
+        lineprint("pirecorder " + __version__ + " started!", date = True)
         lineprint("="*47, False)
 
         self.brightfile = self.setupdir+"/cusbright.yml"
         self.configfilerel = configfile
-        self.configfile = self.setupdir+"/"+configfile
+        self.configfile = self.setupdir + "/" + configfile
         self.nametypes = ("label","date","time","datetime","counter","rpi","")
 
         self.config = LocalConfig(self.configfile, compact_form = True)
-        overwrite=True
+        overwrite = True
         if not os.path.isfile(self.configfile):
-            lineprint("Config file "+configfile+" not found, new file created..")
+            lineprint("Config file " + configfile + " not found, new file created..")
             for section in ["rec","cam","cus","img","vid"]:
                 if section not in list(self.config):
                     self.config.add_section(section)
-            set=True
+            set = True
         elif str(self.config).count("=")<36:
-            overwrite=False
-            set=True
+            overwrite = False
+            set = True
         else:
-            set=False
-            lineprint("Config file "+configfile+" loaded..")
+            set = False
+            lineprint("Config file " + configfile + " loaded..")
             lineprint("Recording " + self.config.rec.rectype + " in " +\
                           self.home + self.config.rec.recdir)
         if set:
-            self.settings(overwrite=overwrite,internal="",
-                          recdir="pirecorder/recordings",subdirs=False,label="test",rectype="img",maxres="v2",
-                          automode=True,brightness=45,contrast=10,saturation=0,iso=200,sharpness=0,compensation=0,shutterspeed=8000,
-                          rotation=0,brighttune=0,roi=None,gains=(1.0,2.5),annotatesize=0,nameparam1="label",nameparam2="date",nameparam3="rpi",nameparam4="counter",nameparam5="time",
-                          imgdims=(2592,1944),imgfps=1,imgwait=5.0,imgnr=12,imgtime=60,imgquality=50,
-                          viddims=(1640,1232),vidfps=24,vidduration=10,viddelay=10,vidquality=11,maxviddur=3600,maxvidsize=0)
+            self.settings(overwrite=overwrite, internal="",
+                          recdir="pirecorder/recordings", subdirs=False, label="test", rectype="img", maxres="v2",
+                          automode=True, brightness=45, contrast=10, saturation=0, iso=200, sharpness=0, compensation=0,shutterspeed=8000,
+                          rotation=0, brighttune=0, roi=None, gains=(1.0,2.5), annotatesize=0, nameparam1="label", nameparam2="date",
+                          nameparam3="rpi", nameparam4="counter", nameparam5="time", imgdims=(2592,1944), 
+                          imgfps=1, imgwait=5.0, imgnr=12, imgtime=60, imgquality=50, viddims=(1640,1232),
+                          vidfps=24, vidduration=10, viddelay=10, vidquality=11, maxviddur=3600, maxvidsize=0)
             lineprint("Config settings stored and updated..")
 
 
         self._imgparams()
         self._shuttertofps()
         if self.config.rec.rectype == "imgseq":
-            if self.config.cam.shutterspeed/1000000.>=(self.config.img.imgwait/5):
+            if self.config.cam.shutterspeed / 1000000. >= (self.config.img.imgwait / 5):
                 lineprint("imgwait is not enough for provided shutterspeed" + \
                           ", will be overwritten..")
 
@@ -168,7 +169,7 @@ class PiRecorder:
         self.cam.rotation = self.config.cus.rotation
         self.cam.exposure_compensation = self.config.cam.compensation
 
-        if self.config.cus.annotatesize>5:
+        if self.config.cus.annotatesize > 5:
             self.cam.annotate_background = picamera.Color('black')
             self.cam.annotate_text_size = self.config.cus.annotatesize
 
@@ -178,40 +179,53 @@ class PiRecorder:
         if self.config.rec.rectype in ["vid","vidseq"]:
             self.cam.resolution = picamconv(literal_eval(self.config.vid.viddims))
             self.cam.framerate = self.config.vid.vidfps
-        if fps != None:
+        
+        if fps is not None:
             self.cam.framerate = fps
 
+        # Set the region of interest, if provided
         if self.config.cus.roi is None:
-            self.cam.zoom = (0,0,1,1)
+            self.cam.zoom = (0, 0, 1, 1)
             self.resize = self.cam.resolution
         else:
             self.cam.zoom = literal_eval(self.config.cus.roi)
-            w = int(self.cam.resolution[0]*self.cam.zoom[2])
-            h = int(self.cam.resolution[1]*self.cam.zoom[3])
-            if self.config.rec.rectype in ["vid","vidseq"]:
-                self.resize = picamconv((w,h))
-            else:
-                self.resize = (w,h)
+            w = int(self.cam.resolution[0] * self.cam.zoom[2])
+            h = int(self.cam.resolution[1] * self.cam.zoom[3])
+            self.resize = picamconv((w, h)) if self.config.rec.rectype in ["vid", "vidseq"] else (w, h)
 
+        # Determine if long exposure is needed
         self.longexpo = False if self.cam.framerate >= 6 else True
 
+        # Start in auto mode to allow the camera to adjust exposure and AWB
         self.cam.exposure_mode = "auto"
         self.cam.awb_mode = "auto"
         lineprint("Camera warming up..")
+
+        # Wait for the camera to adjust—time can be tuned depending on your framerate
         if auto or self.config.cam.automode:
-            self.cam.shutter_speed = 0
+            #self.cam.shutter_speed = 0
             sleep(2)
         elif self.cam.framerate >= 6:
             sleep(6) if self.cam.framerate > 1.6 else sleep(10)
         else:
             sleep(2)
-        if not auto and self.config.cam.automode == False:
-            self.cam.shutter_speed = self.config.cam.shutterspeed
+
+        # If you’re using fixed settings (i.e. not in auto mode), lock the camera settings
+        if not (auto or self.config.cam.automode):
+            # Capture the auto-adjusted settings from the warm-up period
+            current_exposure = self.cam.exposure_speed
+            current_awb_gains = self.cam.awb_gains
+
+            # Lock exposure and white balance by disabling auto modes
             self.cam.exposure_mode = "off"
             self.cam.awb_mode = "off"
-            self.cam.awb_gains = eval(self.config.cus.gains)
+            # Use your preset shutter speed if provided; otherwise use the current exposure
+            self.cam.shutter_speed = self.config.cam.shutterspeed if hasattr(self.config.cam, 'shutterspeed') else current_exposure
+            # Apply preset gains if available; otherwise, keep auto-determined gains
+            self.cam.awb_gains = eval(self.config.cus.gains) if self.config.cus.gains else current_awb_gains
             sleep(0.1)
 
+        # Apply remaining fixed settings
         brightness = self.config.cam.brightness + self.config.cus.brighttune
         self.cam.brightness = brightness
         self.cam.contrast = self.config.cam.contrast
@@ -219,8 +233,7 @@ class PiRecorder:
         self.cam.iso = self.config.cam.iso
         self.cam.sharpness = self.config.cam.sharpness
 
-        self.rawCapture = picamera.array.PiRGBArray(self.cam,
-                          size=self.cam.resolution)
+        self.rawCapture = picamera.array.PiRGBArray(self.cam, size = self.cam.resolution)
 
         self.maxvidsize = self.config.vid.maxvidsize if self.config.vid.maxvidsize>0 else 999
 
@@ -242,7 +255,7 @@ class PiRecorder:
 
         """Computes image fps based on shutterspeed within provided range"""
 
-        fps = round(1./(self.config.cam.shutterspeed/1000000.),2)
+        fps = round(1. / (self.config.cam.shutterspeed / 1000000.),2)
         self.config.img.imgfps = min(max(fps, minfps), maxfps)
 
 
@@ -305,8 +318,8 @@ class PiRecorder:
             self.config.cam.shutterspeed = self.cam.exposure_speed
             self.config.cus.gains = tuple([round(float(i),2) for i in self.cam.awb_gains])
             self.config.save()
-            lineprint("Shutterspeed set to "+str(self.cam.exposure_speed))
-            lineprint("White balance gains set to "+str(self.config.cus.gains))
+            lineprint("Shutterspeed set to " + str(self.cam.exposure_speed))
+            lineprint("White balance gains set to " + str(self.config.cus.gains))
 
         stream.close()
         self.rawCapture.close()
@@ -347,7 +360,7 @@ class PiRecorder:
             cameras directly. Note that "v2" is the default so when an older
             camera model is connected this should be set here.
         annotatesize : int, default = 0
-            The font size of the annotation. If a value of less than6 is provided
+            The font size of the annotation. If a value of less than 6 is provided
             no annotation will be shown.
         rotation : int, default = 0
             Custom rotation specific to the Raspberry Pi, should be either 0 or
@@ -604,7 +617,7 @@ class PiRecorder:
     def camconfig(self, fps=None, vidsize=0.4):
 
         lineprint("Opening stream for interactive configuration..")
-        fps = max(self.config.vid.vidfps,1) if fps==None else int(fps)
+        fps = max(self.config.vid.vidfps,1) if fps == None else int(fps)
         self._setup_cam(fps=fps)
         configout = Camconfig(self.cam, auto=self.config.cam.automode,
                               vidsize=vidsize)
@@ -683,8 +696,8 @@ class PiRecorder:
 
             if "{timestamp:%H%M%S}" in self.filename:
                 filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
-            if self.config.cus.annotatesize>5:
-                self.cam.annotate_text = filename.replace(".jpg","").split("/",1)[1]
+            if self.config.cus.annotatesize > 5:
+                self.cam.annotate_text = filename.replace(".jpg","").split("/",1)[0]
             self.cam.capture(filename, format="jpeg", resize = self.resize,
                              quality = self.config.img.imgquality)
             lineprint("Captured "+filename)
@@ -693,10 +706,11 @@ class PiRecorder:
 
             starttime = datetime.now()
             timepoint = starttime
-            if self.config.cus.annotatesize>5:
+            if self.config.cus.annotatesize > 5:
                 if "{timestamp:%H%M%S}" in self.filename:
                     filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
                     filename = filename.replace("{counter:03d}","001").split("/",1)[::-1][0]
+                    filename = filename.replace("{counter:05d}","00001").split("/",1)[::-1][0]
                 self.cam.annotate_text = filename.replace(".jpg","")
             counter= 1
             for i, img in enumerate(self.cam.capture_continuous(self.filename,
@@ -717,6 +731,7 @@ class PiRecorder:
                         if "{timestamp:%H%M%S}" in self.filename:
                             filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
                             filename = filename.replace("{counter:03d}","{:03d}".format(counter)).split("/",1)[::-1][0]
+                            filename = filename.replace("{counter:05d}","{:05d}".format(counter)).split("/",1)[::-1][0]
                             self.cam.annotate_text = filename.split("/",1)[::-1][0].replace(".jpg","")
                 else:
                     lineprint("Captured "+img)
@@ -724,12 +739,15 @@ class PiRecorder:
 
         elif self.config.rec.rectype in ["vid","vidseq"]:
 
-            # Temporary fix for flicker at start of (first) video
-            self.cam.start_recording(BytesIO(), format = "h264",
-                                     resize = self.resize, level = "4.2")
-            self.cam.wait_recording(2)
-            self.cam.stop_recording()
+            # # Temporary fix for flicker at start of (first) video
+            # self.cam.start_recording(BytesIO(), format = "h264",
+            #                         resize = self.resize, level = "4.2")
+            # self.cam.wait_recording(2)
+            # self.cam.stop_recording()
 
+            # Wait for user input before starting the first video session
+            input("Press Enter to start the first video session...")
+        
             for session in ["_S%02d" % i for i in range(1,999)]:
                 if "{timestamp:%H%M%S}" in self.filename:
                     filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
@@ -748,17 +766,17 @@ class PiRecorder:
                         nr = "_v"+str(counter).zfill(2)
                     finalname = filename+nr+self.filetype
                     video = VidOutput(finalname)
-                    if self.config.cus.annotatesize>5:
+                    if self.config.cus.annotatesize > 5:
                         self.cam.annotate_text = finalname.replace(".h264","").split("/",1)[::-1][0]
                     self.cam.start_recording(video, resize = self.resize,
-                                             quality = self.config.vid.vidquality,
-                                             level = "4.2",
-                                             format = self.filetype[1:])
+                                            quality = self.config.vid.vidquality,
+                                            level = "4.2",
+                                            format = self.filetype[1:])
                     lineprint("Start recording "+filename)
                     rectime = 0
                     while video.size < self.maxvidsize*1000000 and rectime < waittime:
                         rectime += 0.1
-                        if self.config.cus.annotatesize>5:
+                        if self.config.cus.annotatesize > 5:
                             filename = self.filename.replace("{timestamp:%H%M%S}",strftime("%H%M%S"))
                             self.cam.annotate_text = filename.replace(".h264","").split("/",1)[::-1][0]
                         self.cam.wait_recording(0.1)
