@@ -11,6 +11,15 @@ A paper accompanying this package is published in the Journal of Open Source Sof
 
 <p align="center"><img src="https://github.com/jollejolles/pirecorder/blob/master/images/pirecorder-logo-large.jpg"></p>
 
+> ## Compatibility & Status
+> pirecorder is built on the [`picamera`](http://picamera.readthedocs.io/) library, which depends on the legacy Raspberry Pi camera stack. Since **Raspberry Pi OS Bullseye**, Raspberry Pi switched to a new camera system based on `libcamera`, which is incompatible with `picamera`. The compatibility by OS version is:
+>
+> - **Buster and earlier** — fully supported
+> - **Bullseye** — works only with legacy camera stack enabled and 32-bit OS
+> - **Bookworm and Trixie** — not supported yet
+>
+> I am working on a **major update (v4.0) to support the new `picamera2`/`libcamera` stack for early summer 2026**, which will restore full compatibility with current Raspberry Pi hardware and OS versions. Watch this repository for updates.
+
 ## Key Features
 * **Controlled recording using custom, easy-to-edit configuration files**
 * **Record single images and videos, timelapses, and sequences of videos**
@@ -30,8 +39,6 @@ A paper accompanying this package is published in the Journal of Open Source Sof
 *pirecorder* consists of a main `PiRecorder` module to run image and video recordings, `stream` and `camconfig` modules with interactive user interfaces for help setting up, calibrating, and configuring the camera, a `schedule` module for scheduling future recordings, and a `convert` module for the easy converting of (folders of) recorded images and videos.
 
 ## Install
-**Note:** ! pirecorder relies on picamera, which is not properly integrated in the latest Raspberry Pi OS (Bullseye). Therefore it is highly recommended to use the previous OS Buster to use pirecorder and picamera. It still works but there may be issues with dependencies. You can download Buster OS [here](https://downloads.raspberrypi.org/raspios_armhf/images/raspios_armhf-2021-05-28/) and find more information from the Raspberry Pi foundation about the issue [here](https://www.raspberrypi.com/news/bullseye-camera-system/). I hope to be able to update pirecorder later this year to work easier with bullseye.
-
 To install the latest release of pirecorder, simply open a terminal window and enter:
 
 ```
